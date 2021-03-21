@@ -93,14 +93,14 @@ class RaceMobilePage extends RaceBasicPage {
 
   Widget _buildTotalCounter(BuildContext context, double kmCounter) {
     return SliverPersistentHeader(
-      pinned: true,
+      pinned: false,
       delegate: SliverAppBarDelegate(
         minHeight: 100,
         maxHeight: 100,
         child: Container(
           alignment: Alignment.center,
           // color: Colors.white,
-          color: Color.fromRGBO(153, 148, 86, 60 ),
+          // color: Color.fromRGBO(153, 148, 86, 60 ),
           child: Column(
             children: [
               Text(
@@ -209,11 +209,20 @@ class RaceMobilePage extends RaceBasicPage {
         ),
         Positioned(
           top: 257,
-          left: 30,
+          left: 30, 
           child: StageBuildingIcon(
             stagesBuilding[1].id,
             name: stagesBuilding[1].name,
             photo: stagesBuilding[1].photo,
+          ),
+        ),
+        Positioned(
+          top: 157,
+          left: 160,
+          child: StageBuildingIcon(
+            stagesBuilding[2].id,
+            name: stagesBuilding[2].name,
+            photo: stagesBuilding[2].photo,
           ),
         ),
       ]);
@@ -262,7 +271,7 @@ class RaceMobilePage extends RaceBasicPage {
           children: [
             Positioned(
               child: Card(
-                color: Color.fromRGBO(89, 63, 153, 60),
+                color: Color.fromRGBO(89, 63, 153, 1),
                 child: ListTile(
                   leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),

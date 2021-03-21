@@ -1,4 +1,3 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:yodravet/src/routes/router.dart';
 import 'package:yodravet/src/routes/navigation_service.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';

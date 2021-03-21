@@ -28,7 +28,7 @@ class UserMobilePage extends UserBasicPage {
     bool _loading = false;
     bool isStravaLogin = false;
     bool lockStravaLogin = false;
-    int _filterDonorTab = 0;
+    int _filterDonorTab = 2;
     List<ActivityPurchase> donors = [];
 
     return BlocBuilder<UserBloc, UserState>(
@@ -67,8 +67,11 @@ class UserMobilePage extends UserBasicPage {
             .addAll(_buildSliverActivities(context, isStravaLogin, activities));
         slivers.add(_buildDonorsList(context, _filterDonorTab, donors));
 
-        return CustomScrollView(
-          slivers: slivers,
+        return Container(
+          color: Color.fromRGBO(153, 148, 86, 1 ),
+          child: CustomScrollView(
+            slivers: slivers,
+          ),
         );
       },
     );
@@ -92,7 +95,7 @@ class UserMobilePage extends UserBasicPage {
         minHeight: 40,
         maxHeight: 40,
         child: Container(
-          color: Color.fromRGBO(153, 148, 86, 60 ),
+          color: Color.fromRGBO(153, 148, 86, 1),
           child: ListTile(
             leading: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
@@ -121,7 +124,7 @@ class UserMobilePage extends UserBasicPage {
           maxHeight: 50,
           child: Container(
             padding: EdgeInsets.all(8.0),
-            color: Colors.white,
+            color: Color.fromRGBO(153, 148, 86, 1),
             child: Row(
               children: [
                 Text('Conectar con Strava'),
@@ -191,7 +194,7 @@ class UserMobilePage extends UserBasicPage {
           maxHeight: 50,
           child: Container(
               padding: EdgeInsets.all(8.0),
-              color: Colors.white,
+              color: Color.fromRGBO(153, 148, 86, 1),
               child: _buildActivitiesTitle(context, beforeDate, afterDate)),
         ),
       ));
@@ -230,13 +233,13 @@ class UserMobilePage extends UserBasicPage {
               ),
             ],
           ),
-          Spacer(),
-          IconButton(
-              icon: Icon(FontAwesomeIcons.syncAlt),
-              onPressed: () {
-                BlocProvider.of<UserBloc>(context)
-                    .add(GetStravaActivitiesEvent());
-              }),
+          // Spacer(),
+          // IconButton(
+          //     icon: Icon(FontAwesomeIcons.syncAlt),
+          //     onPressed: () {
+          //       BlocProvider.of<UserBloc>(context)
+          //           .add(GetStravaActivitiesEvent());
+          //     }),
         ],
       );
     } else {
@@ -268,7 +271,7 @@ class UserMobilePage extends UserBasicPage {
               maxHeight: MediaQuery.of(context).size.height * 0.45,
               child: Container(
                 padding: EdgeInsets.all(8.0),
-                color: Color.fromRGBO(153, 148, 86, 60 ),
+                color: Color.fromRGBO(153, 148, 86, 1),
                 child: ListView.builder(
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
@@ -363,8 +366,9 @@ class UserMobilePage extends UserBasicPage {
     List<Widget> slivers = [];
     int poleCounter = 1;
 
-      slivers.add(Padding(
+      slivers.add(Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        color: Color.fromRGBO(153, 148, 86, 1),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -372,18 +376,12 @@ class UserMobilePage extends UserBasicPage {
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
-                  color: filterDonorTab == 0 ? Theme.of(context).primaryColor : Colors.black,
-                  icon: Icon(FontAwesomeIcons.star), onPressed: () { 
-                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(0));
-                   },
-                ),
-                IconButton(
-                  color: filterDonorTab == 1 ? Colors.blue : Colors.black,
-                  icon: Icon(FontAwesomeIcons.walking), onPressed: () { 
-                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(1));
-                   },
-                ),
+                // IconButton(
+                //   color: filterDonorTab == 0 ? Theme.of(context).primaryColor : Colors.black,
+                //   icon: Icon(FontAwesomeIcons.star), onPressed: () { 
+                //     BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(0));
+                //    },
+                // ),
                 IconButton(
                   color: filterDonorTab == 2 ? Colors.blue : Colors.black,
                   icon: Icon(FontAwesomeIcons.running), onPressed: () { 
@@ -394,6 +392,12 @@ class UserMobilePage extends UserBasicPage {
                   color: filterDonorTab == 3 ? Colors.blue : Colors.black,
                   icon: Icon(FontAwesomeIcons.bicycle), onPressed: () { 
                     BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(3));
+                   },
+                ),
+                IconButton(
+                  color: filterDonorTab == 1 ? Colors.blue : Colors.black,
+                  icon: Icon(FontAwesomeIcons.walking), onPressed: () { 
+                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(1));
                    },
                 ),
             ]),

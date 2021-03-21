@@ -21,11 +21,11 @@ abstract class HomeBasicPage extends BasicPage {
           alignment: Alignment.centerLeft,
           child: Text(
             title,
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 58),
           ),
         ),
         elevation: 0.0,
-        backgroundColor: Color.fromRGBO(177, 237, 100, 93),
+        backgroundColor: Color.fromRGBO(153, 148, 86, 60 ),
         // actions: [
         //   IconButton(
         //     icon: Icon(FontAwesomeIcons.userCircle),
@@ -38,6 +38,19 @@ abstract class HomeBasicPage extends BasicPage {
       );
     } else {
       return AppBar(
+        leading: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/race/logoYocorro.png'),
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                height: 50,
+                width: 50,
+              ),
+            ),
         title: Text(title),
         actions: [
           IconButton(
@@ -47,6 +60,25 @@ abstract class HomeBasicPage extends BasicPage {
               BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
             },
           ),
+          // RawMaterialButton(
+          //   onPressed: () {
+          //     BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
+          //   },
+          //   child: ClipRRect(
+          //     borderRadius: BorderRadius.circular(100),
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         image: DecorationImage(
+          //           image: AssetImage('assets/race/logoYocorro.png'),
+          //         ),
+          //         borderRadius: BorderRadius.all(Radius.circular(10)),
+          //       ),
+          //       height: 50,
+          //       width: 50,
+          //     ),
+          //   ),
+          //   shape: CircleBorder(),
+          // ),
         ],
       );
     }

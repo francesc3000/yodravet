@@ -18,7 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   DateTime _afterDate;
   List<ActivityPurchase> _donors = [];
   List<ActivityPurchase> _filterDonors = [];
-  int _filterDonorTab = 0;
+  int _filterDonorTab = 2;
   bool _lockStravaLogin = false;
 
   UserBloc(this.session, this.factoryDao) {
@@ -160,11 +160,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
               .listen((donors) {
             this._donors = donors;
 
-            this._filterDonors = _copyDonorsList(this._donors);
+            // this._filterDonors = _copyDonorsList(this._donors);
 
-            this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
+            // this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
 
-            this.add(UploadUserFieldsEvent());
+            // this.add(UploadUserFieldsEvent());
+
+            this.add(ChangeUserPodiumTabEvent(_filterDonorTab));
           });
 
           if (this._user.isStravaLogin) {

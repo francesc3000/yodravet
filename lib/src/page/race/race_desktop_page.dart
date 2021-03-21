@@ -70,8 +70,11 @@ class RaceDesktopPage extends RaceBasicPage {
       }
 
       if (_loading)
-        return Center(
-          child: CircularProgressIndicator(),
+        return Container(
+          color: Color.fromRGBO(153, 148, 86, 60),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         );
 
       slivers.clear();
@@ -80,13 +83,13 @@ class RaceDesktopPage extends RaceBasicPage {
       slivers.add(_buildMap(context, _riveArtboard, _buyers, _stagesBuilding));
 
       return Container(
-        // color: Color.fromRGBO(177, 237, 100, 93),
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/race/logoYoCorro.png"),
             fit: BoxFit.fitHeight,
           ),
-          color: Color.fromRGBO(177, 237, 100, 93),
+          // color: Color.fromRGBO(177, 237, 100, 93),
+          color: Color.fromRGBO(153, 148, 86, 60),
         ),
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         alignment: Alignment.center,
@@ -107,15 +110,25 @@ class RaceDesktopPage extends RaceBasicPage {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
-        minHeight: 100,
-        maxHeight: 120,
+        minHeight: 140,
+        maxHeight: 140,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Column(
               children: [
-                Text(stageTitle),
-                Text('Km Etapa:'),
+                Text(
+                  stageTitle,
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
+                ),
+                Text(
+                  'Km Etapa:',
+                  style: TextStyle(
+                    fontSize: 26,
+                  ),
+                ),
                 Row(
                   children: [
                     Countup(
@@ -125,41 +138,44 @@ class RaceDesktopPage extends RaceBasicPage {
                       duration: Duration(seconds: 3),
                       separator: '.',
                       style: TextStyle(
-                        fontSize: 26,
+                        fontSize: 36,
                       ),
                     ),
                     Text(
                       ' / ${stageLimit.round()}',
-                      style: TextStyle(fontSize: 26),
+                      style: TextStyle(fontSize: 36),
                     ),
                   ],
                 ),
               ],
             ),
-            Container(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                    'Km Totales:',
-                    style: TextStyle(fontSize: 26),
+            Column(
+              children: [
+                Text(
+                  'Km Totales:',
+                  style: TextStyle(fontSize: 46, color: Colors.red),
+                ),
+                Countup(
+                  begin: 0,
+                  end: kmCounter,
+                  precision: 2,
+                  duration: Duration(seconds: 3),
+                  separator: '.',
+                  style: TextStyle(
+                    fontSize: 56,
+                    color: Colors.red,
                   ),
-                  Countup(
-                    begin: 0,
-                    end: kmCounter,
-                    precision: 2,
-                    duration: Duration(seconds: 3),
-                    separator: '.',
-                    style: TextStyle(
-                      fontSize: 56,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             Column(
               children: [
-                Text('Km Acumulado:'),
+                Text(
+                  'Km Acumulado:',
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
+                ),
                 Countup(
                   begin: 0,
                   end: extraCounter,
@@ -167,7 +183,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   duration: Duration(seconds: 3),
                   separator: '.',
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 36,
                   ),
                 ),
               ],
@@ -216,6 +232,15 @@ class RaceDesktopPage extends RaceBasicPage {
                   stagesBuilding[1].id,
                   name: stagesBuilding[1].name,
                   photo: stagesBuilding[1].photo,
+                ),
+              ),
+              Positioned(
+                top: 165,
+                left: 250,
+                child: StageBuildingIcon(
+                  stagesBuilding[2].id,
+                  name: stagesBuilding[2].name,
+                  photo: stagesBuilding[2].photo,
                 ),
               ),
             ]),
@@ -273,6 +298,7 @@ class RaceDesktopPage extends RaceBasicPage {
       children: [
         Positioned(
           child: Card(
+            color: Color.fromRGBO(89, 63, 153, 1),
             child: ListTile(
               leading: ClipRRect(
                   borderRadius: BorderRadius.circular(100), child: userPhoto),

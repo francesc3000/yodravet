@@ -106,6 +106,8 @@ flutter:
   assets:
     - assets/race/spain.riv
     - assets/race/vallhebron.png
+    - assets/race/centrofelipe.png
+    - assets/race/fmedicinamadrid.png
     - assets/race/logoYocorro.png
     - assets/defaultAvatar.png
     - assets/medallas/medalla1.png
