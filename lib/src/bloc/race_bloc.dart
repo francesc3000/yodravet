@@ -15,23 +15,83 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   List<ActivityPurchase> _buyers = [];
   RaceMapFactory _raceMapFactory = RaceMapFactory();
   StageBuilding _currentStageBuilding;
+  StageBuilding _currentMouseStageBuilding;
   List<StageBuilding> _stagesBuilding = [
     StageBuilding(
       'Stage1',
       'C.I. Príncipe Felipe',
-      'assets/race/centrofelipe.png',
+      'C.I. Príncipe Felipe',
+      'assets/race/stages/centrofelipe.png',
       'blablabla',
     ),
     StageBuilding(
       'Stage2',
-      'Universidad de Sevilla',
-      'assets/race/vallhebron.png',
+      'Centro Andaluz de Biologia Molecular y Medicina Regenerativa',
+      'CABIMER',
+      'assets/race/stages/cabimer.png',
       'blablabla',
     ),
     StageBuilding(
-      'Stage3',
+      'Stage3.1',
       'Facultad Medicina Madrid',
-      'assets/race/fmedicinamadrid.png',
+      'Facultad Medicina Madrid',
+      'assets/race/stages/fmedicinamadrid.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage3.2',
+      'Hospital Ruber Internacional Madrid',
+      'H.Ruber',
+      'assets/race/stages/rubermadrid.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage4',
+      'Facultad de Ciencias de la Salud Campus Oza Universidad A Coruña',
+      'Uni. A Coruña',
+      'assets/race/stages/universidadacoruna.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage5.1',
+      'Biocruces Health Research Institute',
+      'Biocruces Institute',
+      'assets/race/stages/biocruces.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage5.2',
+      'Biobide',
+      'Biobide',
+      'assets/race/stages/biobide.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage6',
+      'Universidad Nebrija',
+      'Universidad Nebrija',
+      'assets/race/stages/universidadnebrija.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage7.1',
+      'Centre Universitari Neurogenètica Pompeu Fabra',
+      'C.U Neurogenètica Pompeu Fabra',
+      'assets/race/stages/pompeufabra.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage7.2',
+      "Vall d'Hebron",
+      "Vall d'Hebron",
+      'assets/race/stages/vallhebron.png',
+      'blablabla',
+    ),
+    StageBuilding(
+      'Stage8',
+      'Asociació Esportiva Yo Corro por el Dravet',
+      'A.E.Yo Corro por el Dravet',
+      'assets/race/logoYoCorro.png',
       'blablabla',
     ),
   ];
@@ -106,6 +166,25 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             ? RaceStateError(error.message)
             : RaceStateError('Algo fue mal al clickar sobre el mapa');
       }
+    } else if (event is BackClickOnMapEvent) {
+      _currentStageBuilding = null; 
+
+      yield _updateRaceFieldsEvent();
+    
+    } else if (event is MouseOnEnterEvent) {
+      try {
+        _currentMouseStageBuilding = _stagesBuilding.firstWhere((stageBuilding) => stageBuilding.id.compareTo(event.id)==0);
+  
+        yield _updateRaceFieldsEvent();
+      } catch (error) {
+        yield error is RaceStateError
+            ? RaceStateError(error.message)
+            : RaceStateError('Algo fue mal al pasar sobre el mapa');
+      }
+    } else if (event is MouseOnExitEvent) {
+      _currentMouseStageBuilding = null;
+
+      yield _updateRaceFieldsEvent();
     }
   }
 
@@ -119,6 +198,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       riveArtboard: _raceMapFactory.riveArtboard,
       buyers: _buyers,
       currentStageBuilding: _currentStageBuilding,
+      currentMouseStageBuilding: _currentMouseStageBuilding,
       stagesBuilding: _stagesBuilding,
     );
   }

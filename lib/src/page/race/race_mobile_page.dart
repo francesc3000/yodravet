@@ -6,6 +6,7 @@ import 'package:rive/rive.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
+import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/stage_building.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
@@ -60,7 +61,8 @@ class RaceMobilePage extends RaceBasicPage {
                   return StageBuildingPage(
                       stageBuilding: _currentStageBuilding,
                       expandedHeight: MediaQuery.of(context).size.height / 3,
-                      leadingWidth: MediaQuery.of(context).size.width,);
+                      leadingWidth: MediaQuery.of(context).size.width,
+                      imageFit: BoxFit.cover);
                 });
           });
         }
@@ -104,7 +106,7 @@ class RaceMobilePage extends RaceBasicPage {
           child: Column(
             children: [
               Text(
-                'Km Totales:',
+                AppLocalizations.of(context).totalTitle,
                 style: TextStyle(fontSize: 26),
               ),
               Countup(
@@ -137,7 +139,7 @@ class RaceMobilePage extends RaceBasicPage {
             Column(
               children: [
                 Text(stageTitle),
-                Text('Km Etapa:'),
+                Text(AppLocalizations.of(context).stageTitle),
                 Row(
                   children: [
                     Countup(
@@ -161,7 +163,7 @@ class RaceMobilePage extends RaceBasicPage {
             Spacer(),
             Column(
               children: [
-                Text('Km Acumulado:'),
+                Text(AppLocalizations.of(context).extraTitle),
                 Countup(
                   begin: 0,
                   end: extraCounter,
@@ -188,10 +190,10 @@ class RaceMobilePage extends RaceBasicPage {
       child = Stack(children: [
         Positioned(
           top: 0,
-          left: 0,
+          // left: 0,
           child: SizedBox(
             height: 370,
-            width: 400,
+            width: 380,
             child: Rive(
               artboard: riveArtboard,
               fit: BoxFit.contain,
@@ -199,32 +201,104 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 157,
-          left: 268,
+          top: 167,
+          left: 238,
           child: StageBuildingIcon(
             stagesBuilding[0].id,
-            name: stagesBuilding[0].name,
+            name: stagesBuilding[0].shortName,
             photo: stagesBuilding[0].photo,
           ),
         ),
         Positioned(
-          top: 257,
-          left: 30, 
+          top: 267,
+          left: 45, 
           child: StageBuildingIcon(
             stagesBuilding[1].id,
-            name: stagesBuilding[1].name,
+            name: stagesBuilding[1].shortName,
             photo: stagesBuilding[1].photo,
           ),
         ),
         Positioned(
-          top: 157,
-          left: 160,
+          top: 147,
+          left: 150,
           child: StageBuildingIcon(
             stagesBuilding[2].id,
-            name: stagesBuilding[2].name,
+            name: stagesBuilding[2].shortName,
             photo: stagesBuilding[2].photo,
           ),
         ),
+        Positioned(
+          top: 117,
+          left: 117,
+          child: StageBuildingIcon(
+            stagesBuilding[3].id,
+            name: stagesBuilding[3].shortName,
+            photo: stagesBuilding[3].photo,
+          ),
+        ),
+        Positioned(
+          top: 17,
+          // left: -4,
+          child: StageBuildingIcon(
+            stagesBuilding[4].id,
+            name: stagesBuilding[4].shortName,
+            photo: stagesBuilding[4].photo,
+          ),
+        ),
+        Positioned(
+          top: 40,
+          left: 137,
+          child: StageBuildingIcon(
+            stagesBuilding[5].id,
+            name: stagesBuilding[5].shortName,
+            photo: stagesBuilding[5].photo,
+          ),
+        ),
+        Positioned(
+          top: 12,
+          left: 102,
+          child: StageBuildingIcon(
+            stagesBuilding[6].id,
+            name: stagesBuilding[6].shortName,
+            photo: stagesBuilding[6].photo,
+          ),
+        ),
+        Positioned(
+          top: 23,
+          left: 192,
+          child: StageBuildingIcon(
+            stagesBuilding[7].id,
+            name: stagesBuilding[7].shortName,
+            photo: stagesBuilding[7].photo,
+          ),
+        ),
+        Positioned(
+          top: 98,
+          left: 312,
+          child: StageBuildingIcon(
+            stagesBuilding[8].id,
+            name: stagesBuilding[8].shortName,
+            photo: stagesBuilding[8].photo,
+          ),
+        ),
+        Positioned(
+          top: 47,
+          left: 329,
+          child: StageBuildingIcon(
+            stagesBuilding[9].id,
+            name: stagesBuilding[9].shortName,
+            photo: stagesBuilding[9].photo,
+          ),
+        ),
+        // Positioned(
+        //   top: 85,
+        //   left: 269,
+        //   child: StageBuildingIcon(
+        //     stagesBuilding[10].id,
+        //     name: stagesBuilding[10].shortName,
+        //     photo: stagesBuilding[10].photo,
+        //   ),
+        // ),
       ]);
     } else {
       child = Container();

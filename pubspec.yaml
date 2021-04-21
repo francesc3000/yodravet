@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+3
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -65,6 +65,7 @@ dependencies:
   # TODO: Falta configurar
   # https://firebase.flutter.dev/docs/auth/social/
   sign_in_with_apple: ^2.5.4
+  crypto: ^2.1.5
   # https://pub.dev/packages/animations∂
   animations: ^1.1.2
 
@@ -105,10 +106,19 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/race/spain.riv
-    - assets/race/vallhebron.png
-    - assets/race/centrofelipe.png
-    - assets/race/fmedicinamadrid.png
+    - assets/race/stages/vallhebron.png
+    - assets/race/stages/centrofelipe.png
+    - assets/race/stages/fmedicinamadrid.png
+    - assets/race/stages/rubermadrid.png
+    - assets/race/stages/pompeufabra.png
+    - assets/race/stages/achucarro.png
+    - assets/race/stages/biocruces.png
+    - assets/race/stages/biobide.png
+    - assets/race/stages/universidadacoruna.png
+    - assets/race/stages/universidadnebrija.png
+    - assets/race/stages/cabimer.png
     - assets/race/logoYocorro.png
+    - assets/race/logoYocorroSinFondo.png
     - assets/defaultAvatar.png
     - assets/medallas/medalla1.png
     - assets/medallas/medalla2.png

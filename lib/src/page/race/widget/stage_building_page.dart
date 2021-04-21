@@ -5,16 +5,17 @@ class StageBuildingPage extends StatelessWidget {
   final StageBuilding stageBuilding;
   final double expandedHeight;
   final double leadingWidth;
+  final BoxFit imageFit;
 
   const StageBuildingPage(
-      {Key key, this.stageBuilding, this.expandedHeight=300, this.leadingWidth=300})
+      {Key key, this.stageBuilding, this.expandedHeight=300, this.leadingWidth=300, this.imageFit = BoxFit.fitHeight})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers = [];
 
     slivers.clear();
-    slivers.add(_buildHeader(context, stageBuilding.name, stageBuilding.photo, expandedHeight, leadingWidth));
+    slivers.add(_buildHeader(context, stageBuilding.name, stageBuilding.photo, expandedHeight, leadingWidth, imageFit));
     slivers.add(_buildBody(context, stageBuilding.description));
 
     return CustomScrollView(
@@ -22,7 +23,7 @@ class StageBuildingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, String name, String image, double expandedHeight, double leadingWidth) {
+  Widget _buildHeader(BuildContext context, String name, String image, double expandedHeight, double leadingWidth, BoxFit imageFit) {
     return SliverAppBar(
       expandedHeight: expandedHeight,
       leadingWidth: leadingWidth,
@@ -37,12 +38,12 @@ class StageBuildingPage extends StatelessWidget {
         // centerTitle: true,
         title: Text(name,
             style: TextStyle(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontSize: 16.0,
             )),
         background: Image.asset(
           image,
-          fit: BoxFit.cover,
+          fit: imageFit,
         ),
       ),
     );

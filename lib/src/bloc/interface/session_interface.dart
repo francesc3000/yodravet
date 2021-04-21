@@ -16,6 +16,7 @@ abstract class Session extends Bloc<SessionEvent, SessionState> {
   Future autoLogIn([String userEmail, String password]);
   Future<User> logIn(String userEmail, String password);
   Future<User> googleLogIn();
+  Future<User> appleLogIn();
   Future<bool> stravaLogIn();
   Future<bool> stravaLogout();
   Future<bool> changePassword(String email);

@@ -18,9 +18,10 @@ class UpdateRaceFieldsState extends RaceState {
   final Artboard riveArtboard;
   final List<ActivityPurchase> buyers;
   final StageBuilding currentStageBuilding;
+  final StageBuilding currentMouseStageBuilding;
   final List<StageBuilding> stagesBuilding;
   
-  UpdateRaceFieldsState({this.kmCounter, this.stageCounter, this.extraCounter, this.stageLimit, this.stageTitle, this.riveArtboard, this.buyers, this.currentStageBuilding, this.stagesBuilding});
+  UpdateRaceFieldsState({this.kmCounter, this.stageCounter, this.extraCounter, this.stageLimit, this.stageTitle, this.riveArtboard, this.buyers, this.currentStageBuilding, this.currentMouseStageBuilding, this.stagesBuilding});
 
   @override
   String toString() => 'UploadRaceFields State';

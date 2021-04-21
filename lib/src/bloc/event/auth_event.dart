@@ -28,6 +28,10 @@ class GoogleLogInEvent extends AuthEvent {
   String toString() => 'GoogleLogIn Event';
 }
 
+class AppleLogInEvent extends AuthEvent {
+  @override
+  String toString() => 'AppleLogInEvent Event';
+}
 class StravaLogInEvent extends AuthEvent {
   @override
   String toString() => 'StravaLogIn Event';
@@ -53,6 +57,9 @@ class SignedInEvent extends AuthEvent {
 }
 
 class ChangePasswordEvent extends AuthEvent {
+  final String email;
+
+  ChangePasswordEvent(this.email);
   @override
   String toString() => 'Change password Event';
 }

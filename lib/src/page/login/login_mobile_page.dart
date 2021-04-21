@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/state/auth_state.dart';
+import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/routes/route_name.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
@@ -33,13 +34,19 @@ class LoginMobilePage extends LoginBasicPage {
         _isLoadingGoogle = false;
         _isLoadingApple = false;
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/' + RouteName.userPage, (route) => false);
+          Navigator.pop(context);
+          Navigator.pushNamed(
+              context, '/' + RouteName.userPage);
         });
       } else if (state is AuthLoadingState) {
         _isLoading = state.isLoading;
         _isLoadingGoogle = state.isLoadingGoogle;
         _isLoadingApple = state.isLoadingApple;
+      } else if (state is ChangePasswordSuccessState) {
+        CustomSnackBar().show(
+            context: context,
+            message: 'Se ha enviado un correo electrónico a tu cuenta con instrucciones',
+            iconData: FontAwesomeIcons.exclamationCircle);
       } else if (state is AuthStateError) {
         _isLoading = false;
         _isLoadingGoogle = false;
@@ -86,7 +93,8 @@ class LoginMobilePage extends LoginBasicPage {
               child: CustomButton(
                 child: _isLoadingApple
                 ? CircularProgressIndicator(backgroundColor: Colors.white)
-                : Row(
+                : 
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(FontAwesomeIcons.apple, color: Colors.white),
@@ -102,12 +110,12 @@ class LoginMobilePage extends LoginBasicPage {
                 color: Colors.black,
                 onPressed: () {
                   Navigator.pop(context);
-                  // BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
+                  BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
                 },
               ),
             ),
           ),
-          Center(child: Text('O inicia sesión con tu correo electrónico')),
+          Center(child: Text(AppLocalizations.of(context).logInO)),
           Container(
             margin:
                 EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
@@ -138,7 +146,7 @@ class LoginMobilePage extends LoginBasicPage {
           CustomButton(
             child: _isLoading
                 ? CircularProgressIndicator(backgroundColor: Colors.white)
-                : Text('Iniciar Sesión', style: TextStyle(color: Colors.white)),
+                : Text(AppLocalizations.of(context).logIn, style: TextStyle(color: Colors.white)),
             onPressed: () {
               Navigator.pop(context);
               BlocProvider.of<AuthBloc>(context).add(LogInEvent(
@@ -154,7 +162,7 @@ class LoginMobilePage extends LoginBasicPage {
                   style: TextStyle(color: Colors.blueAccent),
                 ),
                 onPressed: () {
-                  BlocProvider.of<AuthBloc>(context).add(ChangePasswordEvent());
+                  BlocProvider.of<AuthBloc>(context).add(ChangePasswordEvent(emailTextController.text));
                 },
               ),
               Spacer(),

@@ -82,6 +82,28 @@ class SessionBloc extends Session {
 
   }
 
+  @override
+  Future<User> appleLogIn() async{
+    User appleUser =  await this._factoryDao.userDao.appleLogIn();
+
+    if (appleUser.isLogin) {
+      this.user = await _populateUser(appleUser.id);
+      if(!this.user.isLogin) {
+        this.user = appleUser;
+        //Si no se encuentra en base de datos se crea el usuario
+        await this._factoryDao.userDao.createUser(user.id, user.email, user.name, user.lastname, user.photo);
+      }
+      print('Salgo de login en session_bloc ha ido bien el login');
+
+      this.add(SignedEvent(true, false));
+    } else {
+      this.add(SignedEvent(false, false));
+    }
+
+    return this.user;
+
+  }
+
   Future<User> _populateUser(String userId) async {
     return await this._factoryDao.userDao.populateUser(userId);
   }

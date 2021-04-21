@@ -5,9 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "yodravet",
+            "name": "Flutter for web",
+            "type": "dart",
             "request": "launch",
-            "type": "dart"
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port", 
+                "5000",
+            ]
         }
     ]
 }

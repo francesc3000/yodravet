@@ -4,6 +4,7 @@ import 'package:yodravet/src/model/user.dart';
 abstract class UserDaoInterface {
   Future<String> logIn(String email, String pass);
   Future<User> googleLogIn();
+  Future<User> appleLogIn();
   Future<bool> stravaLogIn();
   Future<bool> stravaLogout();
   Future<bool> logOut();

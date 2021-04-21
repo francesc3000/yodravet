@@ -22,10 +22,62 @@
           }
         },
         {
+          "client_id": "194761676212-2rcqjh7g0l6ic331ukbgfej6u4ic3393.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.yocorroporeldravet.yodravet",
+            "certificate_hash": "1854e69d86ed101842d8fafcc491ed3e82a90489"
+          }
+        },
+        {
           "client_id": "194761676212-bb6bom9l7tudeonkmrtglfjiam1e11ub.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "es.yocorroporeldravet.yodravet",
+            "certificate_hash": "73da010c83c28e8ee86d8fffb6c5e199201dff1f"
+          }
+        },
+        {
+          "client_id": "194761676212-vg0ohb7qppgqprl77aiuo90bgpbf6cbu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQqWOL0u7d2JjwGfnqF3UI3i2tglY2Iek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "194761676212-vg0ohb7qppgqprl77aiuo90bgpbf6cbu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "194761676212-7bbdfk1gs07ua1p2ot7ir7gsp1ftvov7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "es.yocorroporeldravet.yodravet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194761676212:android:ae1b1ad17d725cf4a5cee1",
+        "android_client_info": {
+          "package_name": "es.yocorroporeldravet.yodravetbackoffice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194761676212-80dl50pp15eric5mfpm8g74sq5cf9dmb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.yocorroporeldravet.yodravetbackoffice",
             "certificate_hash": "73da010c83c28e8ee86d8fffb6c5e199201dff1f"
           }
         },

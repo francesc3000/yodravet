@@ -7,6 +7,7 @@ import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/user_event.dart';
 import 'package:yodravet/src/bloc/state/user_state.dart';
 import 'package:yodravet/src/bloc/user_bloc.dart';
+import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/routes/route_name.dart';
@@ -104,7 +105,7 @@ class UserMobilePage extends UserBasicPage {
                     : Image.network(photoUrl)),
             title: Text(fullname),
             trailing: ElevatedButton(
-              child: Text('Cerrar Sesión'),
+              child: Text(AppLocalizations.of(context).logOut),
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
@@ -127,7 +128,7 @@ class UserMobilePage extends UserBasicPage {
             color: Color.fromRGBO(153, 148, 86, 1),
             child: Row(
               children: [
-                Text('Conectar con Strava'),
+                Text(AppLocalizations.of(context).stravaConnect),
                 Icon(FontAwesomeIcons.strava, color: Colors.orange),
                 Spacer(),
                 Switch(
@@ -215,7 +216,7 @@ class UserMobilePage extends UserBasicPage {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Dona tus kilómetros entre el'),
+              Text(AppLocalizations.of(context).donerTitle),
               Row(
                 children: [
                   Text('${afterDate.day}' +
@@ -223,7 +224,7 @@ class UserMobilePage extends UserBasicPage {
                       '${afterDate.month}' +
                       '/' +
                       '${afterDate.year}'),
-                  Text(' y el '),
+                  Text(AppLocalizations.of(context).donerMiddleTitle),
                   Text('${beforeDate.day}' +
                       '/' +
                       '${beforeDate.month}' +
@@ -243,7 +244,7 @@ class UserMobilePage extends UserBasicPage {
         ],
       );
     } else {
-      result = Text('Podrás donar tus Km en la siguiente edición');
+      result = Text(AppLocalizations.of(context).rangeOut);
     }
 
     return result;
@@ -258,7 +259,7 @@ class UserMobilePage extends UserBasicPage {
         slivers.add(
           SliverList(
             delegate: SliverChildListDelegate(<Widget>[
-              Text('No se han encontrado actividades en Strava'),
+              Text(AppLocalizations.of(context).noStravaActivities),
             ]),
           ),
         );
@@ -303,7 +304,7 @@ class UserMobilePage extends UserBasicPage {
     return Card(
       child: ListTile(
         leading: Icon(iconData),
-        title: Text('${distance.toString()}' + 'Km'),
+        title: Text('${distance.toStringAsFixed(2)}' + ' Km'),
         subtitle: Text('${activity.startDate.day}' +
             '/' +
             '${activity.startDate.month}' +
@@ -328,7 +329,7 @@ class UserMobilePage extends UserBasicPage {
         break;
       case ActivityStatus.nodonate:
         result = ElevatedButton(
-          child: Text('Donar'),
+          child: Text(AppLocalizations.of(context).doner),
           style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor)),
           onPressed: () {
@@ -339,14 +340,14 @@ class UserMobilePage extends UserBasicPage {
         break;
       case ActivityStatus.manual:
         result = ElevatedButton(
-            child: Text('Km manuales'),
+            child: Text(AppLocalizations.of(context).manualKm),
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red)),
             onPressed: null);
         break;
       default:
         result = ElevatedButton(
-            child: Text('Km Donados'),
+            child: Text(AppLocalizations.of(context).donerKm),
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.green)),
             onPressed: null);
@@ -372,7 +373,7 @@ class UserMobilePage extends UserBasicPage {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Ranking Km Donados'),
+            Text(AppLocalizations.of(context).rankingDonerKm),
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
               children: [
@@ -440,7 +441,7 @@ class UserMobilePage extends UserBasicPage {
                           alignment: Alignment.centerRight,
                           child: Icon(iconData)),
                       trailing: Text(
-                        '${distance.toString()}' + 'Km',
+                        '${distance.toStringAsFixed(2)}' + ' Km',
                         style: TextStyle(fontSize: 19),
                       ),
                     ),

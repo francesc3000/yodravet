@@ -75,6 +75,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ? AuthStateError(error.message)
             : AuthStateError('Algo fue mal en el LogIn de Google!');
       }
+    } else if (event is AppleLogInEvent) {
+      try {
+        yield AuthLoadingState(isLoadingApple: true);
+        try {
+          this._user = await this.session.appleLogIn();
+        } catch (error) {
+          throw error is auth.FirebaseAuthException ?
+           AuthStateError(error.message) :
+           AuthStateError(error.message);
+        }
+      } catch (error) {
+        yield error is AuthStateError
+            ? AuthStateError(error.message)
+            : AuthStateError('Algo fue mal en el LogIn de Apple!');
+      }
     } else if (event is StravaLogInEvent) {
       try {
         // yield AuthLoadingState();
@@ -91,9 +106,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } else if (event is LogOutEvent) {
       try {
-        this.preferences.logout();
-        this.session.add(sessionEvent.LogoutEvent());
-        // yield AuthLoadingState();
+        if(this._user.isLogin) {
+          this.preferences.logout();
+          this.session.add(sessionEvent.LogoutEvent());
+        }
       } catch (error) {
         yield error is AuthStateError
             ? AuthStateError(error.message)
@@ -112,7 +128,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } else if (event is ChangePasswordEvent) {
       try {
-        if (await this.session.changePassword(this._user.email)) {
+        if(event.email.isEmpty) {
+          throw AuthStateError('Por favor rellenar campo usuario con su correo electrónico');
+        }
+        if (await this.session.changePassword(event.email)) {
           this.add(LogOutEvent());
           yield ChangePasswordSuccessState(this._user);
         }

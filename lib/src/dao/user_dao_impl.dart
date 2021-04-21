@@ -28,6 +28,11 @@ class UserDaoImpl extends UserDaoInterface {
   }
 
   @override
+  Future<User> appleLogIn() async {
+    return TransformModel.userDao2User(await _auth.appleLogIn());
+  }
+
+  @override
   Future<User> populateUser(String userId) async {
     UserDao userDao;
 

@@ -6,6 +6,7 @@ import 'package:rive/rive.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
+import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/stage_building.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
@@ -21,6 +22,7 @@ class RaceDesktopPage extends RaceBasicPage {
   Widget body(BuildContext context) {
     Artboard _riveArtboard;
     bool _loading = false;
+    bool _isShowModalOn = false;
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
@@ -48,9 +50,10 @@ class RaceDesktopPage extends RaceBasicPage {
         _stagesBuilding = state.stagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
-        if (_currentStageBuilding != null) {
+        if (_currentStageBuilding != null && !_isShowModalOn) {
+          _isShowModalOn = true;
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            showModalBottomSheet(
+            Future future = showModalBottomSheet(
                 context: context,
                 shape: RoundedRectangleBorder(
                   borderRadius:
@@ -63,7 +66,11 @@ class RaceDesktopPage extends RaceBasicPage {
                     leadingWidth: MediaQuery.of(context).size.width,
                   );
                 });
+            future.then((_) =>
+                BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent()));
           });
+        } else {
+          _isShowModalOn = false;
         }
       } else if (state is RaceStateError) {
         _loading = false;
@@ -85,8 +92,9 @@ class RaceDesktopPage extends RaceBasicPage {
       return Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/race/logoYoCorro.png"),
-            fit: BoxFit.fitHeight,
+            image: AssetImage("assets/race/logoYoCorroSinFondo.png"),
+            // fit: BoxFit.fitHeight,
+            scale: 1.0,
           ),
           // color: Color.fromRGBO(177, 237, 100, 93),
           color: Color.fromRGBO(153, 148, 86, 60),
@@ -124,7 +132,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   ),
                 ),
                 Text(
-                  'Km Etapa:',
+                  AppLocalizations.of(context).stageTitle,
                   style: TextStyle(
                     fontSize: 26,
                   ),
@@ -152,7 +160,7 @@ class RaceDesktopPage extends RaceBasicPage {
             Column(
               children: [
                 Text(
-                  'Km Totales:',
+                  AppLocalizations.of(context).totalTitle,
                   style: TextStyle(fontSize: 46, color: Colors.red),
                 ),
                 Countup(
@@ -171,7 +179,7 @@ class RaceDesktopPage extends RaceBasicPage {
             Column(
               children: [
                 Text(
-                  'Km Acumulado:',
+                  AppLocalizations.of(context).extraTitle,
                   style: TextStyle(
                     fontSize: 36,
                   ),
@@ -217,32 +225,104 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 180,
-                left: 361,
+                top: 190,
+                left: 340,
                 child: StageBuildingIcon(
                   stagesBuilding[0].id,
-                  name: stagesBuilding[0].name,
+                  name: stagesBuilding[0].shortName,
                   photo: stagesBuilding[0].photo,
                 ),
               ),
               Positioned(
-                top: 300,
-                left: 81,
+                top: 310,
+                left: 100,
                 child: StageBuildingIcon(
                   stagesBuilding[1].id,
-                  name: stagesBuilding[1].name,
+                  name: stagesBuilding[1].shortName,
                   photo: stagesBuilding[1].photo,
                 ),
               ),
               Positioned(
-                top: 165,
-                left: 250,
+                top: 160,
+                left: 230,
                 child: StageBuildingIcon(
                   stagesBuilding[2].id,
-                  name: stagesBuilding[2].name,
+                  name: stagesBuilding[2].shortName,
                   photo: stagesBuilding[2].photo,
                 ),
               ),
+              Positioned(
+                top: 130,
+                left: 190,
+                child: StageBuildingIcon(
+                  stagesBuilding[3].id,
+                  name: stagesBuilding[3].shortName,
+                  photo: stagesBuilding[3].photo,
+                ),
+              ),
+              Positioned(
+                top: 17,
+                // left: -4,
+                child: StageBuildingIcon(
+                  stagesBuilding[4].id,
+                  name: stagesBuilding[4].shortName,
+                  photo: stagesBuilding[4].photo,
+                ),
+              ),
+              Positioned(
+                top: 25,
+                left: 215,
+                child: StageBuildingIcon(
+                  stagesBuilding[5].id,
+                  name: stagesBuilding[5].shortName,
+                  photo: stagesBuilding[5].photo,
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 180,
+                child: StageBuildingIcon(
+                  stagesBuilding[6].id,
+                  name: stagesBuilding[6].shortName,
+                  photo: stagesBuilding[6].photo,
+                ),
+              ),
+              Positioned(
+                top: 19,
+                left: 278,
+                child: StageBuildingIcon(
+                  stagesBuilding[7].id,
+                  name: stagesBuilding[7].shortName,
+                  photo: stagesBuilding[7].photo,
+                ),
+              ),
+              Positioned(
+                top: 100,
+                left: 440,
+                child: StageBuildingIcon(
+                  stagesBuilding[8].id,
+                  name: stagesBuilding[8].shortName,
+                  photo: stagesBuilding[8].photo,
+                ),
+              ),
+              Positioned(
+                top: 50,
+                left: 440,
+                child: StageBuildingIcon(
+                  stagesBuilding[9].id,
+                  name: stagesBuilding[9].shortName,
+                  photo: stagesBuilding[9].photo,
+                ),
+              ),
+              // Positioned(
+              //   top: 90,
+              //   left: 379,
+              //   child: StageBuildingIcon(
+              //     stagesBuilding[10].id,
+              //     name: stagesBuilding[10].shortName,
+              //     photo: stagesBuilding[10].photo,
+              //   ),
+              // ),
             ]),
           ),
           Expanded(

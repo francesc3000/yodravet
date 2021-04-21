@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/state/auth_state.dart';
+import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
 
@@ -110,7 +111,7 @@ class SignupMobilePage extends SignupBasicPage {
           CustomButton(
             child: _isloading
                 ? CircularProgressIndicator(backgroundColor: Colors.white)
-                : Text('Registrarme', style: TextStyle(color: Colors.white),),
+                : Text(AppLocalizations.of(context).signIn, style: TextStyle(color: Colors.white),),
             onPressed: () {
               BlocProvider.of<AuthBloc>(context).add(SignupEvent(
                   _emailTextController.text,
