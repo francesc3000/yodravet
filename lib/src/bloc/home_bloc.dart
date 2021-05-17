@@ -37,7 +37,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    if (event is ChangeTabEvent) {
+    if (event is HomeEventEmpty) {
+      yield HomeInitState();
+    } else if (event is ChangeTabEvent) {
       try {
         _currentIndex = event.index;
         if (!this._user.isLogin) {
@@ -56,6 +58,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else {
         yield Navigate2UserPageState();
       }
+    } else if (event is Navigate2LoginSuccessEvent) {
+      yield Navigate2LoginSuccess();
     } else if (event is HomeLogOutEvent) {
       yield HomeLogOutState();
     }

@@ -24,6 +24,11 @@ class Navigate2LoginState extends HomeState {
   String toString() => 'Navigate2LoginState State';
 }
 
+class Navigate2LoginSuccess extends HomeState {
+  @override
+  String toString() => 'Navigate2LoginSuccess';
+}
+
 class HomeLogOutState extends HomeState {
   @override
   String toString() => 'HomeLogOut State';

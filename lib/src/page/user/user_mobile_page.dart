@@ -304,7 +304,7 @@ class UserMobilePage extends UserBasicPage {
     return Card(
       child: ListTile(
         leading: Icon(iconData),
-        title: Text('${distance.toStringAsFixed(2)}' + ' Km'),
+        title: Text('${distance.toStringAsFixed(1)}' + ' Km'),
         subtitle: Text('${activity.startDate.day}' +
             '/' +
             '${activity.startDate.month}' +
@@ -441,7 +441,7 @@ class UserMobilePage extends UserBasicPage {
                           alignment: Alignment.centerRight,
                           child: Icon(iconData)),
                       trailing: Text(
-                        '${distance.toStringAsFixed(2)}' + ' Km',
+                        '${distance.toStringAsFixed(1)}' + ' Km',
                         style: TextStyle(fontSize: 19),
                       ),
                     ),

@@ -19,6 +19,11 @@ class Navigate2UserPageEvent extends HomeEvent {
   String toString() => 'Navigate2UserPage Event';
 }
 
+class Navigate2LoginSuccessEvent extends HomeEvent {
+  @override
+  String toString() => 'Navigate2LoginSuccess';
+}
+
 class HomeLogOutEvent extends HomeEvent {
   @override
   String toString() => 'HomeLogOut Event';

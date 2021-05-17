@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/model/activity.dart';
@@ -170,8 +171,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           });
 
           if (this._user.isStravaLogin) {
-            if (await this.factoryDao.userDao.stravaLogIn()) {
-              this.add(GetStravaActivitiesEvent());
+            if (!kIsWeb) {
+              if (await this.factoryDao.userDao.stravaLogIn()) {
+                this.add(GetStravaActivitiesEvent());
+              }
             }
           }
         });

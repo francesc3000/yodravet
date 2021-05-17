@@ -26,15 +26,15 @@ abstract class HomeBasicPage extends BasicPage {
         ),
         elevation: 0.0,
         backgroundColor: Color.fromRGBO(153, 148, 86, 60 ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(FontAwesomeIcons.userCircle),
-        //     tooltip: AppLocalizations.of(context).userTooltip,
-        //     onPressed: () {
-        //       BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(FontAwesomeIcons.userCircle),
+            tooltip: AppLocalizations.of(context).userTooltip,
+            onPressed: () {
+              BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
+            },
+          ),
+        ],
       );
     } else {
       return AppBar(

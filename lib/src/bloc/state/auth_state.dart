@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:yodravet/src/model/signup.dart';
 import 'package:yodravet/src/model/user.dart';
 
 abstract class AuthState {}
@@ -44,20 +42,9 @@ class ChangePasswordSuccessState extends AuthState {
   String toString() => 'Change password Ok State';
 }
 
-class UpdateSignupFieldsState extends AuthState {
-  final Signup signup;
-  bool showError;
-
-  UpdateSignupFieldsState(
-      {@required this.signup,
-      this.showError = true});
+class Go2SignupState extends AuthState {
   @override
-  String toString() => 'SignUpFieldsState State';
-}
-
-class SignUpSuccessState extends AuthState {
-  @override
-  String toString() => 'SignUpSuccessState State';
+  String toString() => 'Go2SignupState State';
 }
 
 class AuthStateError extends AuthState {

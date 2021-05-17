@@ -142,7 +142,7 @@ class RaceDesktopPage extends RaceBasicPage {
                     Countup(
                       begin: 0,
                       end: stageCounter,
-                      precision: 2,
+                      precision: 1,
                       duration: Duration(seconds: 3),
                       separator: '.',
                       style: TextStyle(
@@ -166,7 +166,7 @@ class RaceDesktopPage extends RaceBasicPage {
                 Countup(
                   begin: 0,
                   end: kmCounter,
-                  precision: 2,
+                  precision: 1,
                   duration: Duration(seconds: 3),
                   separator: '.',
                   style: TextStyle(
@@ -187,7 +187,7 @@ class RaceDesktopPage extends RaceBasicPage {
                 Countup(
                   begin: 0,
                   end: extraCounter,
-                  precision: 2,
+                  precision: 1,
                   duration: Duration(seconds: 3),
                   separator: '.',
                   style: TextStyle(
@@ -261,8 +261,8 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 17,
-                // left: -4,
+                top: 110,
+                left: 235,
                 child: StageBuildingIcon(
                   stagesBuilding[4].id,
                   name: stagesBuilding[4].shortName,
@@ -270,8 +270,8 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 25,
-                left: 215,
+                top: 17,
+                // left: -4,
                 child: StageBuildingIcon(
                   stagesBuilding[5].id,
                   name: stagesBuilding[5].shortName,
@@ -288,8 +288,8 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 19,
-                left: 278,
+                top: 23,
+                left: 228,
                 child: StageBuildingIcon(
                   stagesBuilding[7].id,
                   name: stagesBuilding[7].shortName,
@@ -297,8 +297,8 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 100,
-                left: 440,
+                top: 19,
+                left: 278,
                 child: StageBuildingIcon(
                   stagesBuilding[8].id,
                   name: stagesBuilding[8].shortName,
@@ -306,7 +306,7 @@ class RaceDesktopPage extends RaceBasicPage {
                 ),
               ),
               Positioned(
-                top: 50,
+                top: 100,
                 left: 440,
                 child: StageBuildingIcon(
                   stagesBuilding[9].id,
@@ -314,15 +314,24 @@ class RaceDesktopPage extends RaceBasicPage {
                   photo: stagesBuilding[9].photo,
                 ),
               ),
-              // Positioned(
-              //   top: 90,
-              //   left: 379,
-              //   child: StageBuildingIcon(
-              //     stagesBuilding[10].id,
-              //     name: stagesBuilding[10].shortName,
-              //     photo: stagesBuilding[10].photo,
-              //   ),
-              // ),
+              Positioned(
+                top: 50,
+                left: 440,
+                child: StageBuildingIcon(
+                  stagesBuilding[10].id,
+                  name: stagesBuilding[10].shortName,
+                  photo: stagesBuilding[10].photo,
+                ),
+              ),
+              Positioned(
+                top: 90,
+                left: 379,
+                child: StageBuildingIcon(
+                  stagesBuilding[11].id,
+                  name: stagesBuilding[11].shortName,
+                  photo: stagesBuilding[11].photo,
+                ),
+              ),
             ]),
           ),
           Expanded(
@@ -331,7 +340,7 @@ class RaceDesktopPage extends RaceBasicPage {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Text('Compra tus km en yodravet@gmail.com'),
+                  child: Text('Compra tus km en yodravetapp@gmail.com'),
                 ),
                 Expanded(
                   flex: 10,

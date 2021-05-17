@@ -56,8 +56,7 @@ class StravaImpl extends StravaInterface {
                 distance: activity.distance,
                 startDate: activity.startDate,
                 type: activity.type,
-                //TODO: Poner isManual
-                // isManual: activity.manual
+                isManual: activity.manual
               ))
           .toList();
     } catch (e) {

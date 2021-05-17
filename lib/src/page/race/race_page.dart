@@ -11,6 +11,7 @@ class RacePage extends StatelessWidget {
     return ScreenTypeLayout(
         mobile: OrientationLayoutBuilder(
           portrait: (context) => RaceMobilePage(''),
+          landscape: (context) => RaceMobilePage('', isPortrait: false),
         ),
         tablet:  OrientationLayoutBuilder(
           portrait: (context) => RaceMobilePage(''),

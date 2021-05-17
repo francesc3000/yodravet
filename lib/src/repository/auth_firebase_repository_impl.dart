@@ -116,9 +116,10 @@ class AuthFirebaseRepositoryImpl implements AuthRepository {
     return TransformModel.raw2UserDao(
         id: userCredential.user.uid,
         email: userCredential.user.email,
-        name: userCredential.user.displayName,
+        name: appleCredential.givenName + ' ' + appleCredential.familyName,
+        // name: userCredential.user.displayName ?? 'Anónimo',
         lastname: '',
-        photo: userCredential.user.photoURL,
+        photo: userCredential.user.photoURL ?? '',
         isStravaLogin: false);
   }
 

@@ -42,7 +42,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.1"
   bloc:
     dependency: "direct main"
     description:
@@ -304,7 +304,7 @@ packages:
     source: hosted
     version: "1.1.2"
   google_sign_in_web:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_sign_in_web
       url: "https://pub.dartlang.org"
@@ -652,7 +652,7 @@ packages:
     source: hosted
     version: "0.4.0"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"

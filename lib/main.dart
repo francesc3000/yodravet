@@ -6,6 +6,7 @@ import 'src/bloc/auth_bloc.dart';
 import 'src/bloc/home_bloc.dart';
 import 'src/bloc/race_bloc.dart';
 import 'src/bloc/session_bloc.dart';
+import 'src/bloc/signup_bloc.dart';
 import 'src/bloc/user_bloc.dart';
 import 'src/dao/factory_dao.dart';
 import 'src/page/app.dart';
@@ -36,6 +37,10 @@ void main() async{
         BlocProvider<RaceBloc>(
           create: (context) =>
               RaceBloc(_factoryDao),
+        ),
+        BlocProvider<SignupBloc>(
+          create: (context) =>
+              SignupBloc(_sessionBloc),
         ),
       ],
 

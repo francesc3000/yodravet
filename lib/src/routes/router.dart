@@ -1,5 +1,6 @@
 import 'package:yodravet/src/page/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:yodravet/src/page/privacy/privacy_policy_page.dart';
 import 'package:yodravet/src/page/signup/signup_page.dart';
 import 'package:yodravet/src/page/user/user_page.dart';
 
@@ -25,6 +26,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SignupPage(),
+      );
+
+    case RouteName.politicaPrivacidadPage:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: PrivacyPolicyPage(),
       );
 
     default:

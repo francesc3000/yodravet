@@ -16,7 +16,7 @@ import 'race_basic_page.dart';
 import 'widget/stage_building_page.dart';
 
 class RaceMobilePage extends RaceBasicPage {
-  RaceMobilePage(String title) : super(title);
+  RaceMobilePage(String title, {bool isPortrait:true}) : super(title, isPortrait: isPortrait);
 
   @override
   Widget body(BuildContext context) {
@@ -112,7 +112,7 @@ class RaceMobilePage extends RaceBasicPage {
               Countup(
                 begin: 0,
                 end: kmCounter,
-                precision: 2,
+                precision: 1,
                 duration: Duration(seconds: 3),
                 separator: '.',
                 style: TextStyle(
@@ -145,7 +145,7 @@ class RaceMobilePage extends RaceBasicPage {
                     Countup(
                       begin: 0,
                       end: stageCounter,
-                      precision: 2,
+                      precision: 1,
                       duration: Duration(seconds: 3),
                       separator: '.',
                       style: TextStyle(
@@ -167,7 +167,7 @@ class RaceMobilePage extends RaceBasicPage {
                 Countup(
                   begin: 0,
                   end: extraCounter,
-                  precision: 2,
+                  precision: 1,
                   duration: Duration(seconds: 3),
                   separator: '.',
                   style: TextStyle(
@@ -185,6 +185,8 @@ class RaceMobilePage extends RaceBasicPage {
   Widget _buildMap(BuildContext context, Artboard riveArtboard,
       List<StageBuilding> stagesBuilding) {
     Widget child;
+    double mapWidth = this.isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
+    double mapHeight = 380;
 
     if (riveArtboard != null) {
       child = Stack(children: [
@@ -192,8 +194,8 @@ class RaceMobilePage extends RaceBasicPage {
           top: 0,
           // left: 0,
           child: SizedBox(
-            height: 370,
-            width: 380,
+            height: mapHeight,
+            width: mapWidth,
             child: Rive(
               artboard: riveArtboard,
               fit: BoxFit.contain,
@@ -201,8 +203,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 167,
-          left: 238,
+          top: mapHeight * 0.47,
+          left: mapWidth * 0.57,
           child: StageBuildingIcon(
             stagesBuilding[0].id,
             name: stagesBuilding[0].shortName,
@@ -210,8 +212,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 267,
-          left: 45, 
+          top: mapHeight * 0.74,
+          left: mapWidth * 0.12, 
           child: StageBuildingIcon(
             stagesBuilding[1].id,
             name: stagesBuilding[1].shortName,
@@ -219,8 +221,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 147,
-          left: 150,
+          top: mapHeight * 0.41,
+          left: mapWidth * 0.37,
           child: StageBuildingIcon(
             stagesBuilding[2].id,
             name: stagesBuilding[2].shortName,
@@ -228,8 +230,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 117,
-          left: 117,
+          top: mapHeight * 0.34,
+          left: mapWidth * 0.27,
           child: StageBuildingIcon(
             stagesBuilding[3].id,
             name: stagesBuilding[3].shortName,
@@ -237,8 +239,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 17,
-          // left: -4,
+          top: mapHeight * 0.24,
+          left: mapWidth * 0.38,
           child: StageBuildingIcon(
             stagesBuilding[4].id,
             name: stagesBuilding[4].shortName,
@@ -246,8 +248,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 40,
-          left: 137,
+          top: mapHeight * 0.06,
+          // left: -4,
           child: StageBuildingIcon(
             stagesBuilding[5].id,
             name: stagesBuilding[5].shortName,
@@ -255,8 +257,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 12,
-          left: 102,
+          top: mapHeight * 0.03,
+          left: mapWidth * 0.24,
           child: StageBuildingIcon(
             stagesBuilding[6].id,
             name: stagesBuilding[6].shortName,
@@ -264,8 +266,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 23,
-          left: 192,
+          top: mapHeight * 0.08,
+          left: mapWidth * 0.38,
           child: StageBuildingIcon(
             stagesBuilding[7].id,
             name: stagesBuilding[7].shortName,
@@ -273,8 +275,8 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 98,
-          left: 312,
+          top: mapHeight * 0.07,
+          left: mapWidth * 0.51,
           child: StageBuildingIcon(
             stagesBuilding[8].id,
             name: stagesBuilding[8].shortName,
@@ -282,23 +284,32 @@ class RaceMobilePage extends RaceBasicPage {
           ),
         ),
         Positioned(
-          top: 47,
-          left: 329,
+          top: mapHeight * 0.29,
+          left: mapWidth * 0.74,
           child: StageBuildingIcon(
             stagesBuilding[9].id,
             name: stagesBuilding[9].shortName,
             photo: stagesBuilding[9].photo,
           ),
         ),
-        // Positioned(
-        //   top: 85,
-        //   left: 269,
-        //   child: StageBuildingIcon(
-        //     stagesBuilding[10].id,
-        //     name: stagesBuilding[10].shortName,
-        //     photo: stagesBuilding[10].photo,
-        //   ),
-        // ),
+        Positioned(
+          top: mapHeight * 0.12,
+          left: mapWidth * 0.76,
+          child: StageBuildingIcon(
+            stagesBuilding[10].id,
+            name: stagesBuilding[10].shortName,
+            photo: stagesBuilding[10].photo,
+          ),
+        ),
+        Positioned(
+          top: mapHeight * 0.25,
+          left: mapWidth * 0.6,
+          child: StageBuildingIcon(
+            stagesBuilding[11].id,
+            name: stagesBuilding[11].shortName,
+            photo: stagesBuilding[11].photo,
+          ),
+        ),
       ]);
     } else {
       child = Container();
@@ -326,7 +337,7 @@ class RaceMobilePage extends RaceBasicPage {
     int poleCounter = 1;
 
     if (buyers.isNotEmpty) {
-      slivers.add(Center(child: Text('Compra tus km en yodravet@gmail.com')));
+      slivers.add(Center(child: Text('Compra tus km en yodravetapp@gmail.com')));
     }
 
     for (ActivityPurchase buyer in buyers) {

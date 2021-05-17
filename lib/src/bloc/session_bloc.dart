@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/bloc/state/session_state.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
@@ -50,7 +51,9 @@ class SessionBloc extends Session {
     this.user = await _populateUser(userId);
     if (user.isLogin) {
       print('Salgo de login en session_bloc ha ido bien el login');
-      this.user.isStravaLogin = await this._factoryDao.userDao.stravaLogIn();
+      if(!kIsWeb) {
+        // this.user.isStravaLogin = await this._factoryDao.userDao.stravaLogIn();
+      }
       this.add(SignedEvent(true, false));
     } else {
       print('Salgo del login en sessio_bloc no se ha podido hacer el login');
@@ -138,5 +141,14 @@ class SessionBloc extends Session {
     //Se crea el usuario en ruta user 
     await this._factoryDao.userDao.createUser(uid, email, name, lastname, photo);
 
+    this.user = User(
+        id: uid,
+        email: email,
+        name: name,
+        lastname: lastname,
+        photo: photo,
+        isStravaLogin: false);
+
+    this.add(SignedEvent(true, false));
   }
 }

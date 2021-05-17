@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:yodravet/src/model/signup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/repository/interface/preferences.dart';
 
@@ -13,7 +13,6 @@ import 'state/session_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   User _user = User();
-  Signup _signup = Signup();
   Preferences preferences;
   Session session;
 
@@ -39,7 +38,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
-    if (event is AutoLogInEvent) {
+    if (event is AuthEventEmpty) {
+      yield AuthInitState();
+    } else if (event is AutoLogInEvent) {
       try {
         await _autoLogin(this.session, preferences);
       } catch (error) {
@@ -94,7 +95,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         // yield AuthLoadingState();
         try {
-          this._user.isStravaLogin = await this.session.stravaLogIn();
+          if (!kIsWeb) {
+            this._user.isStravaLogin = await this.session.stravaLogIn();
+          }
           this.session.add(UserChangeEvent(this._user));
         } catch (error) {
           throw AuthStateError(error.message);
@@ -140,28 +143,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ? AuthStateError(error.message)
             : AuthStateError('Algo fue mal en el cambio de contraseña!');
       }
-    } else if (event is SignupEvent) {
-      try {
-        _signup.email = event.email;
-        _signup.name = event.name;
-        _signup.lastname = event.lastname;
-        _signup.password = event.password;
-        _signup.passwordCopy = event.passwordCopy;
-
-        _signup.cleanErrors();
-        _signup.validateFields();
-
-        if(_signup.existsError) {
-          yield _updateSignupFieldsState();
-        } else {
-          await this.session.signup(_signup.email, _signup.password, _signup.name, _signup.lastname, _signup.photo);
-          yield SignUpSuccessState();
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal al registrarte!');
-      }
+    } else if (event is Go2SignupEvent) {
+      yield Go2SignupState();
     }
   }
 
@@ -187,9 +170,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     return false;
-  }
-
-  AuthState _updateSignupFieldsState() {
-    return UpdateSignupFieldsState(signup: _signup, showError: false);
   }
 }

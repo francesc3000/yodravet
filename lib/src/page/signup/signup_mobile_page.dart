@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
-import 'package:yodravet/src/bloc/state/auth_state.dart';
+import 'package:yodravet/src/bloc/event/signup_event.dart';
+import 'package:yodravet/src/bloc/signup_bloc.dart';
+import 'package:yodravet/src/bloc/state/signup_state.dart';
 import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
@@ -14,7 +17,7 @@ class SignupMobilePage extends SignupBasicPage {
   SignupMobilePage(String title) : super(title);
 
   Widget body(BuildContext context) {
-    bool _isloading = false;
+    bool _isLoading = false;
     TextEditingController _emailTextController = TextEditingController();
     TextEditingController _passTextController = TextEditingController();
     TextEditingController _passCopyTextController = TextEditingController();
@@ -26,7 +29,7 @@ class SignupMobilePage extends SignupBasicPage {
     String _passwordError = '';
     String _passwordCopyError = '';
 
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<SignupBloc, SignupState>(
         builder: (BuildContext context, state) {
       if (state is UpdateSignupFieldsState) {
         _emailTextController.text = state.signup.email;
@@ -39,90 +42,105 @@ class SignupMobilePage extends SignupBasicPage {
         _lastnameError = state.signup.lastnameError;
         _passwordError = state.signup.passwordError;
         _passwordCopyError = state.signup.passwordCopyError;
-      } else if (state is AuthStateError) {
-        _isloading = false;
+        _isLoading = state.isLoading;
+      } else if (state is SignUpSuccessState) {
+        _isLoading = false;
+        BlocProvider.of<SignupBloc>(context).add(SignupEventEmpty());
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        });
+      } else if (state is SignupStateError) {
+        _isLoading = false;
         CustomSnackBar().show(
             context: context,
             message: state.message,
             iconData: FontAwesomeIcons.exclamationCircle);
       }
-
-      return ListView(
-        children: <Widget>[
-          Container(
-            margin:
-                EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
-            child: TextFormField(
-              controller: _emailTextController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                  labelText: 'Correo electrónico',
-                  errorText: _emailError),
-            ),
-          ),
-          Container(
-            margin:
-                EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
-            child: TextFormField(
-              controller: _nameTextController,
-              decoration: InputDecoration(
-                labelText: 'Nombre',
-                errorText: _nameError
+      return WillPopScope(
+        onWillPop: () {
+          return _onWillPop(context);
+        },
+        child: Container(
+          color: Color.fromRGBO(153, 148, 86, 60),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                    left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _emailTextController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      labelText: 'Correo electrónico', errorText: _emailError),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin:
-                EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
-            child: TextFormField(
-              controller: _lastnameTextController,
-              decoration: InputDecoration(
-                labelText: 'Apellidos',
-                errorText: _lastnameError
+              Container(
+                margin: EdgeInsets.only(
+                    left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _nameTextController,
+                  decoration: InputDecoration(
+                      labelText: 'Nombre', errorText: _nameError),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin:
-                EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
-            child: TextFormField(
-              controller: _passTextController,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                errorText: _passwordError
+              Container(
+                margin: EdgeInsets.only(
+                    left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _lastnameTextController,
+                  decoration: InputDecoration(
+                      labelText: 'Apellidos', errorText: _lastnameError),
+                ),
               ),
-              obscureText: true,
-            ),
-          ),
-          Container(
-            margin:
-                EdgeInsets.only(left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
-            child: TextFormField(
-              controller: _passCopyTextController,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                labelText: 'Repetir contraseña',
-                errorText: _passwordCopyError
+              Container(
+                margin: EdgeInsets.only(
+                    left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _passTextController,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                      labelText: 'Contraseña', errorText: _passwordError),
+                  obscureText: true,
+                ),
               ),
-              obscureText: true,
-            ),
+              Container(
+                margin: EdgeInsets.only(
+                    left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
+                child: TextFormField(
+                  controller: _passCopyTextController,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                      labelText: 'Repetir contraseña',
+                      errorText: _passwordCopyError),
+                  obscureText: true,
+                ),
+              ),
+              CustomButton(
+                child: _isLoading
+                    ? CircularProgressIndicator(backgroundColor: Colors.white)
+                    : Text(
+                        AppLocalizations.of(context).signIn,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                onPressed: () {
+                  BlocProvider.of<SignupBloc>(context).add(SignUpEvent(
+                    _emailTextController.text,
+                    _nameTextController.text,
+                    _lastnameTextController.text,
+                    _passTextController.text,
+                    _passCopyTextController.text,
+                  ));
+                },
+              ),
+            ],
           ),
-          CustomButton(
-            child: _isloading
-                ? CircularProgressIndicator(backgroundColor: Colors.white)
-                : Text(AppLocalizations.of(context).signIn, style: TextStyle(color: Colors.white),),
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(SignupEvent(
-                  _emailTextController.text,
-                  _nameTextController.text,
-                  _lastnameTextController.text,
-                  _passTextController.text,
-                  _passCopyTextController.text,));
-            },
-          ),
-        ],
+        ),
       );
     });
+  }
+
+  Future<bool> _onWillPop(BuildContext context) async {
+    BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
+    return true;
   }
 }

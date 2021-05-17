@@ -41,6 +41,14 @@ class ActivityPurchase extends Activity {
     }
 
     if (this.totalPurchase == other.totalPurchase) {
+      if (this.distance < other.distance) {
+        return 1;
+      }
+
+      if (this.distance > other.distance) {
+        return -1;
+      }
+
       return 0;
     }
 

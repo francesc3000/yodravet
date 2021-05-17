@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../basic_page.dart';
 
-abstract class RaceBasicPage extends BasicPage {
-  final bool isPortrait;
-  RaceBasicPage(String title, {this.isPortrait=true}) : super(title);
+abstract class PrivacyPolicyBasicPage extends BasicPage {
+  PrivacyPolicyBasicPage(String title) : super(title);
 
   @override
   PreferredSizeWidget appBar(BuildContext context, {String title}) {
-    return null;
+    return AppBar(title: Text(title),);
   }
 
   @override

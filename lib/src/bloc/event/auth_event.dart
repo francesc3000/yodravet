@@ -91,15 +91,7 @@ class GetSignUpByEmailEvent extends AuthEvent {
   String toString() => 'GetSignUpByEmail Event';
 }
 
-class SignupEvent extends AuthEvent {
-  final String email;
-  final String name;
-  final String lastname;
-  final String password;
-  final String passwordCopy;
-
-  SignupEvent(this.email, this.name, this.lastname, this.password, this.passwordCopy);
-
+class Go2SignupEvent extends AuthEvent {
   @override
-  String toString() => 'Signup Event';
+  String toString() => 'Go2SignupEvent Event';
 }

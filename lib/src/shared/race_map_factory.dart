@@ -41,8 +41,7 @@ class RaceMapFactory {
       MySimpleAnimation _controllerStep;
       int i;
       for (i = 1; i <= stage; i++) {
-        // TODO: Cambiar por DateTime.now()
-        final today = DateTime(2021, 6, 5);
+        final today = DateTime.now();
         int step;
         if (i == stage && today.isBefore(nextStageDate)) {
           var diffDays = nextStageDate.difference(today).inDays;

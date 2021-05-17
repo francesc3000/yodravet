@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
+import 'package:yodravet/src/bloc/event/home_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
 import 'package:yodravet/src/bloc/state/home_state.dart';
 import 'package:yodravet/src/page/login/login_page.dart';
@@ -70,6 +71,7 @@ class HomeDesktopPage extends HomeBasicPage {
                   height: MediaQuery.of(context).copyWith().size.height,
                 );
               });
+          BlocProvider.of<HomeBloc>(context).add(Navigate2LoginSuccessEvent());
         });
       }
       return _pages[_currentIndex];

@@ -1,5 +1,5 @@
 name: yodravet
-description: A new Flutter project.
+description: Una app de A.E Yo corro por el Dravet
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+3
+version: 1.0.9+9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -41,16 +41,19 @@ dependencies:
   strava_flutter: ^1.2.2+62
   # https://pub.dev/packages/cloud_firestore
   cloud_firestore: ^0.16.0
+  # cloud_firestore: ^1.0.7
   # https://pub.dev/packages/firebase_auth
   firebase_auth: ^0.20.0+1
+  # firebase_auth: ^1.1.2
   # https://pub.dev/packages/google_sign_in
   google_sign_in: ^4.5.9
   # https://pub.dev/packages/google_sign_in_web
-  google_sign_in_web: ^0.9.2
+  # google_sign_in_web: ^0.9.2
   # https://pub.dartlang.org/packages/firebase_analytics
   # firebase_analytics: ^7.0.1
   # https://pub.dev/packages/firebase_core
   firebase_core: ^0.7.0
+  # firebase_core: ^1.1.0
   # https://pub.dev/packages/rive
   rive: ^0.6.7
   # https://pub.dev/packages/countup
@@ -62,12 +65,13 @@ dependencies:
   # https://pub.dev/packages/email_validator
   email_validator: ^1.0.6
   # https://pub.dev/packages/sign_in_with_apple
-  # TODO: Falta configurar
   # https://firebase.flutter.dev/docs/auth/social/
   sign_in_with_apple: ^2.5.4
   crypto: ^2.1.5
   # https://pub.dev/packages/animations∂
   animations: ^1.1.2
+  # https://pub.dev/packages/url_launcher
+  url_launcher: ^5.4.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -117,6 +121,15 @@ flutter:
     - assets/race/stages/universidadacoruna.png
     - assets/race/stages/universidadnebrija.png
     - assets/race/stages/cabimer.png
+    - assets/race/stages/ajsantfeliu.png
+    - assets/race/stages/researchers/antoniogilnagelrein.png
+    - assets/race/stages/researchers/jonandonidunabeitia.png
+    - assets/race/stages/researchers/juancastorivadulla.png
+    - assets/race/stages/researchers/juanmanuelencinas.png
+    - assets/race/stages/researchers/manuelalvarezdolado.png
+    - assets/race/stages/researchers/maximoibogalindo.png
+    - assets/race/stages/researchers/paolobonifazi.png
+    - assets/race/stages/researchers/victorpuntes.png
     - assets/race/logoYocorro.png
     - assets/race/logoYocorroSinFondo.png
     - assets/defaultAvatar.png
