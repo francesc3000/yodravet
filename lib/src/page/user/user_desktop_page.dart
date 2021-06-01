@@ -11,6 +11,7 @@ import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/routes/route_name.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import 'user_basic_page.dart';
@@ -74,7 +75,7 @@ class UserDesktopPage extends UserBasicPage {
         slivers.add(_buildDonorsList(context, _filterDonorTab, donors));
 
         return Container(
-          color: Color.fromRGBO(153, 148, 86, 1 ),
+          color: Color.fromRGBO(153, 148, 86, 1),
           child: CustomScrollView(
             slivers: slivers,
           ),
@@ -111,7 +112,8 @@ class UserDesktopPage extends UserBasicPage {
             title: Text(fullname),
             trailing: ElevatedButton(
               child: Text(AppLocalizations.of(context).logOut),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(primaryColor)),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
               },
@@ -122,37 +124,39 @@ class UserDesktopPage extends UserBasicPage {
     ));
 
     //Switch Strava login
-    // slivers.add(
-    //   SliverPersistentHeader(
-    //     pinned: true,
-    //     delegate: SliverAppBarDelegate(
-    //       minHeight: 40,
-    //       maxHeight: 50,
-    //       child: Container(
-    //         padding: EdgeInsets.all(8.0),
-    //         color: Color.fromRGBO(153, 148, 86, 1),
-    //         child: Row(
-    //           children: [
-    //             Text(AppLocalizations.of(context).stravaConnect),
-    //             Icon(FontAwesomeIcons.strava, color: Colors.orange),
-    //             Spacer(),
-    //             Switch(
-    //                 activeColor: Colors.green,
-    //                 inactiveThumbColor:
-    //                     lockStravaLogin ? Colors.grey : Colors.red,
-    //                 value: isStravaLogin,
-    //                 onChanged: lockStravaLogin
-    //                     ? null
-    //                     : (_) {
-    //                         BlocProvider.of<UserBloc>(context)
-    //                             .add(ConnectWithStravaEvent());
-    //                       }),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
+    if (!PlatformDiscover.isWeb()) {
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverAppBarDelegate(
+            minHeight: 40,
+            maxHeight: 50,
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              color: Color.fromRGBO(153, 148, 86, 1),
+              child: Row(
+                children: [
+                  Text(AppLocalizations.of(context).stravaConnect),
+                  Icon(FontAwesomeIcons.strava, color: Colors.orange),
+                  Spacer(),
+                  Switch(
+                      activeColor: Colors.green,
+                      inactiveThumbColor:
+                          lockStravaLogin ? Colors.grey : Colors.red,
+                      value: isStravaLogin,
+                      onChanged: lockStravaLogin
+                          ? null
+                          : (_) {
+                              BlocProvider.of<UserBloc>(context)
+                                  .add(ConnectWithStravaEvent());
+                            }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     if (isStravaLogin) {
       // slivers.add(
@@ -260,34 +264,40 @@ class UserDesktopPage extends UserBasicPage {
     List<Widget> slivers = [];
 
     // if (isStravaLogin) {
-      if (activities.length == 0) {
-        slivers.add(
-          SliverList(
-            delegate: SliverChildListDelegate(<Widget>[
-              Text(AppLocalizations.of(context).noStravaActivities),
-            ]),
-          ),
-        );
-      } else {
-        slivers.add(
-          SliverPersistentHeader(
-            pinned: false,
-            delegate: SliverAppBarDelegate(
-              minHeight: 100,
-              maxHeight: MediaQuery.of(context).size.height * 0.45,
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                color: Color.fromRGBO(153, 148, 86, 1),
-                child: ListView.builder(
+    if (activities.length == 0) {
+      slivers.add(
+        SliverList(
+          delegate: SliverChildListDelegate(<Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(AppLocalizations.of(context).noStravaActivities),
+              )),
+            ),
+          ]),
+        ),
+      );
+    } else {
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: false,
+          delegate: SliverAppBarDelegate(
+            minHeight: 100,
+            maxHeight: MediaQuery.of(context).size.height * 0.45,
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              color: Color.fromRGBO(153, 148, 86, 1),
+              child: ListView.builder(
                   itemCount: activities.length,
                   itemBuilder: (context, index) {
-                  return _buildActivity(context, activities[index]);
-                }),
-              ),
+                    return _buildActivity(context, activities[index]);
+                  }),
             ),
           ),
-        );
-      }
+        ),
+      );
+    }
     // }
 
     return slivers;
@@ -336,7 +346,8 @@ class UserDesktopPage extends UserBasicPage {
         result = ElevatedButton(
           child: Text(AppLocalizations.of(context).doner),
           style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor)),
+              backgroundColor:
+                  MaterialStateProperty.all(Theme.of(context).primaryColor)),
           onPressed: () {
             BlocProvider.of<UserBloc>(context)
                 .add(DonateKmEvent(activity.stravaId));
@@ -361,9 +372,11 @@ class UserDesktopPage extends UserBasicPage {
     return result;
   }
 
-  Widget _buildDonorsList(BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {
+  Widget _buildDonorsList(
+      BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {
     return SliverList(
-      delegate: SliverChildListDelegate(_buildDonors(context, filterDonorTab, donors)),
+      delegate: SliverChildListDelegate(
+          _buildDonors(context, filterDonorTab, donors)),
     );
   }
 
@@ -372,44 +385,48 @@ class UserDesktopPage extends UserBasicPage {
     List<Widget> slivers = [];
     int poleCounter = 1;
 
-      slivers.add(Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        color: Color.fromRGBO(153, 148, 86, 1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(AppLocalizations.of(context).rankingDonerKm),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: [
-                // IconButton(
-                //   color: filterDonorTab == 0 ? Theme.of(context).primaryColor : Colors.black,
-                //   icon: Icon(FontAwesomeIcons.star), onPressed: () { 
-                //     BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(0));
-                //    },
-                // ),
-                IconButton(
-                  color: filterDonorTab == 2 ? Colors.blue : Colors.black,
-                  icon: Icon(FontAwesomeIcons.running), onPressed: () { 
-                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(2));
-                   },
-                ),
-                IconButton(
-                  color: filterDonorTab == 3 ? Colors.blue : Colors.black,
-                  icon: Icon(FontAwesomeIcons.bicycle), onPressed: () { 
-                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(3));
-                   },
-                ),
-                IconButton(
-                  color: filterDonorTab == 1 ? Colors.blue : Colors.black,
-                  icon: Icon(FontAwesomeIcons.walking), onPressed: () { 
-                    BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(1));
-                   },
-                ),
-            ]),
-          ],
-        ),
-      ));
+    slivers.add(Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      color: Color.fromRGBO(153, 148, 86, 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(AppLocalizations.of(context).rankingDonerKm),
+          ButtonBar(alignment: MainAxisAlignment.spaceAround, children: [
+            // IconButton(
+            //   color: filterDonorTab == 0 ? Theme.of(context).primaryColor : Colors.black,
+            //   icon: Icon(FontAwesomeIcons.star), onPressed: () {
+            //     BlocProvider.of<UserBloc>(context).add(ChangeUserPodiumTabEvent(0));
+            //    },
+            // ),
+            IconButton(
+              color: filterDonorTab == 2 ? Colors.blue : Colors.black,
+              icon: Icon(FontAwesomeIcons.running),
+              onPressed: () {
+                BlocProvider.of<UserBloc>(context)
+                    .add(ChangeUserPodiumTabEvent(2));
+              },
+            ),
+            IconButton(
+              color: filterDonorTab == 3 ? Colors.blue : Colors.black,
+              icon: Icon(FontAwesomeIcons.bicycle),
+              onPressed: () {
+                BlocProvider.of<UserBloc>(context)
+                    .add(ChangeUserPodiumTabEvent(3));
+              },
+            ),
+            IconButton(
+              color: filterDonorTab == 1 ? Colors.blue : Colors.black,
+              icon: Icon(FontAwesomeIcons.walking),
+              onPressed: () {
+                BlocProvider.of<UserBloc>(context)
+                    .add(ChangeUserPodiumTabEvent(1));
+              },
+            ),
+          ]),
+        ],
+      ),
+    ));
 
     for (ActivityPurchase donor in donors) {
       double distance = donor.distance / 1000;
@@ -428,7 +445,9 @@ class UserDesktopPage extends UserBasicPage {
           iconData = FontAwesomeIcons.running;
       }
 
-      if(filterDonorTab==0) {iconData = FontAwesomeIcons.star;}
+      if (filterDonorTab == 0) {
+        iconData = FontAwesomeIcons.star;
+      }
 
       slivers.add(
         Stack(

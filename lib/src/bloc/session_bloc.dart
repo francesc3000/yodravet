@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/bloc/state/session_state.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/session_event.dart';
 import 'interface/session_interface.dart';
@@ -51,7 +51,7 @@ class SessionBloc extends Session {
     this.user = await _populateUser(userId);
     if (user.isLogin) {
       print('Salgo de login en session_bloc ha ido bien el login');
-      if(!kIsWeb) {
+      if(!PlatformDiscover.isWeb()) {
         // this.user.isStravaLogin = await this._factoryDao.userDao.stravaLogIn();
       }
       this.add(SignedEvent(true, false));

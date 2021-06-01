@@ -12,49 +12,50 @@ import 'state/race_state.dart';
 
 class RaceBloc extends Bloc<RaceEvent, RaceState> {
   Race _race = Race();
+  double _stageDayLeft = 0;
   final FactoryDao factoryDao;
   List<ActivityPurchase> _buyers = [];
   RaceMapFactory _raceMapFactory = RaceMapFactory();
   StageBuilding _currentStageBuilding;
   StageBuilding _currentMouseStageBuilding;
   List<StageBuilding> _stagesBuilding = [
-    StageBuilding(
-      'Stage1',
-      'C.I. Príncipe Felipe',
-      'C.I. Príncipe Felipe',
-      'assets/race/stages/centrofelipe.png',
-      [ Researcher('Máximo Ibo Galindo',
-      'Medicina de precisión mediante la utilización de modelo Drosophila.',
-      'assets/race/stages/researchers/maximoibogalindo.png',
-      'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
-       Researcher('Isabel del Pino',
-       'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
-      //  'assets/race/stages/researchers/isabeldelpino.png',
-      '',
-      'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
-      ]
-    ),
+    StageBuilding('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
+        'assets/race/stages/centrofelipe.png', [
+      Researcher(
+          'Máximo Ibo Galindo',
+          'Medicina de precisión mediante la utilización de modelo Drosophila.',
+          'assets/race/stages/researchers/maximoibogalindo.png',
+          'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
+      Researcher(
+          'Isabel del Pino',
+          'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
+           'assets/race/stages/researchers/isabelpino.png',
+          'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
+    ]),
     StageBuilding(
       'Stage2',
       'Centro Andaluz de Biologia Molecular y Medicina Regenerativa',
       'CABIMER',
       'assets/race/stages/cabimer.png',
-      [Researcher('Manuel Álvarez Dolado', 
-      'Terapia Celular Mediante Precursores Neuronales Gabaérgicos para Encefalopatías Epilépticas Infantiles (S. Dravet, S. West y S. Stxbp1).', 
-      'assets/race/stages/researchers/manuelalvarezdolado.png', 
-      'https://www.indrenetwork.com/es/proyectos/terapia-celular-mediante-precursores-neuronales-gabaergicos-encefalopatias-epilepticas-infantiles-sdravet-swest-sstxbp1'),
-      ], 
+      [
+        Researcher(
+            'Manuel Álvarez Dolado',
+            'Terapia Celular Mediante Precursores Neuronales Gabaérgicos para Encefalopatías Epilépticas Infantiles (S. Dravet, S. West y S. Stxbp1).',
+            'assets/race/stages/researchers/manuelalvarezdolado.png',
+            'https://www.indrenetwork.com/es/proyectos/terapia-celular-mediante-precursores-neuronales-gabaergicos-encefalopatias-epilepticas-infantiles-sdravet-swest-sstxbp1'),
+      ],
     ),
     StageBuilding(
       'Stage3.1',
       'Facultad Medicina Madrid',
       'Facultad Medicina Madrid',
       'assets/race/stages/fmedicinamadrid.png',
-      [Researcher('Onintza Sagredo', 
-      'Estudio del sistema cannbinoideo en el Síndrome de Dravet.', 
-      // 'assets/race/stages/researchers/onintzasagredo.png',
-      '',
-      'https://www.indrenetwork.com/es/proyectos/estudio-sistema-cannabinoide-sindrome-dravet'),
+      [
+        Researcher(
+            'Onintza Sagredo',
+            'Estudio del sistema cannbinoideo en el Síndrome de Dravet.',
+            'assets/race/stages/researchers/onintzasagredo.png',
+            'https://www.indrenetwork.com/es/proyectos/estudio-sistema-cannabinoide-sindrome-dravet'),
       ],
     ),
     StageBuilding(
@@ -62,10 +63,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Hospital Ruber Internacional Madrid',
       'H.Ruber',
       'assets/race/stages/rubermadrid.png',
-      [Researcher('Antonio Gil-Nagel Rein', 
-      'Ensayos clínicos. Investigación clínica. Estudios de imagen.', 
-      'assets/race/stages/researchers/antoniogilnagelrein.png', 
-      'https://www.indrenetwork.com/es/grupos-investigacion/unidad-epilepsia-hospital-ruber-internacional'),
+      [
+        Researcher(
+            'Antonio Gil-Nagel Rein',
+            'Ensayos clínicos. Investigación clínica. Estudios de imagen.',
+            'assets/race/stages/researchers/antoniogilnagelrein.png',
+            'https://www.indrenetwork.com/es/grupos-investigacion/unidad-epilepsia-hospital-ruber-internacional'),
       ],
     ),
     StageBuilding(
@@ -73,10 +76,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Universidad Nebrija',
       'U.Nebrija',
       'assets/race/stages/universidadnebrija.png',
-      [Researcher('Jon Andoni Duñabeitia', 
-      'Caracterización del desarrollo cognitivo en el Síndrome de Dravet.', 
-      'assets/race/stages/researchers/jonandonidunabeitia.png', 
-      'https://www.indrenetwork.com/es/grupos-investigacion/centro-ciencia-cognitiva-c3'),
+      [
+        Researcher(
+            'Jon Andoni Duñabeitia',
+            'Caracterización del desarrollo cognitivo en el Síndrome de Dravet.',
+            'assets/race/stages/researchers/jonandonidunabeitia.png',
+            'https://www.indrenetwork.com/es/grupos-investigacion/centro-ciencia-cognitiva-c3'),
       ],
     ),
     StageBuilding(
@@ -84,10 +89,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Facultad de Ciencias de la Salud Campus Oza Universidad A Coruña',
       'Uni. A Coruña',
       'assets/race/stages/universidadacoruna.png',
-      [Researcher('Juan Casto Rivadulla', 
-      'Efecto de campos magnéticos estáticos de intensidad moderada en modelos de epilepsia y síndrome de Dravet.', 
-      'assets/race/stages/researchers/juancastorivadulla.png', 
-      'https://www.indrenetwork.com/es/proyectos/efecto-campos-magneticos-estaticos-intensidad-moderada-modelos-epilepsia-sindrome-dravet'),
+      [
+        Researcher(
+            'Juan Casto Rivadulla',
+            'Efecto de campos magnéticos estáticos de intensidad moderada en modelos de epilepsia y síndrome de Dravet.',
+            'assets/race/stages/researchers/juancastorivadulla.png',
+            'https://www.indrenetwork.com/es/proyectos/efecto-campos-magneticos-estaticos-intensidad-moderada-modelos-epilepsia-sindrome-dravet'),
       ],
     ),
     StageBuilding(
@@ -95,10 +102,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Biocruces Health Research Institute',
       'Biocruces',
       'assets/race/stages/biocruces.png',
-      [Researcher('Paolo Bonifazi', 
-      'Neuroimagen computacional.', 
-      'assets/race/stages/researchers/paolobonifazi.png', 
-      'https://www.indrenetwork.com/es/grupos-investigacion/computational-neuroimaging-lab'),
+      [
+        Researcher(
+            'Paolo Bonifazi',
+            'Neuroimagen computacional.',
+            'assets/race/stages/researchers/paolobonifazi.png',
+            'https://www.indrenetwork.com/es/grupos-investigacion/computational-neuroimaging-lab'),
       ],
     ),
     StageBuilding(
@@ -106,15 +115,18 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Achucarro Basque Center for Neuroscience',
       'Achucarro',
       'assets/race/stages/achucarro.png',
-      [Researcher('Juan Manuel Encinas', 
-      'Neurogénesis y Gliogénesis Reactiva en un Modelo de Síndrome de Dravet.', 
-      '',
-      'https://www.indrenetwork.com/es/proyectos/neurogenesis-gliogenesis-reactiva-modelo-sindrome-dravet'),
-      Researcher('Jan Tonnesen', 
-      'Investigación de la epilepsia mediante imágenes de súper resolución de las sinapsis y del espacio extracelular en tejido cerebral vivo.',
-      'assets/race/stages/researchers/juanmanuelencinas.png', 
-      'https://www.indrenetwork.com/es/proyectos/investigacion-epilepsia-mediante-imagenes-super-resolucion-sinapsis-espacio-extracelular-tejido-cerebral-vivo',
-),
+      [
+        Researcher(
+            'Juan Manuel Encinas',
+            'Neurogénesis y Gliogénesis Reactiva en un Modelo de Síndrome de Dravet.',
+            'assets/race/stages/researchers/juanmanuelencinas.png',
+            'https://www.indrenetwork.com/es/proyectos/neurogenesis-gliogenesis-reactiva-modelo-sindrome-dravet'),
+        Researcher(
+          'Jan Tonnesen',
+          'Investigación de la epilepsia mediante imágenes de súper resolución de las sinapsis y del espacio extracelular en tejido cerebral vivo.',
+          'assets/race/stages/researchers/jantonnensen.png',
+          'https://www.indrenetwork.com/es/proyectos/investigacion-epilepsia-mediante-imagenes-super-resolucion-sinapsis-espacio-extracelular-tejido-cerebral-vivo',
+        ),
       ],
     ),
     StageBuilding(
@@ -122,23 +134,25 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Biobide',
       'Biobide',
       'assets/race/stages/biobide.png',
-      [Researcher('Ainhoa Alzualde', 
-      'Caracterización de la línea de pez cebra didys552 (mutante del gen snc1lab) y puesta a punto del ensayo de screening de eficacia con drogas de referencia.', 
-      // 'assets/race/stages/researchers/ainhoaalzualde.png', 
-      '',
-      'https://www.indrenetwork.com/es/proyectos/caracterizacion-linea-pez-cebra-didys552-mutante-gen-snc1lab-puesta-punto-ensayo-screening-eficacia-drogas-referencia'),
+      [
+        Researcher(
+            'Ainhoa Alzualde',
+            'Caracterización de la línea de pez cebra didys552 (mutante del gen snc1lab) y puesta a punto del ensayo de screening de eficacia con drogas de referencia.',
+            'assets/race/stages/researchers/ainhoaalzualde.png',
+            'https://www.indrenetwork.com/es/proyectos/caracterizacion-linea-pez-cebra-didys552-mutante-gen-snc1lab-puesta-punto-ensayo-screening-eficacia-drogas-referencia'),
       ],
     ),
     StageBuilding(
       'Stage7.1',
-      'Centre Universitari Neurogenètica Pompeu Fabra',
-      'C.U Neurogenètica Pompeu Fabra',
+      'Universitat Pompeu Fabra',
+      'Uni. Pompeu Fabra',
       'assets/race/stages/pompeufabra.png',
-      [Researcher('Sandra Acosta', 
-      'Organoides cerebrales en encefalopatías epilépticas. Neurogenética funcional.', 
-      // 'assets/race/stages/researchers/sandraacosta.png',
-      '',
-      'https://www.indrenetwork.com/es/grupos-investigacion/neurogenetica-funcional'),
+      [
+        Researcher(
+            'Sandra Acosta',
+            'Organoides cerebrales en encefalopatías epilépticas. Neurogenética funcional.',
+            'assets/race/stages/researchers/sandraacosta.png',
+            'https://www.indrenetwork.com/es/grupos-investigacion/neurogenetica-funcional'),
       ],
     ),
     StageBuilding(
@@ -146,10 +160,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       "Vall d'Hebron",
       "Vall d'Hebron",
       'assets/race/stages/vallhebron.png',
-      [Researcher('Victor Puntes', 
-      'Nanopartículas anti-oxidantes y anti-inflamatorias para proteger contra la hiper-actividad y mitigar el daño post-crisis.', 
-      'assets/race/stages/researchers/victorpuntes.png', 
-      'https://www.indrenetwork.com/es/proyectos/nanoparticulas-anti-oxidantes-anti-inflamatorias-proteger-contra-hiper-actividad-mitigar-dano-post-crisis'),
+      [
+        Researcher(
+            'Victor Puntes',
+            'Nanopartículas anti-oxidantes y anti-inflamatorias para proteger contra la hiper-actividad y mitigar el daño post-crisis.',
+            'assets/race/stages/researchers/victorpuntes.png',
+            'https://www.indrenetwork.com/es/proyectos/nanoparticulas-anti-oxidantes-anti-inflamatorias-proteger-contra-hiper-actividad-mitigar-dano-post-crisis'),
       ],
     ),
     StageBuilding(
@@ -157,11 +173,14 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Ajuntament de Sant Feliu de Llobregat',
       'Ajuntament Sant Feliu',
       'assets/race/stages/ajsantfeliu.png',
-      [Researcher('Asociació Esportiva Yo Corro por el Dravet',
-      'Ciudad de la sede de la Asociación Esportiva yo corro por el Dravet y punto de salida de la cursa virtual Dravet Tour y de llegada el día 23 junio dia internacional del sindrome de Dravet.',
-      'assets/race/logoYoCorro.png',
-      '',
-      )],
+      [
+        Researcher(
+          'Asociació Esportiva Yo Corro por el Dravet',
+          'Ciudad de la sede de la Asociación Esportiva yo corro por el Dravet y punto de salida de la cursa virtual Dravet Tour y de llegada el día 23 junio dia internacional del sindrome de Dravet.',
+          'assets/race/logoYocorro.png',
+          '',
+        )
+      ],
     ),
   ];
 
@@ -185,10 +204,17 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
           this._race.stage = race.stage;
           this._race.stageLimit = race.stageLimit;
           this._race.stageTitle = race.stageTitle;
+          this._race.startDate = race.startDate;
           this._race.nextStageDate = race.nextStageDate;
+          Duration leftDuration = this._race.startDate.isAfter(DateTime.now()) ? Duration(days: 0)
+                                  : this._race.nextStageDate.difference(DateTime.now());
+          int inDays = leftDuration.inDays <= 0 ? 0 : leftDuration.inDays;
+          _stageDayLeft = inDays.toDouble();
 
           await _raceMapFactory.init(
-              this._race.stage, this._race.nextStageDate);
+              this._race.stage, 
+              this._race.startDate,
+              this._race.nextStageDate);
 
           this.add(UpdateRaceFieldsEvent());
         });
@@ -200,7 +226,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             var mainBuyerList = this._buyers.where(
                 (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
 
-            if (mainBuyerList.isEmpty || mainBuyerList.first.userId.compareTo('anonymous')==0) {
+            if (mainBuyerList.isEmpty ||
+                mainBuyerList.first.userId.compareTo('anonymous') == 0) {
               this._buyers.add(buyer);
             } else {
               var mainBuyer = mainBuyerList.first;
@@ -227,8 +254,9 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       yield _updateRaceFieldsEvent();
     } else if (event is ClickOnMapEvent) {
       try {
-        _currentStageBuilding = _stagesBuilding.firstWhere((stageBuilding) => stageBuilding.id.compareTo(event.id)==0);
-  
+        _currentStageBuilding = _stagesBuilding.firstWhere(
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+
         yield _updateRaceFieldsEvent();
       } catch (error) {
         yield error is RaceStateError
@@ -236,14 +264,14 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             : RaceStateError('Algo fue mal al clickar sobre el mapa');
       }
     } else if (event is BackClickOnMapEvent) {
-      _currentStageBuilding = null; 
+      _currentStageBuilding = null;
 
       yield _updateRaceFieldsEvent();
-    
     } else if (event is MouseOnEnterEvent) {
       try {
-        _currentMouseStageBuilding = _stagesBuilding.firstWhere((stageBuilding) => stageBuilding.id.compareTo(event.id)==0);
-  
+        _currentMouseStageBuilding = _stagesBuilding.firstWhere(
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+
         yield _updateRaceFieldsEvent();
       } catch (error) {
         yield error is RaceStateError
@@ -264,6 +292,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       extraCounter: _race.extraCounter,
       stageLimit: _race.stageLimit,
       stageTitle: _race.stageTitle,
+      stageDayLeft: _stageDayLeft,
       riveArtboard: _raceMapFactory.riveArtboard,
       buyers: _buyers,
       currentStageBuilding: _currentStageBuilding,

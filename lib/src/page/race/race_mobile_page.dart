@@ -1,8 +1,11 @@
 import 'package:countup/countup.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
@@ -16,7 +19,8 @@ import 'race_basic_page.dart';
 import 'widget/stage_building_page.dart';
 
 class RaceMobilePage extends RaceBasicPage {
-  RaceMobilePage(String title, {bool isPortrait:true}) : super(title, isPortrait: isPortrait);
+  RaceMobilePage(String title, {bool isPortrait: true})
+      : super(title, isPortrait: isPortrait);
 
   @override
   Widget body(BuildContext context) {
@@ -30,6 +34,7 @@ class RaceMobilePage extends RaceBasicPage {
       double _extraCounter = 0;
       double _stageLimit = 0;
       String _stageTitle = '';
+      double _stageDayLeft = 0;
       List<ActivityPurchase> _buyers = [];
       StageBuilding _currentStageBuilding;
       List<StageBuilding> _stagesBuilding = [];
@@ -44,6 +49,7 @@ class RaceMobilePage extends RaceBasicPage {
         _extraCounter = state.extraCounter / 1000;
         _stageLimit = state.stageLimit / 1000;
         _stageTitle = state.stageTitle;
+        _stageDayLeft = state.stageDayLeft;
         _riveArtboard = state.riveArtboard;
         _buyers = state.buyers;
         _stagesBuilding = state.stagesBuilding;
@@ -78,7 +84,7 @@ class RaceMobilePage extends RaceBasicPage {
       slivers.clear();
       slivers.add(_buildTotalCounter(context, _kmCounter));
       slivers.add(_buildSubCounters(
-          context, _stageTitle, _stageLimit, _stageCounter, _extraCounter));
+          context, _stageTitle, _stageLimit, _stageCounter, _extraCounter, _stageDayLeft));
       slivers.add(_buildMap(context, _riveArtboard, _stagesBuilding));
       slivers.add(_buildBuyersList(context, _buyers));
 
@@ -127,7 +133,7 @@ class RaceMobilePage extends RaceBasicPage {
   }
 
   Widget _buildSubCounters(BuildContext context, String stageTitle,
-      double stageLimit, double stageCounter, double extraCounter) {
+      double stageLimit, double stageCounter, double extraCounter, double stageDayLeft) {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
@@ -163,6 +169,22 @@ class RaceMobilePage extends RaceBasicPage {
             Spacer(),
             Column(
               children: [
+                Text(AppLocalizations.of(context).leftDayTitle),
+                Countup(
+                  begin: 0,
+                  end: stageDayLeft,
+                  precision: 0,
+                  duration: Duration(seconds: 3),
+                  separator: '.',
+                  style: TextStyle(
+                    fontSize: 26,
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            Column(
+              children: [
                 Text(AppLocalizations.of(context).extraTitle),
                 Countup(
                   begin: 0,
@@ -185,7 +207,8 @@ class RaceMobilePage extends RaceBasicPage {
   Widget _buildMap(BuildContext context, Artboard riveArtboard,
       List<StageBuilding> stagesBuilding) {
     Widget child;
-    double mapWidth = this.isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
+    double mapWidth =
+        this.isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
     double mapHeight = 380;
 
     if (riveArtboard != null) {
@@ -213,7 +236,7 @@ class RaceMobilePage extends RaceBasicPage {
         ),
         Positioned(
           top: mapHeight * 0.74,
-          left: mapWidth * 0.12, 
+          left: mapWidth * 0.12,
           child: StageBuildingIcon(
             stagesBuilding[1].id,
             name: stagesBuilding[1].shortName,
@@ -336,9 +359,38 @@ class RaceMobilePage extends RaceBasicPage {
     List<Widget> slivers = [];
     int poleCounter = 1;
 
-    if (buyers.isNotEmpty) {
-      slivers.add(Center(child: Text('Compra tus km en yodravetapp@gmail.com')));
-    }
+    // if (buyers.isNotEmpty) {
+    // slivers.add(Center(child: Text('Compra tus km en yodravetapp@gmail.com')));
+    // }
+
+    slivers.add(
+      Center(
+        child: RichText(
+          text: TextSpan(
+              text: 'Compra tus km solidarios en ',
+              style: TextStyle(fontFamily: 'AkayaTelivigala'),
+              children: [
+                TextSpan(
+                  text: 'Apoyo Dravet ',
+                  style: new TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue,
+                    fontFamily: 'AkayaTelivigala',
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: new TapGestureRecognizer()
+                    ..onTap = () {
+                      launch(
+                          'https://www.apoyodravet.eu/tienda-solidaria/donacion/compra-kilometros-solidarios-dravet-tour?utm_source=app&utm_medium=enlace&utm_campaign=compra-kilometros-dravet-tour');
+                    },
+                ),
+                WidgetSpan(
+                  child: Icon(FontAwesomeIcons.externalLinkAlt, size: 11.0),
+                ),
+              ]),
+        ),
+      ),
+    );
 
     for (ActivityPurchase buyer in buyers) {
       double distance = buyer.distance / 1000;

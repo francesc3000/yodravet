@@ -9,6 +9,7 @@ import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/state/auth_state.dart';
 import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/routes/route_name.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
 
@@ -91,7 +92,7 @@ class LoginMobilePage extends LoginBasicPage {
               ),
             ),
             Visibility(
-              visible: Platform.isIOS || Platform.isMacOS ? true : false,
+              visible: _visibleIfPlatform(context),
               child: Container(
                 margin: EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
@@ -187,5 +188,17 @@ class LoginMobilePage extends LoginBasicPage {
         ),
       );
     });
+  }
+
+  bool _visibleIfPlatform(BuildContext context) {
+    if (PlatformDiscover.isWeb()) {
+      if (PlatformDiscover.isMacOs(context)) {
+        return false;
+      }
+    } else if (Platform.isIOS || Platform.isMacOS){
+      return true;
+    }
+
+    return false;
   }
 }

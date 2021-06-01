@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/repository/interface/preferences.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/auth_event.dart';
 import 'event/session_event.dart' as sessionEvent;
@@ -95,7 +95,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         // yield AuthLoadingState();
         try {
-          if (!kIsWeb) {
+          if (!PlatformDiscover.isWeb()) {
             this._user.isStravaLogin = await this.session.stravaLogIn();
           }
           this.session.add(UserChangeEvent(this._user));

@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/event/home_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
 import 'package:yodravet/src/locale/locales.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import '../basic_page.dart';
 
@@ -14,7 +14,7 @@ abstract class HomeBasicPage extends BasicPage {
   @override
   PreferredSizeWidget appBar(BuildContext context, {String title}) {
     // if (Theme.of(context).platform == TargetPlatform.linux || Theme.of(context).platform == TargetPlatform.macOS || Theme.of(context).platform == TargetPlatform.windows) {
-    if (kIsWeb) {
+    if (PlatformDiscover.isWeb()) {
       return AppBar(
         title: Container(
           // color: Color.fromRGBO(177, 237, 100, 93),

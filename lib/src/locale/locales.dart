@@ -134,9 +134,9 @@ class AppLocalizations {
   
   String get donerTitle {
     return Intl.message(
-      'Dona tus kilómetros entre el',
+      'Sube tus kilómetros entre el',
       name: 'donerTitle',
-      desc: 'Dona tus kilómetros entre el',
+      desc: 'Sube tus kilómetros entre el',
       locale: localeName,
     );
   }
@@ -152,7 +152,7 @@ class AppLocalizations {
   
   String get donerOutTitle {
     return Intl.message(
-      'Podrás donar tus Km en la siguiente edición',
+      'Podrás subir tus Km en la siguiente edición',
       name: 'donerOutTitle',
       desc: 'donerOutTitle',
       locale: localeName,
@@ -161,9 +161,9 @@ class AppLocalizations {
 
   String get doner {
     return Intl.message(
-      'Donar',
-      name: 'Donar',
-      desc: 'Donar',
+      'Subir',
+      name: 'Subir',
+      desc: 'Subir',
       locale: localeName,
     );
   }
@@ -179,25 +179,25 @@ class AppLocalizations {
 
   String get donerKm {
     return Intl.message(
-      'Km Donados',
+      'Km Subidos',
       name: 'donerKm',
-      desc: 'Km Donados',
+      desc: 'Km Subidos',
       locale: localeName,
     );
   }
 
   String get rankingDonerKm {
     return Intl.message(
-      'Ranking Km Donados',
+      'Ranking Km Subidos',
       name: 'rankingDonerKm',
-      desc: 'Ranking Km Donados',
+      desc: 'Ranking Km Subidos',
       locale: localeName,
     );
   }
   
   String get noStravaActivities {
     return Intl.message(
-      'No se han encontrado actividades en Strava',
+      '¡Aún no has subido ninguna actividad!',
       name: 'noStravaActivities',
       desc: 'noStravaActivities',
       locale: localeName,
@@ -206,9 +206,18 @@ class AppLocalizations {
 
   String get rangeOut {
     return Intl.message(
-      'Fuera de fecha',
+      '¡Gracias por tu colaboración!\nNos vemos en la próxima edición.',
       name: 'rangeOut',
       desc: 'rangeOut',
+      locale: localeName,
+    );
+  }
+
+  String get beforeRange {
+    return Intl.message(
+      'Podrás subir km a partir del',
+      name: 'beforeRange',
+      desc: 'beforeRange',
       locale: localeName,
     );
   }
@@ -387,6 +396,15 @@ class AppLocalizations {
   String get privacyPolicyParagraph10 {
     return Intl.message(
       'If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at yocorroytu2722@gmail.com.',
+      name: 'privacyPolicyParagraph10',
+      desc: 'privacyPolicyParagraph10',
+      locale: localeName,
+    );
+  }
+
+  String get leftDayTitle {
+    return Intl.message(
+      'Días Fin Etapa:',
       name: 'privacyPolicyParagraph10',
       desc: 'privacyPolicyParagraph10',
       locale: localeName,

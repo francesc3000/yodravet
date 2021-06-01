@@ -138,7 +138,10 @@ class StageBuildingPage extends StatelessWidget {
             flex: 1,
             child: Visibility(
                 visible: researcher.photo.isNotEmpty,
-                child: Image.asset(researcher.photo)),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Image.asset(researcher.photo),
+                )),
           ),
         ],
       ),

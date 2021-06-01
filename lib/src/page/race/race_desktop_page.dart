@@ -1,8 +1,11 @@
 import 'package:countup/countup.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
@@ -31,6 +34,7 @@ class RaceDesktopPage extends RaceBasicPage {
       double _extraCounter = 0;
       double _stageLimit = 0;
       String _stageTitle = '';
+      double _stageDayLeft = 0;
       List<ActivityPurchase> _buyers = [];
       StageBuilding _currentStageBuilding;
       List<StageBuilding> _stagesBuilding = [];
@@ -50,6 +54,7 @@ class RaceDesktopPage extends RaceBasicPage {
         _stagesBuilding = state.stagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
+        _stageDayLeft = state.stageDayLeft;
         if (_currentStageBuilding != null && !_isShowModalOn) {
           _isShowModalOn = true;
           SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -86,7 +91,7 @@ class RaceDesktopPage extends RaceBasicPage {
 
       slivers.clear();
       slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
-          _stageCounter, _extraCounter));
+          _stageCounter, _extraCounter, _stageDayLeft));
       slivers.add(_buildMap(context, _riveArtboard, _buyers, _stagesBuilding));
 
       return Container(
@@ -114,7 +119,8 @@ class RaceDesktopPage extends RaceBasicPage {
       String stageTitle,
       double stageLimit,
       double stageCounter,
-      double extraCounter) {
+      double extraCounter,
+      double stageDayLeft) {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
@@ -131,27 +137,56 @@ class RaceDesktopPage extends RaceBasicPage {
                     fontSize: 36,
                   ),
                 ),
-                Text(
-                  AppLocalizations.of(context).stageTitle,
-                  style: TextStyle(
-                    fontSize: 26,
-                  ),
-                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Countup(
-                      begin: 0,
-                      end: stageCounter,
-                      precision: 1,
-                      duration: Duration(seconds: 3),
-                      separator: '.',
-                      style: TextStyle(
-                        fontSize: 36,
-                      ),
+                    Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).stageTitle,
+                          style: TextStyle(
+                            fontSize: 26,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Countup(
+                              begin: 0,
+                              end: stageCounter,
+                              precision: 1,
+                              duration: Duration(seconds: 3),
+                              separator: '.',
+                              style: TextStyle(
+                                fontSize: 36,
+                              ),
+                            ),
+                            Text(
+                              ' / ${stageLimit.round()}',
+                              style: TextStyle(fontSize: 36),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text(
-                      ' / ${stageLimit.round()}',
-                      style: TextStyle(fontSize: 36),
+                    Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).leftDayTitle,
+                          style: TextStyle(
+                            fontSize: 26,
+                          ),
+                        ),
+                        Countup(
+                          begin: 0,
+                          end: stageDayLeft,
+                          precision: 0,
+                          duration: Duration(seconds: 3),
+                          separator: '.',
+                          style: TextStyle(
+                            fontSize: 36,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -340,7 +375,33 @@ class RaceDesktopPage extends RaceBasicPage {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Text('Compra tus km en yodravetapp@gmail.com'),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                          text: 'Compra tus km solidarios en ',
+                          style: TextStyle(fontFamily: 'AkayaTelivigala'),
+                          children: [
+                            TextSpan(
+                              text: 'Apoyo Dravet ',
+                              style: new TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.blue,
+                                fontFamily: 'AkayaTelivigala',
+                                decoration: TextDecoration.underline,
+                              ),
+                              recognizer: new TapGestureRecognizer()
+                                ..onTap = () {
+                                  launch(
+                                      'https://www.apoyodravet.eu/tienda-solidaria/donacion/compra-kilometros-solidarios-dravet-tour?utm_source=app&utm_medium=enlace&utm_campaign=compra-kilometros-dravet-tour');
+                                },
+                            ),
+                            WidgetSpan(
+                              child: Icon(FontAwesomeIcons.externalLinkAlt,
+                                  size: 11.0),
+                            ),
+                          ]),
+                    ),
+                  ),
                 ),
                 Expanded(
                   flex: 10,

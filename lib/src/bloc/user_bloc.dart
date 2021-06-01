@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/user.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/session_event.dart';
 import 'event/user_event.dart';
@@ -171,7 +171,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           });
 
           if (this._user.isStravaLogin) {
-            if (!kIsWeb) {
+            if (!PlatformDiscover.isWeb()) {
               if (await this.factoryDao.userDao.stravaLogIn()) {
                 this.add(GetStravaActivitiesEvent());
               }
@@ -278,7 +278,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     donorsAux.sort((a, b) => a.compareTo(b));
 
     for (int i = 0; i < donorsAux.length; i++) {
-      if (i <= 10) {
+      if (i <= 9) {
         donorsReturn.add(donorsAux.elementAt(i));
       }
     }

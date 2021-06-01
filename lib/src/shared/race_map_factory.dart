@@ -19,7 +19,7 @@ class RaceMapFactory {
     8: 2
   };
 
-  Future init(int stage, DateTime nextStageDate) async {
+  Future init(int stage, DateTime startStageDate, DateTime nextStageDate) async {
     
     if (_stage!=stage) {
       _stage = stage;
@@ -42,13 +42,15 @@ class RaceMapFactory {
       int i;
       for (i = 1; i <= stage; i++) {
         final today = DateTime.now();
-        int step;
-        if (i == stage && today.isBefore(nextStageDate)) {
-          var diffDays = nextStageDate.difference(today).inDays;
-          step = linkStageStep[stage] - diffDays;
-          step = step.abs();
-        } else {
-          step = linkStageStep[i];
+        int step = 0;
+        if (today.isAtSameMomentAs(startStageDate) ||  today.isAfter(startStageDate)) {
+          if (i == stage && today.isBefore(nextStageDate)) {
+            var diffDays = nextStageDate.difference(today).inDays;
+            step = linkStageStep[stage] - diffDays;
+            step = step.abs();
+          } else {
+            step = linkStageStep[i];
+          }
         }
         for (int j = 1; j <= step; j++) {
           var controllerName = 'Stage' + '$i' + ' Step' + '$j';
