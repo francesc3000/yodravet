@@ -155,7 +155,8 @@ class RaceDesktopPage extends RaceBasicPage {
                               end: stageCounter,
                               precision: 1,
                               duration: Duration(seconds: 3),
-                              separator: '.',
+                              // separator: '.',
+                              locale: Localizations.localeOf(context),
                               style: TextStyle(
                                 fontSize: 36,
                               ),
@@ -181,7 +182,8 @@ class RaceDesktopPage extends RaceBasicPage {
                           end: stageDayLeft,
                           precision: 0,
                           duration: Duration(seconds: 3),
-                          separator: '.',
+                          // separator: '.',
+                          locale: Localizations.localeOf(context),
                           style: TextStyle(
                             fontSize: 36,
                           ),
@@ -203,7 +205,8 @@ class RaceDesktopPage extends RaceBasicPage {
                   end: kmCounter,
                   precision: 1,
                   duration: Duration(seconds: 3),
-                  separator: '.',
+                  // separator: '.',
+                  locale: Localizations.localeOf(context),
                   style: TextStyle(
                     fontSize: 56,
                     color: Colors.red,
@@ -224,7 +227,8 @@ class RaceDesktopPage extends RaceBasicPage {
                   end: extraCounter,
                   precision: 1,
                   duration: Duration(seconds: 3),
-                  separator: '.',
+                  // separator: '.',
+                  locale: Localizations.localeOf(context),
                   style: TextStyle(
                     fontSize: 36,
                   ),

@@ -62,6 +62,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield Navigate2LoginSuccess();
     } else if (event is HomeLogOutEvent) {
       yield HomeLogOutState();
+    } else if (event is HomeStaticEvent) {
+      yield _uploadHomeFields(index: _currentIndex);
     }
   }
 

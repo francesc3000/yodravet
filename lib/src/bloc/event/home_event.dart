@@ -28,3 +28,8 @@ class HomeLogOutEvent extends HomeEvent {
   @override
   String toString() => 'HomeLogOut Event';
 }
+
+class HomeStaticEvent extends HomeEvent {
+  @override
+  String toString() => 'HomeStaticEvent Event';
+}

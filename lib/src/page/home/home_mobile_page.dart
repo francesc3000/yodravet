@@ -32,6 +32,7 @@ class HomeMobilePage extends HomeBasicPage {
         _currentIndex = state.index;
       } else if (state is Navigate2UserPageState) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
+          BlocProvider.of<HomeBloc>(context).add(HomeStaticEvent());
           Navigator.pushNamed(context, '/' + RouteName.userPage);
         });
       } else if (state is Navigate2LoginState) {

@@ -56,6 +56,7 @@ class RaceMobilePage extends RaceBasicPage {
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
         if (_currentStageBuilding != null) {
+          BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
           SchedulerBinding.instance.addPostFrameCallback((_) {
             showModalBottomSheet(
                 context: context,
@@ -83,8 +84,8 @@ class RaceMobilePage extends RaceBasicPage {
 
       slivers.clear();
       slivers.add(_buildTotalCounter(context, _kmCounter));
-      slivers.add(_buildSubCounters(
-          context, _stageTitle, _stageLimit, _stageCounter, _extraCounter, _stageDayLeft));
+      slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
+          _stageCounter, _extraCounter, _stageDayLeft));
       slivers.add(_buildMap(context, _riveArtboard, _stagesBuilding));
       slivers.add(_buildBuyersList(context, _buyers));
 
@@ -120,7 +121,8 @@ class RaceMobilePage extends RaceBasicPage {
                 end: kmCounter,
                 precision: 1,
                 duration: Duration(seconds: 3),
-                separator: '.',
+                // separator: '.',
+                locale: Localizations.localeOf(context),
                 style: TextStyle(
                   fontSize: 56,
                 ),
@@ -132,8 +134,13 @@ class RaceMobilePage extends RaceBasicPage {
     );
   }
 
-  Widget _buildSubCounters(BuildContext context, String stageTitle,
-      double stageLimit, double stageCounter, double extraCounter, double stageDayLeft) {
+  Widget _buildSubCounters(
+      BuildContext context,
+      String stageTitle,
+      double stageLimit,
+      double stageCounter,
+      double extraCounter,
+      double stageDayLeft) {
     return SliverPersistentHeader(
       pinned: false,
       delegate: SliverAppBarDelegate(
@@ -153,7 +160,8 @@ class RaceMobilePage extends RaceBasicPage {
                       end: stageCounter,
                       precision: 1,
                       duration: Duration(seconds: 3),
-                      separator: '.',
+                      // separator: '.',
+                      locale: Localizations.localeOf(context),
                       style: TextStyle(
                         fontSize: 26,
                       ),
@@ -175,7 +183,8 @@ class RaceMobilePage extends RaceBasicPage {
                   end: stageDayLeft,
                   precision: 0,
                   duration: Duration(seconds: 3),
-                  separator: '.',
+                  // separator: '.',
+                  locale: Localizations.localeOf(context),
                   style: TextStyle(
                     fontSize: 26,
                   ),
@@ -191,7 +200,8 @@ class RaceMobilePage extends RaceBasicPage {
                   end: extraCounter,
                   precision: 1,
                   duration: Duration(seconds: 3),
-                  separator: '.',
+                  // separator: '.',
+                  locale: Localizations.localeOf(context),
                   style: TextStyle(
                     fontSize: 26,
                   ),

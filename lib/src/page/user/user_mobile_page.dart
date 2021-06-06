@@ -249,7 +249,8 @@ class UserMobilePage extends UserBasicPage {
       );
     } else {
       if (afterDate.isAfter(now)) {
-        result = Text(AppLocalizations.of(context).beforeRange + ' ' +
+        result = Text(AppLocalizations.of(context).beforeRange +
+            ' ' +
             '${afterDate.day}' +
             '/' +
             '${afterDate.month}' +
@@ -274,7 +275,8 @@ class UserMobilePage extends UserBasicPage {
             delegate: SliverChildListDelegate(<Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(child: Padding(
+                child: Card(
+                    child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(AppLocalizations.of(context).noStravaActivities),
                 )),
@@ -477,16 +479,7 @@ class UserMobilePage extends UserBasicPage {
                 ),
               ),
             ),
-            Visibility(
-              visible: poleCounter > 3 ? false : true,
-              child: Positioned(
-                left: 55.0,
-                top: 23.0,
-                width: 35,
-                child: Image.asset(
-                    'assets/medallas/medalla' + '$poleCounter' + '.png'),
-              ),
-            ),
+            _poleImage(poleCounter),
           ],
         ),
       );
@@ -495,5 +488,40 @@ class UserMobilePage extends UserBasicPage {
     }
 
     return slivers;
+  }
+
+  Widget _poleImage(int poleCounter) {
+    if (poleCounter <= 3) {
+      return Positioned(
+          left: 58.0,
+          top: 33.0,
+          width: 35,
+          child:
+              Image.asset('assets/medallas/medalla' + '$poleCounter' + '.png'));
+    } else {
+      return Positioned(
+        left: 58.0,
+        top: 40.0,
+        width: 40,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors.white,
+            // height: 35,
+            // width: 35,
+            child: Text(
+              '$poleCounter',
+              style: TextStyle(fontSize: 25.0),
+            ),
+          ),
+          // child: Text(
+          //   poleCounter.toString(),
+          //   textAlign: TextAlign.center,
+          //   style: TextStyle(backgroundColor: Colors.blue, fontSize: 25.0),
+          // ),
+        ),
+      );
+    }
   }
 }

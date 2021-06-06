@@ -278,9 +278,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     donorsAux.sort((a, b) => a.compareTo(b));
 
     for (int i = 0; i < donorsAux.length; i++) {
-      if (i <= 9) {
+      // if (i <= 9) {
         donorsReturn.add(donorsAux.elementAt(i));
-      }
+      // }
     }
 
     return donorsReturn;
