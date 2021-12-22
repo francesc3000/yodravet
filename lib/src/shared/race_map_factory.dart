@@ -16,7 +16,8 @@ class RaceMapFactory {
     5: 5,
     6: 2,
     7: 4,
-    8: 2
+    8: 2,
+    9: 0
   };
 
   Future init(int stage, DateTime startStageDate, DateTime nextStageDate) async {

@@ -32,6 +32,7 @@ class UserMobilePage extends UserBasicPage {
     bool lockStravaLogin = false;
     int _filterDonorTab = 2;
     List<ActivityPurchase> donors = [];
+    String _churro;
 
     return BlocBuilder<UserBloc, UserState>(
       builder: (BuildContext context, state) {
@@ -56,6 +57,7 @@ class UserMobilePage extends UserBasicPage {
           _filterDonorTab = state.filterDonorTab;
           donors = state.donors;
           _loading = false;
+          _churro = state.usuarios;
         }
 
         if (_loading) {
@@ -68,6 +70,7 @@ class UserMobilePage extends UserBasicPage {
         slivers
             .addAll(_buildSliverActivities(context, isStravaLogin, activities));
         slivers.add(_buildDonorsList(context, _filterDonorTab, donors));
+        // slivers.add(_getUsers(context, _churro));
 
         return Container(
           color: Color.fromRGBO(153, 148, 86, 1),
@@ -523,5 +526,23 @@ class UserMobilePage extends UserBasicPage {
         ),
       );
     }
+  }
+
+  Widget _getUsers(BuildContext context, String churro) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SliverAppBarDelegate(
+        minHeight: 140,
+        maxHeight: 240,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SelectableText.rich(
+            TextSpan(
+              text: churro,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

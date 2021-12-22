@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="es.yocorroporeldravet.yodravet">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <application
         android:label="Yo Dravet"
         android:icon="@mipmap/ic_launcher">

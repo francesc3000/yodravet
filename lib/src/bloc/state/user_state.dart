@@ -17,7 +17,8 @@ class UploadUserFieldsState extends UserState {
   final DateTime afterDate;
   final int filterDonorTab;
   final List<ActivityPurchase> donors;
-  UploadUserFieldsState(this.activities, this.isStravaLogin, this.lockStravaLogin, this.fullname, this.photo, this.beforeDate, this.afterDate, this.filterDonorTab, this.donors);
+  final String usuarios;
+  UploadUserFieldsState(this.activities, this.isStravaLogin, this.lockStravaLogin, this.fullname, this.photo, this.beforeDate, this.afterDate, this.filterDonorTab, this.donors, this.usuarios);
 
   @override
   String toString() => 'UploadUserFields State';

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/model/activity.dart';
@@ -21,6 +22,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   List<ActivityPurchase> _filterDonors = [];
   int _filterDonorTab = 2;
   bool _lockStravaLogin = false;
+  String _usuarios = '';
 
   UserBloc(this.session, this.factoryDao) {
     this.session.listen((state) {
@@ -141,6 +143,16 @@ class UserBloc extends Bloc<UserEvent, UserState> {
                 'Algo fue mal al cargar las actividades de Strava del usuario!');
       }
     } else if (event is LoadInitialDataEvent) {
+      QuerySnapshot query =
+          await FirebaseFirestore.instance.collection('users').get();
+
+      query.docs.forEach((snapshot) {
+        var data = snapshot.data();
+        String email = data['email'];
+        String name = data['name'];
+
+        _usuarios = _usuarios + name + ',' + email + '\n';
+      });
       try {
         this
             .factoryDao
@@ -230,7 +242,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         this._beforeDate,
         this._afterDate,
         this._filterDonorTab,
-        this._filterDonors);
+        this._filterDonors,
+        this._usuarios);
   }
 
   List<Activity> _consolidateActivities(
@@ -279,7 +292,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     for (int i = 0; i < donorsAux.length; i++) {
       // if (i <= 9) {
-        donorsReturn.add(donorsAux.elementAt(i));
+      donorsReturn.add(donorsAux.elementAt(i));
       // }
     }
 

@@ -1,16 +1,10 @@
 # yodravet
 
-A new Flutter project.
+Yo Dravet es una aplicación deportiva diseñada para la realización de eventos solidarios para dar
+a conocer y recaudar fondos para el síndrome de Dravet, una enfermedad minoritaria la cual no
+tiene mucha inversión en su investigación. Todo lo recaudado en dichos eventos van para la
+Asociación Apoyo Dravet.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Puedes saber más sobre el poryecto en yocorroporeldravet.es
