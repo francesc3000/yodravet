@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/signup_event.dart';
 import 'package:yodravet/src/bloc/signup_bloc.dart';
 import 'package:yodravet/src/bloc/state/signup_state.dart';
-import 'package:yodravet/src/locale/locales.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
 
+import '../../route/app_router_delegate.dart';
 import 'signup_basic_page.dart';
 
 class SignupDesktopPage extends SignupBasicPage {
-  SignupDesktopPage(String title) : super(title);
+  const SignupDesktopPage(String title, AppRouterDelegate appRouterDelegate,
+      {Key? key})
+      : super(title, appRouterDelegate, key: key);
 
   @override
-  PreferredSizeWidget appBar(BuildContext context, {String title}) {
-    return null;
-  }
+  PreferredSizeWidget? appBar(BuildContext context, {String? title}) => null;
 
+  @override
   Widget body(BuildContext context) {
     bool _isLoading = false;
     TextEditingController _emailTextController = TextEditingController();
@@ -28,20 +30,20 @@ class SignupDesktopPage extends SignupBasicPage {
     TextEditingController _passCopyTextController = TextEditingController();
     TextEditingController _nameTextController = TextEditingController();
     TextEditingController _lastnameTextController = TextEditingController();
-    String _emailError = '';
-    String _nameError = '';
-    String _lastnameError = '';
-    String _passwordError = '';
-    String _passwordCopyError = '';
+    String? _emailError = '';
+    String? _nameError = '';
+    String? _lastnameError = '';
+    String? _passwordError = '';
+    String? _passwordCopyError = '';
 
     return BlocBuilder<SignupBloc, SignupState>(
         builder: (BuildContext context, state) {
       if (state is UpdateSignupFieldsState) {
-        _emailTextController.text = state.signup.email;
-        _nameTextController.text = state.signup.name;
-        _lastnameTextController.text = state.signup.lastname;
-        _passTextController.text = state.signup.password;
-        _passCopyTextController.text = state.signup.passwordCopy;
+        _emailTextController.text = state.signup.email!;
+        _nameTextController.text = state.signup.name!;
+        _lastnameTextController.text = state.signup.lastname!;
+        _passTextController.text = state.signup.password!;
+        _passCopyTextController.text = state.signup.passwordCopy!;
         _emailError = state.signup.emailError;
         _nameError = state.signup.nameError;
         _lastnameError = state.signup.lastnameError;
@@ -51,8 +53,8 @@ class SignupDesktopPage extends SignupBasicPage {
       } else if (state is SignUpSuccessState) {
         _isLoading = false;
         BlocProvider.of<SignupBloc>(context).add(SignupEventEmpty());
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
+          routerDelegate.pushPageAndRemoveUntil(name: '/');
         });
       } else if (state is SignupStateError) {
         _isLoading = false;
@@ -61,16 +63,15 @@ class SignupDesktopPage extends SignupBasicPage {
             message: state.message,
             iconData: FontAwesomeIcons.exclamationCircle);
       }
+      //TODO: Quitar WillPopScope
       return WillPopScope(
-        onWillPop: () {
-          return _onWillPop(context);
-        },
+        onWillPop: () => _onWillPop(context),
         child: Container(
-          color: Color.fromRGBO(153, 148, 86, 60),
+          color: const Color.fromRGBO(153, 148, 86, 60),
           child: ListView(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
                   controller: _emailTextController,
@@ -80,7 +81,7 @@ class SignupDesktopPage extends SignupBasicPage {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
                   controller: _nameTextController,
@@ -89,7 +90,7 @@ class SignupDesktopPage extends SignupBasicPage {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
                   controller: _lastnameTextController,
@@ -98,7 +99,7 @@ class SignupDesktopPage extends SignupBasicPage {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
                   controller: _passTextController,
@@ -109,7 +110,7 @@ class SignupDesktopPage extends SignupBasicPage {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
                   controller: _passCopyTextController,
@@ -122,10 +123,11 @@ class SignupDesktopPage extends SignupBasicPage {
               ),
               CustomButton(
                 child: _isLoading
-                    ? CircularProgressIndicator(backgroundColor: Colors.white)
+                    ? const CircularProgressIndicator(
+                        backgroundColor: Colors.white)
                     : Text(
-                        AppLocalizations.of(context).signIn,
-                        style: TextStyle(color: Colors.white),
+                        AppLocalizations.of(context)!.signIn,
+                        style: const TextStyle(color: Colors.white),
                       ),
                 onPressed: () {
                   BlocProvider.of<SignupBloc>(context).add(SignUpEvent(

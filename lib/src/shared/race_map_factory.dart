@@ -1,12 +1,10 @@
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:rive/rive.dart';
 
 class RaceMapFactory {
-  Artboard riveArtboard;
+  Artboard? riveArtboard;
   bool _first = false;
-  int _stage = -1;
-  RiveAnimationController _firstControllerStep;
-  // RiveAnimationController _controllerStep1b;
+  int? _stage = -1;
+  RiveAnimationController? _firstControllerStep;
 
   Map<int, int> linkStageStep = {
     1: 3,
@@ -20,89 +18,73 @@ class RaceMapFactory {
     9: 0
   };
 
-  Future init(int stage, DateTime startStageDate, DateTime nextStageDate) async {
-    
-    if (_stage!=stage) {
+  Future init(
+      int? stage, DateTime? startStageDate, DateTime? nextStageDate) async {
+    if (_stage != stage) {
       _stage = stage;
       _first = false;
     } else {
       return;
     }
 
-    var data = await rootBundle.load('assets/race/spain.riv');
-    final file = RiveFile();
+    final file = await RiveFile.asset('assets/images/race/spain.riv');
 
-    // Load the RiveFile from the binary data.
-    if (file.import(data)) {
-      // The artboard is the root of the animation and gets drawn in the
-      // Rive widget.
-      riveArtboard = file.mainArtboard;
-      
-      MySimpleAnimation _preControllerStep;
-      MySimpleAnimation _controllerStep;
-      int i;
-      for (i = 1; i <= stage; i++) {
-        final today = DateTime.now();
-        int step = 0;
-        if (today.isAtSameMomentAs(startStageDate) ||  today.isAfter(startStageDate)) {
-          if (i == stage && today.isBefore(nextStageDate)) {
-            var diffDays = nextStageDate.difference(today).inDays;
-            step = linkStageStep[stage] - diffDays;
-            step = step.abs();
-          } else {
-            step = linkStageStep[i];
-          }
-        }
-        for (int j = 1; j <= step; j++) {
-          var controllerName = 'Stage' + '$i' + ' Step' + '$j';
-          _controllerStep = MySimpleAnimation(controllerName);
+    riveArtboard = file.mainArtboard;
 
-          if (!_first) {
-            _first = true;
-            _firstControllerStep = _controllerStep;
-          }
-
-          if (_preControllerStep != null) {
-            _preControllerStep.nextAnimation = _controllerStep;
-            riveArtboard.addController(_preControllerStep);
-            _preControllerStep.isActive = false;
-          }
-          _preControllerStep = _controllerStep;
+    MySimpleAnimation? _preControllerStep;
+    MySimpleAnimation _controllerStep;
+    int i;
+    for (i = 1; i <= stage!; i++) {
+      final today = DateTime.now();
+      int? step = 0;
+      if (today.isAtSameMomentAs(startStageDate!) ||
+          today.isAfter(startStageDate)) {
+        if (i == stage && today.isBefore(nextStageDate!)) {
+          var diffDays = nextStageDate.difference(today).inDays;
+          step = linkStageStep[stage]! - diffDays;
+          step = step.abs();
+        } else {
+          step = linkStageStep[i];
         }
       }
+      for (int j = 1; j <= step!; j++) {
+        var controllerName = 'Stage$i Step$j';
+        _controllerStep = MySimpleAnimation(controllerName);
 
-      if (_preControllerStep != null) {
-        riveArtboard.addController(_preControllerStep);
-        _preControllerStep.isActive = false;
+        if (!_first) {
+          _first = true;
+          _firstControllerStep = _controllerStep;
+        }
 
-        // var controllerName = 'Stage' + '$i' + ' Glow';
-        // _controllerStep = MySimpleAnimation(controllerName);
-        // _preControllerStep.nextAnimation = _controllerStep;
-
-        // riveArtboard.addController(_controllerStep);
-        // _controllerStep.isActive = false;
+        if (_preControllerStep != null) {
+          _preControllerStep.nextAnimation = _controllerStep;
+          riveArtboard!.addController(_preControllerStep);
+          _preControllerStep.isActive = false;
+        }
+        _preControllerStep = _controllerStep;
       }
+    }
 
-      if (_firstControllerStep != null) {
-        _firstControllerStep.isActive = true;
-      }
+    if (_preControllerStep != null) {
+      riveArtboard!.addController(_preControllerStep);
+      _preControllerStep.isActive = false;
+    }
 
-      // _riveArtboard.animationByName('Stage1 Building').animation.loop = Loop.loop;
-      // _riveArtboard.animationByName('Stage1 Building').animation.duration = 11500;
-
+    if (_firstControllerStep != null) {
+      _firstControllerStep!.isActive = true;
     }
   }
 }
 
 class MySimpleAnimation extends SimpleAnimation {
-  RiveAnimationController nextAnimation;
+  RiveAnimationController? nextAnimation;
 
   MySimpleAnimation(String name, {this.nextAnimation}) : super(name);
 
   @override
   void onDeactivate() {
     if (nextAnimation != null) {
-      nextAnimation.isActive = true;
+      nextAnimation!.isActive = true;
     }
   }
 }

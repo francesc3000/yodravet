@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
@@ -18,22 +19,19 @@ class UserDaoImpl extends UserDaoInterface {
   UserDaoImpl(this.firestore);
 
   @override
-  Future<String> logIn(String email, String pass) async {
-    return await _auth.logIn(email, pass);
-  }
+  Future<String> logIn(String email, String pass) async =>
+      await _auth.logIn(email, pass);
 
   @override
-  Future<User> googleLogIn() async {
-    return TransformModel.userDao2User(await _auth.googleLogIn());
-  }
+  Future<User> googleLogIn() async =>
+      TransformModel.userDao2User(await _auth.googleLogIn());
 
   @override
-  Future<User> appleLogIn() async {
-    return TransformModel.userDao2User(await _auth.appleLogIn());
-  }
+  Future<User> appleLogIn() async =>
+      TransformModel.userDao2User(await _auth.appleLogIn());
 
   @override
-  Future<User> populateUser(String userId) async {
+  Future<User> populateUser(String? userId) async {
     UserDao userDao;
 
     try {
@@ -46,29 +44,27 @@ class UserDaoImpl extends UserDaoInterface {
   }
 
   @override
-  Future<String> isUserLoggedIn() async {
-    print('Estoy en UserLoggedIn en user_dao');
+  Future<String?> isUserLoggedIn() async {
+    if (kDebugMode) {
+      print('Estoy en UserLoggedIn en user_dao');
+    }
     return await _auth.isUserLoggedIn();
   }
 
   @override
-  Future<bool> logOut() async {
-    return await _auth.logOut();
-  }
+  Future<bool> logOut() async => await _auth.logOut();
 
   @override
-  Future<bool> changePassword(String email) async {
-    return await this._auth.changePassword(email);
-  }
+  Future<bool> changePassword(String email) async =>
+      await _auth.changePassword(email);
 
   @override
-  Future<String> createAuthUser(String email, String password) {
-    return this._auth.createAuthUser(email, password);
-  }
+  Future<String> createAuthUser(String email, String password) =>
+      _auth.createAuthUser(email, password);
 
   @override
-  Future<bool> createUser(String id, String email, String name, String lastname,
-      String photo) async {
+  Future<bool> createUser(String? id, String? email, String? name,
+      String? lastname, String? photo) async {
     await firestore.createUser(
         id: id, email: email, name: name, lastname: lastname, photo: photo);
 
@@ -76,14 +72,10 @@ class UserDaoImpl extends UserDaoInterface {
   }
 
   @override
-  Future<bool> stravaLogIn() async {
-    return await _strava.stravaLogIn();
-  }
+  Future<bool> stravaLogIn() async => await _strava.stravaLogIn();
 
   @override
-  Future<bool> stravaLogout() async {
-    return await _strava.logOut();
-  }
+  Future<bool> stravaLogout() async => await _strava.logOut();
 
   @override
   Future<bool> donateKm(User user, String raceId, Activity activity) async {
@@ -121,17 +113,15 @@ class UserDaoImpl extends UserDaoInterface {
   }
 
   @override
-  Stream<Map<String, DateTime>> getRangeDates(String raceId) {
-    return firestore.streamRaceInfo(raceId).transform<Map<String, DateTime>>(
-      StreamTransformer<RaceDao, Map<String, DateTime>>.fromHandlers(
-          handleData: (raceDao, sink) {
-        sink.add({'before': raceDao.finalDate, 'after': raceDao.startDate});
-      }),
-    );
-  }
+  Stream<Map<String, DateTime?>> getRangeDates(String raceId) =>
+      firestore.streamRaceInfo(raceId)!.transform<Map<String, DateTime?>>(
+        StreamTransformer<RaceDao, Map<String, DateTime?>>.fromHandlers(
+            handleData: (raceDao, sink) {
+          sink.add({'before': raceDao.finalDate, 'after': raceDao.startDate});
+        }),
+      );
 
   @override
-  Future<bool> saveIsStravaLogin(String userId, bool isStravaLogin) async {
-    return await this.firestore.saveIsStravaLogin(userId, isStravaLogin);
-  }
+  Future<bool> saveIsStravaLogin(String? userId, bool? isStravaLogin) async =>
+      await firestore.saveIsStravaLogin(userId, isStravaLogin);
 }

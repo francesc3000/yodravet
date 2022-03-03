@@ -27,7 +27,7 @@ class GetStravaActivitiesEvent extends UserEvent {
 }
 
 class DonateKmEvent extends UserEvent {
-  final String stravaId;
+  final String? stravaId;
 
   DonateKmEvent(this.stravaId);
   @override

@@ -1,6 +1,5 @@
-import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
 
 import 'event/home_event.dart';
@@ -14,60 +13,68 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   SessionBloc session;
   User _user = User();
 
-  HomeBloc(this.session, this.factoryDao) {
-    this.session.listen((state) {
+  HomeBloc(this.session, this.factoryDao) : super(HomeInitState()) {
+    session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
-          this._user = this.session.user;
+          _user = session.user;
           if (!state.isAutoLogin) {
-            this.add(Navigate2UserPageEvent());
+            add(Navigate2UserPageEvent());
           }
         }
       } else if (state is LogOutState) {
-        this._user.logout();
-        this.add(HomeLogOutEvent());
+        _user.logout();
+        add(HomeLogOutEvent());
       } else if (state is UserChangeState) {
-        this._user = state.user;
+        _user = state.user;
       }
     });
+
+    on<HomeEventEmpty>((event, emit) => emit(HomeInitState()));
+    on<ChangeTabEvent>(_changeTabEvent);
+    on<Navigate2UserPageEvent>(_navigate2UserPageEvent);
+    on<Navigate2LoginSuccessEvent>(_navigate2LoginSuccessEvent);
+    on<HomeLogOutEvent>(_homeLogOutEvent);
+    on<HomeStaticEvent>(_homeStaticEvent);
   }
 
-  @override
-  HomeState get initialState => HomeInitState();
-
-  @override
-  Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    if (event is HomeEventEmpty) {
-      yield HomeInitState();
-    } else if (event is ChangeTabEvent) {
-      try {
-        _currentIndex = event.index;
-        if (!this._user.isLogin) {
-          yield Navigate2LoginState();
-        } else {
-          yield _uploadHomeFields(index: _currentIndex);
-        }
-      } catch (error) {
-        yield error is HomeStateError
-            ? HomeStateError(error.message)
-            : HomeStateError('Algo fue mal en el AutoLogIn!');
-      }
-    } else if (event is Navigate2UserPageEvent) {
-      if (!this._user.isLogin) {
-        yield Navigate2LoginState();
+  void _changeTabEvent(ChangeTabEvent event, Emitter emit) async {
+    try {
+      _currentIndex = event.index;
+      if (!_user.isLogin) {
+        emit(Navigate2LoginState());
       } else {
-        yield Navigate2UserPageState();
+        emit(_uploadHomeFields(index: _currentIndex));
       }
-    } else if (event is Navigate2LoginSuccessEvent) {
-      yield Navigate2LoginSuccess();
-    } else if (event is HomeLogOutEvent) {
-      yield HomeLogOutState();
-    } else if (event is HomeStaticEvent) {
-      yield _uploadHomeFields(index: _currentIndex);
+    } catch (error) {
+      emit(error is HomeStateError
+          ? HomeStateError(error.message)
+          : HomeStateError('Algo fue mal en el AutoLogIn!'));
     }
   }
 
-  HomeState _uploadHomeFields({@required int index}) {
-    return UploadHomeFields(index: index);
+  void _navigate2UserPageEvent(
+      Navigate2UserPageEvent event, Emitter emit) async {
+    if (!_user.isLogin) {
+      emit(Navigate2LoginState());
+    } else {
+      emit(Navigate2UserPageState());
+    }
   }
+
+  void _navigate2LoginSuccessEvent(
+      Navigate2LoginSuccessEvent event, Emitter emit) async {
+    emit(Navigate2LoginSuccess());
+  }
+
+  void _homeLogOutEvent(HomeLogOutEvent event, Emitter emit) async {
+    emit(HomeLogOutState());
+  }
+
+  void _homeStaticEvent(HomeStaticEvent event, Emitter emit) async {
+    emit(_uploadHomeFields(index: _currentIndex));
+  }
+
+  HomeState _uploadHomeFields({required int index}) =>
+      UploadHomeFields(index: index);
 }

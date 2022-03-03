@@ -7,5 +7,6 @@ class StageBuilding {
   final String photo;
   final List<Researcher> researchers;
 
-  StageBuilding(this.id, this.name, this.shortName, this.photo, this.researchers);
+  StageBuilding(
+      this.id, this.name, this.shortName, this.photo, this.researchers);
 }

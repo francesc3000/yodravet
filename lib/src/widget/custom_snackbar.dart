@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomSnackBar {
   void show(
-      {BuildContext context,
-        String message,
+      {required BuildContext context,
+        required String? message,
         IconData iconData = FontAwesomeIcons.exclamationCircle}) {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       showFlash(
@@ -24,7 +24,7 @@ class CustomSnackBar {
           horizontalDismissDirection: HorizontalDismissDirection.horizontal,
           child: FlashBar(
             icon: Icon(iconData),
-            content: Text(message),
+            content: Text(message!),
           ),
         ),
       );

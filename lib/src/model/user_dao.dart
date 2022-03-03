@@ -1,13 +1,13 @@
 import 'activity_dao.dart';
 
 class UserDao {
-  String id;
-  String email;
-  String name;
-  String lastname;
-  String photo;
-  List<ActivityDao> activitiesDao;
-  bool isStravaLogin;
+  String? id;
+  String? email;
+  String? name;
+  String? lastname;
+  String? photo;
+  List<ActivityDao>? activitiesDao;
+  bool? isStravaLogin;
 
   UserDao(
       {this.id = '',
@@ -17,8 +17,6 @@ class UserDao {
       this.photo = '',
       this.isStravaLogin = false,
       this.activitiesDao}) {
-        if(this.activitiesDao==null) {
-          this.activitiesDao = [];
-        }
+        activitiesDao ??= [];
       }
 }

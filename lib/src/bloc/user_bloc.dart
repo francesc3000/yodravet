@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:bloc/bloc.dart';
+import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/user.dart';
+import 'package:yodravet/src/shared/edition.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/session_event.dart';
@@ -16,239 +16,236 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final FactoryDao factoryDao;
   SessionBloc session;
   User _user = User();
-  DateTime _beforeDate;
-  DateTime _afterDate;
+  DateTime? _beforeDate;
+  DateTime? _afterDate;
   List<ActivityPurchase> _donors = [];
   List<ActivityPurchase> _filterDonors = [];
   int _filterDonorTab = 2;
   bool _lockStravaLogin = false;
-  String _usuarios = '';
+  // String _usuarios = '';
 
-  UserBloc(this.session, this.factoryDao) {
-    this.session.listen((state) {
+  UserBloc(this.session, this.factoryDao) : super(UserInitState()) {
+    session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
-          this.add(UserLogInEvent());
+          add(UserLogInEvent());
         }
       } else if (state is LogOutState) {
-        this.add(UserLogOutEvent());
+        add(UserLogOutEvent());
       } else if (state is UserChangeState) {
-        this._user = state.user;
+        _user = state.user;
       }
     });
+
+    on<UserLogOutEvent>(_userLogOutEvent);
+    on<UserLogInEvent>(_userLogInEvent);
+    on<ConnectWithStravaEvent>(_connectWithStravaEvent);
+    on<GetStravaActivitiesEvent>(_getStravaActivitiesEvent);
+    on<DonateKmEvent>(_donateKmEvent);
+    on<LoadInitialDataEvent>(_loadInitialDataEvent);
+    on<ChangeUserPodiumTabEvent>(_changeUserPodiumTabEvent);
+    on<UploadUserFieldsEvent>(_uploadUserFieldsEvent);
   }
 
-  @override
-  UserState get initialState => UserInitState();
-
-  @override
-  Stream<UserState> mapEventToState(UserEvent event) async* {
-    if (event is UserLogOutEvent) {
-      try {
-        if (this._user.isStravaLogin) {
-          this.factoryDao.userDao.stravaLogout();
-          this._user.isStravaLogin = false;
-          this
-              .factoryDao
-              .userDao
-              .saveIsStravaLogin(this._user.id, this._user.isStravaLogin);
-        }
-        await this.factoryDao.userDao.logOut();
-        this._user.logout();
-        yield UserLogOutState();
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError('Algo fue mal en el User LogOut!');
+  void _userLogOutEvent(UserLogOutEvent event, Emitter emit) async {
+    try {
+      if (_user.isStravaLogin!) {
+        factoryDao.userDao.stravaLogout();
+        _user.isStravaLogin = false;
+        factoryDao.userDao.saveIsStravaLogin(_user.id, _user.isStravaLogin);
       }
-    } else if (event is UserLogInEvent) {
-      try {
-        // this.session.add(UserChangeEvent(this._user));
-        this._user = this.session.user;
-        yield UserLogInState();
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError('Algo fue mal en el User Login!');
-      }
-    } else if (event is ConnectWithStravaEvent) {
-      try {
-        if (this._user.isStravaLogin) {
-          await this.session.stravaLogout();
-          this._user.isStravaLogin = false;
-          this._user.stravaLogout();
-          await this
-              .factoryDao
-              .userDao
-              .saveIsStravaLogin(this._user.id, this._user.isStravaLogin);
-          this.session.add(UserChangeEvent(this._user));
-          _lockStravaLogin = true;
-          yield _uploadUserFields();
-        } else {
-          if (await this.session.stravaLogIn()) {
-            this._user.isStravaLogin = true;
-            await this
-                .factoryDao
-                .userDao
-                .saveIsStravaLogin(this._user.id, this._user.isStravaLogin);
-            this.session.add(UserChangeEvent(this._user));
-
-            this.add(GetStravaActivitiesEvent());
-          }
-        }
-
-        yield _uploadUserFields();
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError('Algo fue mal en el Strava Login!');
-      }
-    } else if (event is GetStravaActivitiesEvent) {
-      try {
-        DateTime now = DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 00, 01, 00);
-
-        if (now.isBefore(_beforeDate) && now.isAfter(_afterDate)) {
-          List<Activity> stravaActivities = await this
-              .factoryDao
-              .userDao
-              .getStravaActivities(_beforeDate, _afterDate);
-          this._user.activities =
-              _consolidateActivities(this._user.activities, stravaActivities);
-        }
-        yield _uploadUserFields();
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError(
-                'Algo fue mal al cargar las actividades de Strava del usuario!');
-      }
-    } else if (event is DonateKmEvent) {
-      try {
-        Activity activity = this._user.getActivitByStravaId(event.stravaId);
-        if (activity != null) {
-          activity.status = ActivityStatus.waiting;
-          yield _uploadUserFields();
-          activity.status = ActivityStatus.donate;
-          await this
-              .factoryDao
-              .userDao
-              .donateKm(this._user, '2021DravetTour', activity);
-          yield _uploadUserFields();
-        }
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError(
-                'Algo fue mal al cargar las actividades de Strava del usuario!');
-      }
-    } else if (event is LoadInitialDataEvent) {
-      QuerySnapshot query =
-          await FirebaseFirestore.instance.collection('users').get();
-
-      query.docs.forEach((snapshot) {
-        var data = snapshot.data();
-        String email = data['email'];
-        String name = data['name'];
-
-        _usuarios = _usuarios + name + ',' + email + '\n';
-      });
-      try {
-        this
-            .factoryDao
-            .userDao
-            .getRangeDates('2021DravetTour')
-            .listen((rangeDates) async {
-          if (rangeDates.isNotEmpty) {
-            _beforeDate = rangeDates['before'];
-            _afterDate = rangeDates['after'];
-
-            this.add(UploadUserFieldsEvent());
-          }
-
-          this
-              .factoryDao
-              .raceDao
-              .streamDonors('2021DravetTour')
-              .listen((donors) {
-            this._donors = donors;
-
-            // this._filterDonors = _copyDonorsList(this._donors);
-
-            // this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
-
-            // this.add(UploadUserFieldsEvent());
-
-            this.add(ChangeUserPodiumTabEvent(_filterDonorTab));
-          });
-
-          if (this._user.isStravaLogin) {
-            if (!PlatformDiscover.isWeb()) {
-              if (await this.factoryDao.userDao.stravaLogIn()) {
-                this.add(GetStravaActivitiesEvent());
-              }
-            }
-          }
-        });
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError(
-                'Algo fue mal al cargar los datos iniciales del usuario!');
-      }
-    } else if (event is ChangeUserPodiumTabEvent) {
-      try {
-        this._filterDonors = _copyDonorsList(this._donors);
-        _filterDonorTab = event.indexTab;
-
-        switch (_filterDonorTab) {
-          case 1:
-            this
-                ._filterDonors
-                .removeWhere((donor) => donor.type != ActivityType.walk);
-            break;
-          case 2:
-            this
-                ._filterDonors
-                .removeWhere((donor) => donor.type != ActivityType.run);
-            break;
-          case 3:
-            this
-                ._filterDonors
-                .removeWhere((donor) => donor.type != ActivityType.ride);
-            break;
-          default:
-        }
-
-        this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
-        yield _uploadUserFields();
-      } catch (error) {
-        yield error is UserStateError
-            ? UserStateError(error.message)
-            : UserStateError('Algo fue mal al cambiar de pestaña!');
-      }
-    } else if (event is UploadUserFieldsEvent) {
-      yield _uploadUserFields();
+      await factoryDao.userDao.logOut();
+      _user.logout();
+      emit(UserLogOutState());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError('Algo fue mal en el User LogOut!'));
     }
   }
 
-  UserState _uploadUserFields() {
-    return UploadUserFieldsState(
-        this._user.activities,
-        this._user.isStravaLogin,
-        this._lockStravaLogin,
-        this._user.fullName,
-        this._user.photo,
-        this._beforeDate,
-        this._afterDate,
-        this._filterDonorTab,
-        this._filterDonors,
-        this._usuarios);
+  void _userLogInEvent(UserLogInEvent event, Emitter emit) async {
+    try {
+      // this.session.add(UserChangeEvent(this._user));
+      _user = session.user;
+      emit(UserLogInState());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError('Algo fue mal en el User Login!'));
+    }
   }
+
+  void _connectWithStravaEvent(
+      ConnectWithStravaEvent event, Emitter emit) async {
+    try {
+      if (_user.isStravaLogin!) {
+        await session.stravaLogout();
+        _user.isStravaLogin = false;
+        _user.stravaLogout();
+        await factoryDao.userDao
+            .saveIsStravaLogin(_user.id, _user.isStravaLogin);
+        session.add(UserChangeEvent(_user));
+        _lockStravaLogin = true;
+        emit(_uploadUserFields());
+      } else {
+        if (await session.stravaLogIn()) {
+          _user.isStravaLogin = true;
+          await factoryDao.userDao
+              .saveIsStravaLogin(_user.id, _user.isStravaLogin);
+          session.add(UserChangeEvent(_user));
+
+          add(GetStravaActivitiesEvent());
+        }
+      }
+
+      emit(_uploadUserFields());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError('Algo fue mal en el Strava Login!'));
+    }
+  }
+
+  void _getStravaActivitiesEvent(
+      GetStravaActivitiesEvent event, Emitter emit) async {
+    try {
+      DateTime now = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, 00, 01, 00);
+
+      if (now.isBefore(_beforeDate!) && now.isAfter(_afterDate!)) {
+        List<Activity> stravaActivities = await factoryDao.userDao
+            .getStravaActivities(_beforeDate!, _afterDate!);
+        _user.activities =
+            _consolidateActivities(_user.activities!, stravaActivities);
+      }
+      emit(_uploadUserFields());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError(
+              'Algo fue mal al cargar las actividades de Strava del usuario!'));
+    }
+  }
+
+  void _donateKmEvent(DonateKmEvent event, Emitter emit) async {
+    try {
+      String currentEdition = Edition.currentEdition;
+      Activity activity = _user.getActivitiesByStravaId(event.stravaId);
+      activity.status = ActivityStatus.waiting;
+      emit(_uploadUserFields());
+      activity.status = ActivityStatus.donate;
+      await factoryDao.userDao.donateKm(_user, currentEdition, activity);
+      emit(_uploadUserFields());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError(
+              'Algo fue mal al cargar las actividades de Strava del usuario!'));
+    }
+  }
+
+  void _loadInitialDataEvent(LoadInitialDataEvent event, Emitter emit) async {
+    // QuerySnapshot query =
+    //     await FirebaseFirestore.instance.collection('users').get();
+    //
+    // for (var snapshot in query.docs) {
+    //   DocumentSnapshot data = snapshot.data() as DocumentSnapshot<Object>;
+    //   String email = data['email'];
+    //   String name = data['name'];
+    //
+    //   _usuarios = '$_usuarios$name,$email\n';
+    // }
+
+    String currentEdition = Edition.currentEdition;
+    try {
+      factoryDao.userDao
+          .getRangeDates(currentEdition)
+          .listen((rangeDates) async {
+        if (rangeDates.isNotEmpty) {
+          _beforeDate = rangeDates['before'];
+          _afterDate = rangeDates['after'];
+
+          add(UploadUserFieldsEvent());
+        }
+
+        factoryDao.raceDao.streamDonors(currentEdition).listen((donors) {
+          _donors = donors;
+
+          // this._filterDonors = _copyDonorsList(this._donors);
+
+          // this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
+
+          // this.add(UploadUserFieldsEvent());
+
+          add(ChangeUserPodiumTabEvent(_filterDonorTab));
+        });
+
+        if (_user.isStravaLogin!) {
+          if (!PlatformDiscover.isWeb()) {
+            if (await factoryDao.userDao.stravaLogIn()) {
+              add(GetStravaActivitiesEvent());
+            }
+          }
+        }
+      });
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError(
+              'Algo fue mal al cargar los datos iniciales del usuario!'));
+    }
+  }
+
+  void _changeUserPodiumTabEvent(
+      ChangeUserPodiumTabEvent event, Emitter emit) async {
+    try {
+      _filterDonors = _copyDonorsList(_donors);
+      _filterDonorTab = event.indexTab;
+
+      switch (_filterDonorTab) {
+        case 1:
+          _filterDonors.removeWhere((donor) => donor.type != ActivityType.walk);
+          break;
+        case 2:
+          _filterDonors.removeWhere((donor) => donor.type != ActivityType.run);
+          break;
+        case 3:
+          _filterDonors.removeWhere((donor) => donor.type != ActivityType.ride);
+          break;
+        default:
+      }
+
+      _filterDonors = _consolidateAndSortDonors(_filterDonors);
+      emit(_uploadUserFields());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError('Algo fue mal al cambiar de pestaña!'));
+    }
+  }
+
+  void _uploadUserFieldsEvent(
+      UploadUserFieldsEvent event, Emitter emit) async {
+    emit(_uploadUserFields());
+  }
+
+  UserState _uploadUserFields() => UploadUserFieldsState(
+      _user.activities,
+      _user.isStravaLogin,
+      _lockStravaLogin,
+      _user.fullName,
+      _user.photo,
+      _beforeDate,
+      _afterDate,
+      _filterDonorTab,
+      _filterDonors
+      // _usuarios
+  );
 
   List<Activity> _consolidateActivities(
       List<Activity> userActivities, List<Activity> stravaActivities) {
-    stravaActivities.forEach((stravaActivity) {
+    for (var stravaActivity in stravaActivities) {
       Iterable<Activity> iterableActivity = userActivities.where((activity) {
         if (activity.stravaId == stravaActivity.stravaId) {
           return true;
@@ -260,11 +257,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if (iterableActivity.isEmpty) {
         userActivities.add(stravaActivity);
       }
+    }
 
-      iterableActivity = null;
-    });
-
-    userActivities.sort((a, b) => b.startDate.compareTo(a.startDate));
+    userActivities.sort((a, b) => b.startDate!.compareTo(a.startDate!));
 
     return userActivities;
   }
@@ -275,18 +270,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     List<ActivityPurchase> donorsReturn = [];
 
     //Se consolidan los donantes de km
-    donors.forEach((donor) {
-      var mainDonorList = donorsAux
-          .where((mainBuyer) => mainBuyer.userId.compareTo(donor.userId) == 0);
+    for (var donor in donors) {
+      var mainDonorList = donorsAux.where(
+          (mainBuyer) => mainBuyer.userId!.compareTo(donor.userId!) == 0);
 
       if (mainDonorList.isEmpty) {
         donorsAux.add(donor);
       } else {
         var mainDonor = mainDonorList.first;
-        mainDonor.distance = mainDonor.distance + donor.distance;
-        mainDonor.totalPurchase = mainDonor.totalPurchase + donor.totalPurchase;
+        mainDonor.distance = mainDonor.distance! + donor.distance!;
+        mainDonor.totalPurchase =
+            mainDonor.totalPurchase! + donor.totalPurchase!;
       }
-    });
+    }
     //Ordenamos por km recorridos
     donorsAux.sort((a, b) => a.compareTo(b));
 
@@ -299,20 +295,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     return donorsReturn;
   }
 
-  List<ActivityPurchase> _copyDonorsList(List<ActivityPurchase> donors) {
-    return donors
-        .map((donor) => ActivityPurchase(
-              id: donor.id,
-              stravaId: donor.stravaId,
-              distance: donor.distance,
-              raceId: donor.raceId,
-              startDate: donor.startDate,
-              totalPurchase: donor.totalPurchase,
-              type: donor.type,
-              userFullname: donor.userFullname,
-              userId: donor.userId,
-              userPhoto: donor.userPhoto,
-            ))
-        .toList();
-  }
+  List<ActivityPurchase> _copyDonorsList(List<ActivityPurchase> donors) =>
+      donors
+          .map((donor) => ActivityPurchase(
+                id: donor.id,
+                stravaId: donor.stravaId,
+                distance: donor.distance,
+                raceId: donor.raceId,
+                startDate: donor.startDate,
+                totalPurchase: donor.totalPurchase,
+                type: donor.type,
+                userFullname: donor.userFullname,
+                userId: donor.userId,
+                userPhoto: donor.userPhoto,
+              ))
+          .toList();
 }

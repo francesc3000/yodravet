@@ -3,21 +3,24 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/state/auth_state.dart';
-import 'package:yodravet/src/locale/locales.dart';
-import 'package:yodravet/src/routes/route_name.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 import 'package:yodravet/src/widget/custom_button.dart';
 import 'package:yodravet/src/widget/custom_snackbar.dart';
 
+import '../../route/app_router_delegate.dart';
 import 'login_basic_page.dart';
 
 class LoginMobilePage extends LoginBasicPage {
-  LoginMobilePage(String title) : super(title);
+  const LoginMobilePage(String title, AppRouterDelegate appRouterDelegate,
+      {Key? key})
+      : super(title, appRouterDelegate, key: key);
 
+  @override
   Widget body(BuildContext context) {
     bool _isLoading = false;
     bool _isLoadingGoogle = false;
@@ -31,10 +34,9 @@ class LoginMobilePage extends LoginBasicPage {
         _isLoading = false;
         _isLoadingGoogle = false;
         _isLoadingApple = false;
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/' + RouteName.userPage);
-        });
+        // SchedulerBinding.instance!.addPostFrameCallback((_) {
+        //   routerDelegate.pushPageAndRemoveUntil(name: '/userPage');
+        // });
       } else if (state is AuthLoadingState) {
         _isLoading = state.isLoading;
         _isLoadingGoogle = state.isLoadingGoogle;
@@ -42,13 +44,13 @@ class LoginMobilePage extends LoginBasicPage {
       } else if (state is ChangePasswordSuccessState) {
         CustomSnackBar().show(
             context: context,
-            message:
-                'Se ha enviado un correo electrónico a tu cuenta con instrucciones',
+            message: 'Se ha enviado un correo electrónico a tu cuenta '
+                'con instrucciones',
             iconData: FontAwesomeIcons.exclamationCircle);
       } else if (state is Go2SignupState) {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
           // Navigator.pop(context);
-          Navigator.pushNamed(context, '/' + RouteName.signupPage);
+          routerDelegate.pushPage(name: '/signupPage');
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
         });
       } else if (state is AuthStateError) {
@@ -62,18 +64,20 @@ class LoginMobilePage extends LoginBasicPage {
       }
 
       return Container(
-        color: Color.fromRGBO(153, 148, 86, 60),
+        color: const Color.fromRGBO(153, 148, 86, 60),
         child: ListView(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                   left: 20.0, right: 20.0, top: 16.0, bottom: 2.0),
               child: CustomButton(
                 child: _isLoadingGoogle
-                    ? CircularProgressIndicator(backgroundColor: Colors.white)
+                ? null
+                    // ? const CircularProgressIndicator(
+                    //     backgroundColor: Colors.white)
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Icon(FontAwesomeIcons.google, color: Colors.white),
                           SizedBox(
                             width: 5.0,
@@ -86,7 +90,7 @@ class LoginMobilePage extends LoginBasicPage {
                       ),
                 color: Colors.red,
                 onPressed: () {
-                  Navigator.pop(context);
+                  // routerDelegate.popRoute();
                   BlocProvider.of<AuthBloc>(context).add(GoogleLogInEvent());
                 },
               ),
@@ -94,14 +98,15 @@ class LoginMobilePage extends LoginBasicPage {
             Visibility(
               visible: _visibleIfPlatform(context),
               child: Container(
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
                 child: CustomButton(
                   child: _isLoadingApple
-                      ? CircularProgressIndicator(backgroundColor: Colors.white)
+                      ? const CircularProgressIndicator(
+                          backgroundColor: Colors.white)
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(FontAwesomeIcons.apple, color: Colors.white),
                             SizedBox(
                               width: 5.0,
@@ -114,30 +119,30 @@ class LoginMobilePage extends LoginBasicPage {
                         ),
                   color: Colors.black,
                   onPressed: () {
-                    Navigator.pop(context);
+                    routerDelegate.popRoute();
                     BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
                   },
                 ),
               ),
             ),
-            Center(child: Text(AppLocalizations.of(context).logInO)),
+            Center(child: Text(AppLocalizations.of(context)!.logInO)),
             Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                   left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
               child: TextFormField(
                 controller: emailTextController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Usuario', hintText: 'Correo electrónico'),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                   left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
               child: TextFormField(
                 controller: passTextController,
                 keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Contraseña',
                 ),
                 obscureText: true,
@@ -150,11 +155,12 @@ class LoginMobilePage extends LoginBasicPage {
             ),
             CustomButton(
               child: _isLoading
-                  ? CircularProgressIndicator(backgroundColor: Colors.white)
-                  : Text(AppLocalizations.of(context).logIn,
-                      style: TextStyle(color: Colors.white)),
+                  ? const CircularProgressIndicator(
+                      backgroundColor: Colors.white)
+                  : Text(AppLocalizations.of(context)!.logIn,
+                      style: const TextStyle(color: Colors.white)),
               onPressed: () {
-                Navigator.pop(context);
+                routerDelegate.popRoute();
                 BlocProvider.of<AuthBloc>(context).add(LogInEvent(
                     email: emailTextController.text,
                     pass: passTextController.text));
@@ -163,7 +169,7 @@ class LoginMobilePage extends LoginBasicPage {
             Row(
               children: [
                 TextButton(
-                  child: Text(
+                  child: const Text(
                     'No recuerdo mi contraseña',
                     style: TextStyle(color: Colors.blueAccent),
                   ),
@@ -172,9 +178,9 @@ class LoginMobilePage extends LoginBasicPage {
                         .add(ChangePasswordEvent(emailTextController.text));
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 TextButton(
-                  child: Text(
+                  child: const Text(
                     'Registrarme',
                     style: TextStyle(color: Colors.blueAccent),
                   ),
@@ -195,7 +201,7 @@ class LoginMobilePage extends LoginBasicPage {
       if (PlatformDiscover.isMacOs(context)) {
         return false;
       }
-    } else if (Platform.isIOS || Platform.isMacOS){
+    } else if (Platform.isIOS || Platform.isMacOS) {
       return true;
     }
 

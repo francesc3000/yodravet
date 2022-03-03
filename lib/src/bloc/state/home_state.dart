@@ -6,7 +6,7 @@ class HomeInitState extends HomeState {
 }
 
 class UploadHomeFields extends HomeState {
-  final int index;
+  final int? index;
   
   UploadHomeFields({this.index});
 

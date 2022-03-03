@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../route/app_router_delegate.dart';
 import '../basic_page.dart';
 
 abstract class RaceBasicPage extends BasicPage {
   final bool isPortrait;
-  RaceBasicPage(String title, {this.isPortrait=true}) : super(title);
+  const RaceBasicPage(String title, AppRouterDelegate appRouterDelegate,
+  {this.isPortrait=true, Key? key}) : super(title, appRouterDelegate, key: key);
 
   @override
-  PreferredSizeWidget appBar(BuildContext context, {String title}) {
-    return null;
-  }
+  PreferredSizeWidget? appBar(BuildContext context, {String? title}) => null;
 
   @override
-  Widget bottomNavigationBar(BuildContext context) {
-    return null;
-  }
+  Widget? bottomNavigationBar(BuildContext context) => null;
 
   @override
-  Widget floatingActionButton(BuildContext context) {
-    return null;
-  }
+  Widget? floatingActionButton(BuildContext context) => null;
 }

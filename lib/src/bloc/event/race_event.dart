@@ -41,3 +41,8 @@ class UpdateRaceFieldsEvent extends RaceEvent{
   @override
   String toString() => 'UpdateRaceFields Event';
 }
+
+class ChangeMapSelectedEvent extends RaceEvent{
+  @override
+  String toString() => 'ChangeMapSelected Event';
+}

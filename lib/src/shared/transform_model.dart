@@ -9,14 +9,13 @@ import 'package:yodravet/src/model/user_dao.dart';
 
 class TransformModel {
   static UserDao raw2UserDao(
-      {String id,
-      String email,
-      String photo,
-      String name,
-      String lastname,
-      bool isStravaLogin,
-      List<ActivityDao> activitiesDao}) {
-    return UserDao(
+      {String? id,
+      String? email,
+      String? photo,
+      String? name,
+      String? lastname,
+      bool? isStravaLogin,
+      List<ActivityDao>? activitiesDao}) => UserDao(
       id: id,
       photo: photo,
       email: email,
@@ -25,10 +24,8 @@ class TransformModel {
       isStravaLogin: isStravaLogin,
       activitiesDao: activitiesDao,
     );
-  }
 
-  static User userDao2User(UserDao userDao) {
-    return User(
+  static User userDao2User(UserDao userDao) => User(
       id: userDao.id,
       email: userDao.email,
       name: userDao.name,
@@ -36,22 +33,20 @@ class TransformModel {
       photo: userDao.photo,
       isStravaLogin: userDao.isStravaLogin,
       activities:
-          TransformModel.activitiesDao2Activities(userDao.activitiesDao),
+          TransformModel.activitiesDao2Activities(userDao.activitiesDao!),
     );
-  }
 
   static raw2ActivityDao(
-      {String id,
-      String stravaId,
-      String raceId,
-      DateTime startDate,
-      double distance,
-      bool isDonate = false,
-      bool isPurchase = false,
+      {String? id,
+      String? stravaId,
+      String? raceId,
+      DateTime? startDate,
+      double? distance,
+      bool? isDonate = false,
+      bool? isPurchase = false,
       double totalPurchase = 0.0,
-      String type = 'Run',
-      bool isManual = false}) {
-    return ActivityDao(
+      String? type = 'Run',
+      bool isManual = false}) => ActivityDao(
       id: id,
       stravaId: stravaId,
       raceId: raceId,
@@ -59,9 +54,9 @@ class TransformModel {
       distance: distance,
       status: isManual
           ? ActivityStatus.manual
-          : isPurchase
+          : isPurchase!
               ? ActivityStatus.purchase
-              : isDonate
+              : isDonate!
                   ? ActivityStatus.donate
                   : ActivityStatus.nodonate,
       totalPurchase: totalPurchase,
@@ -71,10 +66,8 @@ class TransformModel {
               ? ActivityType.ride
               : ActivityType.run,
     );
-  }
 
-  static Activity activityDao2Activity(ActivityDao activityDao) {
-    return Activity(
+  static Activity activityDao2Activity(ActivityDao activityDao) => Activity(
       id: activityDao.id,
       stravaId: activityDao.stravaId,
       raceId: activityDao.raceId,
@@ -84,18 +77,13 @@ class TransformModel {
       totalPurchase: activityDao.totalPurchase,
       type: activityDao.type,
     );
-  }
 
   static List<Activity> activitiesDao2Activities(
-      List<ActivityDao> activitiesDao) {
-    return activitiesDao
-        .map((ActivityDao activityDao) =>
-            TransformModel.activityDao2Activity(activityDao))
+      List<ActivityDao> activitiesDao) => activitiesDao
+        .map(TransformModel.activityDao2Activity)
         .toList();
-  }
 
-  static ActivityDao activity2ActivityDao(Activity activity) {
-    return ActivityDao(
+  static ActivityDao activity2ActivityDao(Activity activity) => ActivityDao(
       id: activity.id,
       stravaId: activity.stravaId,
       raceId: activity.raceId,
@@ -105,10 +93,8 @@ class TransformModel {
       totalPurchase: activity.totalPurchase,
       type: activity.type,
     );
-  }
 
-  static Race raceDao2Race(RaceDao raceDao) {
-    return Race(
+  static Race raceDao2Race(RaceDao raceDao) => Race(
         kmCounter: raceDao.kmCounter,
         stageCounter: raceDao.stageCounter,
         extraCounter: raceDao.extraCounter,
@@ -118,19 +104,17 @@ class TransformModel {
         nextStageDate: raceDao.nextStageDate,
         startDate: raceDao.startDate,
         finalDate: raceDao.finalDate);
-  }
 
   static RaceDao raw2RaceDao(
       double kmCounter,
       double stageCounter,
       double extraCounter,
-      int stage,
+      int? stage,
       double stageLimit,
-      String stageTitle,
-      DateTime nextStageDate,
-      DateTime startDate,
-      DateTime finalDate) {
-    return RaceDao(
+      String? stageTitle,
+      DateTime? nextStageDate,
+      DateTime? startDate,
+      DateTime? finalDate) => RaceDao(
         kmCounter: kmCounter,
         stageCounter: stageCounter,
         extraCounter: extraCounter,
@@ -140,20 +124,18 @@ class TransformModel {
         nextStageDate: nextStageDate,
         startDate: startDate,
         finalDate: finalDate);
-  }
 
   static ActivityPurchaseDao raw2ActivityPurchaseDao(
-      {String id,
-      String stravaId,
-      String raceId,
-      DateTime startDate,
-      double distance,
-      double totalPurchase,
-      String userId,
-      String userFullname,
-      String userPhoto,
-      String type = 'Run' }) {
-    return ActivityPurchaseDao(
+      {String? id,
+      String? stravaId,
+      String? raceId,
+      DateTime? startDate,
+      double? distance,
+      double? totalPurchase,
+      String? userId,
+      String? userFullname,
+      String? userPhoto,
+      String? type = 'Run' }) => ActivityPurchaseDao(
       id: id,
       stravaId: stravaId,
       raceId: raceId,
@@ -169,11 +151,9 @@ class TransformModel {
               ? ActivityType.ride
               : ActivityType.run,
     );
-  }
 
   static ActivityPurchase activityPurchaseDao2ActivityPurchase(
-      ActivityPurchaseDao activityPurchaseDao) {
-    return ActivityPurchase(
+      ActivityPurchaseDao activityPurchaseDao) => ActivityPurchase(
       id: activityPurchaseDao.id,
       stravaId: activityPurchaseDao.stravaId,
       raceId: activityPurchaseDao.raceId,
@@ -185,14 +165,9 @@ class TransformModel {
       userPhoto: activityPurchaseDao.userPhoto,
       type: activityPurchaseDao.type,
     );
-  }
 
   static List<ActivityPurchase> activitiesPurchaseDao2ActivitiesPurchase(
-      List<ActivityPurchaseDao> activitiesPurchaseDao) {
-    return activitiesPurchaseDao
-        .map((ActivityPurchaseDao activityPurchaseDao) =>
-            TransformModel.activityPurchaseDao2ActivityPurchase(
-                activityPurchaseDao))
+      List<ActivityPurchaseDao> activitiesPurchaseDao) => activitiesPurchaseDao
+        .map(TransformModel.activityPurchaseDao2ActivityPurchase)
         .toList();
-  }
 }

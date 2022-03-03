@@ -13,34 +13,35 @@ class RaceDaoImpl extends RaceDaoInterface {
   final FirestoreRepositoryImpl firestore;
 
   RaceDaoImpl(this.firestore);
-  
-  @override
-  Stream<Race> streamRaceInfo(String raceId) {
-    return this.firestore.streamRaceInfo(raceId).transform<Race>(
-      StreamTransformer<RaceDao, Race>.fromHandlers(
-          handleData: (raceDao, sink) {
-        sink.add(TransformModel.raceDao2Race(raceDao));
-      }),
-    );
-  }
 
   @override
-  Stream<List<ActivityPurchase>> streamBuyers(String raceId) {
-    return this.firestore.streamBuyers(raceId).transform<List<ActivityPurchase>>(
-      StreamTransformer<List<ActivityPurchaseDao>, List<ActivityPurchase>>.fromHandlers(
-          handleData: (activitiesPurchaseDao, sink) {
-        sink.add(TransformModel.activitiesPurchaseDao2ActivitiesPurchase(activitiesPurchaseDao));
-      }),
-    );
-  }
+  Stream<Race> streamRaceInfo(String raceId) =>
+      firestore.streamRaceInfo(raceId)!.transform<Race>(
+        StreamTransformer<RaceDao, Race>.fromHandlers(
+            handleData: (raceDao, sink) {
+          sink.add(TransformModel.raceDao2Race(raceDao));
+        }),
+      );
 
   @override
-  Stream<List<ActivityPurchase>> streamDonors(String raceId) {
-    return this.firestore.streamDonors(raceId).transform<List<ActivityPurchase>>(
-      StreamTransformer<List<ActivityPurchaseDao>, List<ActivityPurchase>>.fromHandlers(
-          handleData: (activitiesPurchaseDao, sink) {
-        sink.add(TransformModel.activitiesPurchaseDao2ActivitiesPurchase(activitiesPurchaseDao));
-      }),
-    );
-  }
+  Stream<List<ActivityPurchase>> streamBuyers(String raceId) =>
+      firestore.streamBuyers(raceId)!.transform<List<ActivityPurchase>>(
+        StreamTransformer<List<ActivityPurchaseDao>,
+                List<ActivityPurchase>>.fromHandlers(
+            handleData: (activitiesPurchaseDao, sink) {
+          sink.add(TransformModel.activitiesPurchaseDao2ActivitiesPurchase(
+              activitiesPurchaseDao));
+        }),
+      );
+
+  @override
+  Stream<List<ActivityPurchase>> streamDonors(String raceId) =>
+      firestore.streamDonors(raceId)!.transform<List<ActivityPurchase>>(
+        StreamTransformer<List<ActivityPurchaseDao>,
+                List<ActivityPurchase>>.fromHandlers(
+            handleData: (activitiesPurchaseDao, sink) {
+          sink.add(TransformModel.activitiesPurchaseDao2ActivitiesPurchase(
+              activitiesPurchaseDao));
+        }),
+      );
 }

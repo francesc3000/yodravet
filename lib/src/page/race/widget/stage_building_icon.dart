@@ -12,7 +12,7 @@ class StageBuildingIcon extends StatelessWidget {
   final double width;
 
   const StageBuildingIcon(this.id,
-      {Key key,
+      {Key? key,
       this.name = '',
       this.photo = '',
       this.height = 60,
@@ -55,7 +55,7 @@ class StageBuildingIcon extends StatelessWidget {
                       image: DecorationImage(
                         image: AssetImage(photo),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
                     height: height,
                     width: width,
@@ -81,7 +81,7 @@ class StageBuildingIcon extends StatelessWidget {
               ),
             ],
           ),
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
         ),
       );
     });

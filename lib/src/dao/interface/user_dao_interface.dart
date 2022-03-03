@@ -9,7 +9,7 @@ abstract class UserDaoInterface {
   Future<bool> stravaLogout();
   Future<bool> logOut();
   Future<User> populateUser(String userId);
-  Future<String> isUserLoggedIn();
+  Future<String?> isUserLoggedIn();
   Future<bool> changePassword(String email);
   Future<String> createAuthUser(String email, String password);
   Future<bool> createUser(
@@ -17,5 +17,5 @@ abstract class UserDaoInterface {
   Future<bool> saveIsStravaLogin(String userId, bool isStravaLogin);
   Future<List<Activity>> getStravaActivities(DateTime before, DateTime after);
   Future<bool> donateKm(User user, String raceId, Activity activity);
-  Stream<Map<String, DateTime>> getRangeDates(String raceId);
+  Stream<Map<String, DateTime?>> getRangeDates(String raceId);
 }
