@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
-import 'package:yodravet/src/model/activity_purchase.dart';
+import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/stage_building.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
@@ -38,25 +38,28 @@ class RaceMobilePage extends RaceBasicPage {
       double _stageLimit = 0;
       String? _stageTitle = '';
       double? _stageDayLeft = 0;
-      List<ActivityPurchase>? _buyers = [];
+      List<Buyer> _buyers = [];
       StageBuilding? _currentStageBuilding;
       List<StageBuilding>? _stagesBuilding = [];
       List<Widget> slivers = [];
+      bool _isRaceOver = false;
 
       if (state is RaceInitState) {
         BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
         _loading = true;
       } else if (state is UpdateRaceFieldsState) {
-        _kmCounter = state.kmCounter! / 1000;
-        _stageCounter = state.stageCounter! / 1000;
-        _extraCounter = state.extraCounter! / 1000;
-        _stageLimit = state.stageLimit! / 1000;
+        _kmCounter = state.kmCounter / 1000;
+        _stageCounter = state.stageCounter / 1000;
+        _extraCounter = state.extraCounter / 1000;
+        _stageLimit = state.stageLimit / 1000;
         _stageTitle = state.stageTitle;
         _stageDayLeft = state.stageDayLeft;
         _riveArtboard = state.riveArtboard;
         _buyers = state.buyers;
         _stagesBuilding = state.stagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
+        _isSpainMapSelected = state.isSpainMapSelected;
+        _isRaceOver = state.isRaceOver;
         _loading = false;
         if (_currentStageBuilding != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
@@ -74,7 +77,6 @@ class RaceMobilePage extends RaceBasicPage {
                     imageFit: BoxFit.cover));
           });
         }
-        _isSpainMapSelected = state.isSpainMapSelected!;
       } else if (state is RaceStateError) {
         _loading = false;
       }
@@ -87,11 +89,11 @@ class RaceMobilePage extends RaceBasicPage {
 
       slivers.clear();
       slivers.add(_buildTotalCounter(context, _kmCounter));
-      slivers.add(_buildSubCounters(context, _stageTitle!, _stageLimit,
-          _stageCounter, _extraCounter, _stageDayLeft!));
+      slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
+          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
       slivers.add(_buildMap(
           context, _riveArtboard, _stagesBuilding, _isSpainMapSelected));
-      slivers.add(_buildBuyersList(context, _buyers!));
+      slivers.add(_buildBuyersList(context, _buyers));
 
       return Container(
         color: const Color.fromRGBO(153, 148, 86, 60),
@@ -143,73 +145,90 @@ class RaceMobilePage extends RaceBasicPage {
           double stageLimit,
           double stageCounter,
           double extraCounter,
-          double stageDayLeft) =>
+          double stageDayLeft,
+          bool isRaceOver) =>
       SliverPersistentHeader(
         pinned: false,
         delegate: SliverAppBarDelegate(
           minHeight: 80,
           maxHeight: 80,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: isRaceOver
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
             children: [
               Column(
                 children: [
                   Text(stageTitle),
-                  Text(AppLocalizations.of(context)!.stageTitle),
-                  Row(
-                    children: [
-                      Countup(
-                        begin: 0,
-                        end: stageCounter,
-                        precision: 1,
-                        duration: const Duration(seconds: 3),
-                        // separator: '.',
-                        locale: Localizations.localeOf(context),
-                        style: const TextStyle(
-                          fontSize: 26,
+                  Visibility(
+                      visible: isRaceOver,
+                      child: Text(AppLocalizations.of(context)!.stageTitle),),
+                  Visibility(
+                    visible: isRaceOver,
+                    child: Row(
+                      children: [
+                        Countup(
+                          begin: 0,
+                          end: stageCounter,
+                          precision: 1,
+                          duration: const Duration(seconds: 3),
+                          // separator: '.',
+                          locale: Localizations.localeOf(context),
+                          style: const TextStyle(
+                            fontSize: 26,
+                          ),
                         ),
-                      ),
-                      Text(
-                        ' / ${stageLimit.round()}',
-                        style: const TextStyle(fontSize: 26),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Column(
-                children: [
-                  Text(AppLocalizations.of(context)!.leftDayTitle),
-                  Countup(
-                    begin: 0,
-                    end: stageDayLeft,
-                    precision: 0,
-                    duration: const Duration(seconds: 3),
-                    // separator: '.',
-                    locale: Localizations.localeOf(context),
-                    style: const TextStyle(
-                      fontSize: 26,
+                        Text(
+                          ' / ${stageLimit.round()}',
+                          style: const TextStyle(fontSize: 26),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const Spacer(),
-              Column(
-                children: [
-                  Text(AppLocalizations.of(context)!.extraTitle),
-                  Countup(
-                    begin: 0,
-                    end: extraCounter,
-                    precision: 1,
-                    duration: const Duration(seconds: 3),
-                    // separator: '.',
-                    locale: Localizations.localeOf(context),
-                    style: const TextStyle(
-                      fontSize: 26,
+              Visibility(
+                visible: isRaceOver,
+                child: const Spacer(),
+              ),
+              Visibility(
+                visible: isRaceOver,
+                child: Column(
+                  children: [
+                    Text(AppLocalizations.of(context)!.leftDayTitle),
+                    Countup(
+                      begin: 0,
+                      end: stageDayLeft,
+                      precision: 0,
+                      duration: const Duration(seconds: 3),
+                      // separator: '.',
+                      locale: Localizations.localeOf(context),
+                      style: const TextStyle(
+                        fontSize: 26,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              Visibility(visible: isRaceOver, child: const Spacer()),
+              Visibility(
+                visible: isRaceOver,
+                child: Column(
+                  children: [
+                    Text(AppLocalizations.of(context)!.extraTitle),
+                    Countup(
+                      begin: 0,
+                      end: extraCounter,
+                      precision: 1,
+                      duration: const Duration(seconds: 3),
+                      // separator: '.',
+                      locale: Localizations.localeOf(context),
+                      style: const TextStyle(
+                        fontSize: 26,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -245,7 +264,7 @@ class RaceMobilePage extends RaceBasicPage {
               children: [
                 IconButton(
                   icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
-                  color: Colors.blue,
+                  color: const Color.fromARGB(255, 140, 71, 153),
                   iconSize: 30,
                   onPressed: () => BlocProvider.of<RaceBloc>(context)
                       .add(ChangeMapSelectedEvent()),
@@ -264,7 +283,7 @@ class RaceMobilePage extends RaceBasicPage {
               children: [
                 IconButton(
                   icon: const Icon(FontAwesomeIcons.arrowCircleRight),
-                  color: Colors.blue,
+                  color: const Color.fromARGB(255, 140, 71, 153),
                   iconSize: 30,
                   onPressed: () => BlocProvider.of<RaceBloc>(context)
                       .add(ChangeMapSelectedEvent()),
@@ -397,27 +416,20 @@ class RaceMobilePage extends RaceBasicPage {
     );
   }
 
-  Widget _buildBuyersList(
-          BuildContext context, List<ActivityPurchase> buyers) =>
+  Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) =>
       SliverList(
         delegate: SliverChildListDelegate(_buildBuyers(context, buyers)),
       );
 
-  List<Widget> _buildBuyers(
-      BuildContext context, List<ActivityPurchase> buyers) {
+  List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
     List<Widget> slivers = [];
     int poleCounter = 1;
-
-    // if (buyers.isNotEmpty) {
-    // slivers.add(Center(child: Text('Compra tus km en
-    // yodravetapp@gmail.com')));
-    // }
 
     slivers.add(
       Center(
         child: RichText(
           text: TextSpan(
-              text: 'Compra tus km solidarios en ',
+              text: 'Compra tus mariposas en ',
               style: const TextStyle(fontFamily: 'AkayaTelivigala'),
               children: [
                 TextSpan(
@@ -442,14 +454,14 @@ class RaceMobilePage extends RaceBasicPage {
       ),
     );
 
-    for (ActivityPurchase buyer in buyers) {
-      double distance = buyer.distance! / 1000;
-      Widget userPhoto = buyer.userPhoto!.isEmpty
-          ? Image.asset('assets/images/defaultAvatar.png')
+    for (Buyer buyer in buyers) {
+      int butterfly = buyer.butterfly.toInt();
+      Widget userPhoto = buyer.userPhoto.isEmpty
+          ? Image.asset('assets/images/avatar.png')
           : Image.network(
-              buyer.userPhoto!,
+              buyer.userPhoto,
               loadingBuilder: (context, child, imageEvent) =>
-                  Image.asset('assets/images/defaultAvatar.png'),
+                  Image.asset('assets/images/avatar.png'),
             );
 
       slivers.add(
@@ -461,12 +473,23 @@ class RaceMobilePage extends RaceBasicPage {
                 child: ListTile(
                   leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: userPhoto),
-                  title: Text('${buyer.userFullname}'),
+                      child: Container(color: Colors.white, child: userPhoto)),
+                  title: Text(buyer.userFullname),
                   subtitle: Text('${buyer.totalPurchase}' ' €'),
-                  trailing: Text(
-                    '${distance}Km',
-                    style: const TextStyle(fontSize: 19),
+                  trailing: Wrap(
+                    direction: Axis.vertical,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Text(
+                        '$butterfly',
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                      Image.asset(
+                        "assets/images/butterflies.png",
+                        height: 50,
+                        width: 50,
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -9,7 +9,9 @@ abstract class SignupBasicPage extends BasicPage {
       : super(title, appRouterDelegate, key: key);
 
   @override
-  PreferredSizeWidget? appBar(BuildContext context, {String? title}) => AppBar(
+  PreferredSizeWidget? appBar(BuildContext context,
+          {String? title, bool isMusicOn = false}) =>
+      AppBar(
         title: Text(title!),
       );
 

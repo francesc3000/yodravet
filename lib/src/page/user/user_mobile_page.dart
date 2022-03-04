@@ -106,7 +106,14 @@ class UserMobilePage extends UserBasicPage {
             leading: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: photoUrl.isEmpty
-                    ? Image.asset('assets/images/defaultAvatar.png')
+                    ? Container(
+                        color: Colors.white,
+                        child: Image.asset(
+                          'assets/images/avatar.png',
+                          height: 50,
+                          width: 50,
+                        ),
+                )
                     : Image.network(photoUrl)),
             title: Text(fullName),
             trailing: ElevatedButton(
@@ -422,7 +429,7 @@ class UserMobilePage extends UserBasicPage {
     for (ActivityPurchase donor in donors) {
       double distance = donor.distance! / 1000;
       Widget userPhoto = donor.userPhoto!.isEmpty
-          ? Image.asset('assets/images/defaultAvatar.png')
+          ? Image.asset('assets/images/avatar.png')
           : Image.network(donor.userPhoto!);
       IconData iconData;
       switch (donor.type) {

@@ -1,4 +1,5 @@
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
+import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/user_dao.dart';
 
@@ -25,7 +26,7 @@ abstract class Repository implements Endpoints {
       bool userRaceIsPurchase,
       double totalPurchase,
       String activityType);
-  Stream<RaceDao>? streamRaceInfo(String raceId);
-  Stream<List<ActivityPurchaseDao>>? streamBuyers(String raceId);
+  Stream<RaceDao?> streamRaceInfo(String raceId);
+  Stream<List<BuyerDao>> streamBuyers(String raceId);
   Stream<List<ActivityPurchaseDao>>? streamDonors(String raceId);
 }

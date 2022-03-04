@@ -9,8 +9,8 @@ abstract class LoginBasicPage extends BasicPage {
       : super(title, appRouterDelegate, key: key);
 
   @override
-  PreferredSizeWidget? appBar(BuildContext context, {String? title}) =>
-      AppBar();
+  PreferredSizeWidget? appBar(BuildContext context,
+          {String? title, bool isMusicOn = false}) => null;
 
   @override
   Widget? bottomNavigationBar(BuildContext context) => null;

@@ -9,13 +9,13 @@ import 'package:yodravet/src/page/race/race_page.dart';
 
 import '../../bloc/event/home_event.dart';
 import '../../route/app_router_delegate.dart';
-import '../login/login_page.dart';
-import '../test_page.dart';
 import 'home_basic_page.dart';
 
 class HomeDesktopPage extends HomeBasicPage {
-  const HomeDesktopPage(String title, AppRouterDelegate appRouterDelegate,
-  {Key? key}) : super(title, appRouterDelegate, key: key);
+  const HomeDesktopPage(
+      String title, AppRouterDelegate appRouterDelegate, bool isMusicOn,
+      {Key? key})
+      : super(title, appRouterDelegate, isMusicOn, key: key);
 
   @override
   Widget body(BuildContext context) {
@@ -29,31 +29,15 @@ class HomeDesktopPage extends HomeBasicPage {
 
       if (state is HomeInitState) {
         BlocProvider.of<AuthBloc>(context).add(AutoLogInEvent());
+        BlocProvider.of<HomeBloc>(context).add(HomeInitDataEvent());
       } else if (state is UploadHomeFields) {
         _currentIndex = state.index;
       } else if (state is Navigate2UserPageState) {
         SchedulerBinding.instance!.addPostFrameCallback((_) {
           routerDelegate.pushPage(name: '/userPage');
         });
-      } else if (state is Navigate2LoginState) {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
-          showModalBottomSheet(
-              context: context,
-              shape: const RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.vertical(top: Radius.circular(25.0)),
-              ),
-              builder: (BuildContext bc) => Container(
-                  child: TestPage(routerDelegate), //LoginPage(routerDelegate),
-                  alignment: Alignment.bottomCenter,
-                  height: MediaQuery.of(context).copyWith().size.height,
-                ));
-          // routerDelegate.pushPage(name: "/loginPage");
-          BlocProvider.of<HomeBloc>(context)
-          .add(Navigate2LoginSuccessEvent());
-        });
       }
-      return _pages[_currentIndex!];
+      return _pages[_currentIndex];
     });
   }
 }

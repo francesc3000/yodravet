@@ -3,7 +3,7 @@ import 'package:rive/rive.dart';
 class RaceMapFactory {
   Artboard? riveArtboard;
   bool _first = false;
-  int? _stage = -1;
+  int _stage = -1;
   RiveAnimationController? _firstControllerStep;
 
   Map<int, int> linkStageStep = {
@@ -18,8 +18,13 @@ class RaceMapFactory {
     9: 0
   };
 
-  Future init(
-      int? stage, DateTime? startStageDate, DateTime? nextStageDate) async {
+  RaceMapFactory() {
+    RiveFile.asset('assets/images/race/spain.riv')
+        .then((file) => riveArtboard = file.mainArtboard);
+  }
+
+  Future<void> init(
+      int stage, DateTime startStageDate, DateTime nextStageDate) async {
     if (_stage != stage) {
       _stage = stage;
       _first = false;
@@ -27,19 +32,15 @@ class RaceMapFactory {
       return;
     }
 
-    final file = await RiveFile.asset('assets/images/race/spain.riv');
-
-    riveArtboard = file.mainArtboard;
-
     MySimpleAnimation? _preControllerStep;
     MySimpleAnimation _controllerStep;
-    int i;
-    for (i = 1; i <= stage!; i++) {
+
+    for (int i = 1; i <= stage; i++) {
       final today = DateTime.now();
       int? step = 0;
-      if (today.isAtSameMomentAs(startStageDate!) ||
+      if (today.isAtSameMomentAs(startStageDate) ||
           today.isAfter(startStageDate)) {
-        if (i == stage && today.isBefore(nextStageDate!)) {
+        if (i == stage && today.isBefore(nextStageDate)) {
           var diffDays = nextStageDate.difference(today).inDays;
           step = linkStageStep[stage]! - diffDays;
           step = step.abs();

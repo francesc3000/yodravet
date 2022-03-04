@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
+import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/user_dao.dart';
 import 'package:yodravet/src/shared/transform_model.dart';
@@ -177,11 +178,11 @@ class FirestoreRepositoryImpl implements Repository {
   }
 
   @override
-  Stream<RaceDao>? streamRaceInfo(String raceId) =>
-      raceCollectionEndpoint.doc(raceId).snapshots().transform<RaceDao>(
+  Stream<RaceDao?> streamRaceInfo(String raceId) =>
+      raceCollectionEndpoint.doc(raceId).snapshots().transform<RaceDao?>(
         StreamTransformer<DocumentSnapshot<Map<String, dynamic>>,
-            RaceDao>.fromHandlers(handleData: (snapshot, sink) {
-          RaceDao raceDao = RaceDao();
+            RaceDao?>.fromHandlers(handleData: (snapshot, sink) {
+          RaceDao? raceDao;
 
           if (snapshot.exists) {
             Map? data = snapshot.data();
@@ -204,25 +205,23 @@ class FirestoreRepositoryImpl implements Repository {
       );
 
   @override
-  Stream<List<ActivityPurchaseDao>>? streamBuyers(String raceId) =>
+  Stream<List<BuyerDao>> streamBuyers(String raceId) =>
       raceCollectionEndpoint
           .doc(raceId)
-          .collection('pool')
-          .where('isPurchase', isEqualTo: true)
+          .collection('butterflies')
           .snapshots()
-          .transform<List<ActivityPurchaseDao>>(
+          .transform<List<BuyerDao>>(
         StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
-            List<ActivityPurchaseDao>>.fromHandlers(handleData: (query, sink) {
-          List<ActivityPurchaseDao> buyers = [];
+            List<BuyerDao>>.fromHandlers(handleData: (query, sink) {
+          List<BuyerDao> buyers = [];
 
           if (query.docs.isNotEmpty) {
-            buyers = query.docs.map<ActivityPurchaseDao>((snapshot) {
+            buyers = query.docs.map<BuyerDao>((snapshot) {
               Map data = snapshot.data();
-              return TransformModel.raw2ActivityPurchaseDao(
+              return TransformModel.raw2BuyerDao(
                   id: snapshot.id,
-                  raceId: raceId,
-                  startDate: data['date'].toDate(),
-                  distance: double.parse(data['distance'].toString()),
+                  date: data['date'].toDate(),
+                  butterfly: double.parse(data['butterfly'].toString()),
                   totalPurchase: double.parse(data['totalPurchase'].toString()),
                   userId: data['userId'],
                   userFullname: data['userFullname'],
@@ -237,8 +236,8 @@ class FirestoreRepositoryImpl implements Repository {
   Stream<List<ActivityPurchaseDao>>? streamDonors(String raceId) =>
       raceCollectionEndpoint
           .doc(raceId)
-          .collection('pool')
-          .where('isDonate', isEqualTo: true)
+          .collection('butterflies')
+          // .where('isDonate', isEqualTo: true)
           .snapshots()
           .transform<List<ActivityPurchaseDao>>(
         StreamTransformer<QuerySnapshot<Map<String, dynamic>>,

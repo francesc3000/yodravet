@@ -8,7 +8,9 @@ abstract class UnknownBasicPage extends BasicPage {
       : super("", routerDelegate, key: key);
 
   @override
-  PreferredSizeWidget? appBar(BuildContext context, {String? title}) => null;
+  PreferredSizeWidget? appBar(BuildContext context,
+          {String? title, bool isMusicOn = false}) =>
+      null;
 
   @override
   Widget? bottomNavigationBar(BuildContext context) => null;

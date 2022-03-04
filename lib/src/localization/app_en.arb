@@ -19,7 +19,7 @@
   "@logIn": {
     "description": "signIn"
   },
-  "stageTitle": "Km Etapa",
+  "stageTitle": "Km/Etapa",
   "@stageTitle": {
     "description": "stageTitle"
   },

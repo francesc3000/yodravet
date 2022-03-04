@@ -8,15 +8,16 @@ import 'package:yodravet/src/shared/platform_discover.dart';
 
 import '../../route/app_router_delegate.dart';
 import '../basic_page.dart';
-import '../login/login_page.dart';
 
 abstract class HomeBasicPage extends BasicPage {
-  const HomeBasicPage(String title, AppRouterDelegate appRouterDelegate,
+  const HomeBasicPage(
+      String title, AppRouterDelegate appRouterDelegate, bool isMusicOn,
       {Key? key})
-      : super(title, appRouterDelegate, key: key);
+      : super(title, appRouterDelegate, key: key, isMusicOn: isMusicOn);
 
   @override
-  PreferredSizeWidget appBar(BuildContext context, {String? title}) {
+  PreferredSizeWidget appBar(BuildContext context,
+      {String? title, bool isMusicOn = false}) {
     if (PlatformDiscover.isWeb()) {
       return AppBar(
         title: Container(
@@ -29,7 +30,7 @@ abstract class HomeBasicPage extends BasicPage {
           ),
         ),
         elevation: 0.0,
-        backgroundColor: const Color.fromRGBO(153, 148, 86, 60),
+        backgroundColor: const Color.fromARGB(255, 140, 71, 153),
         actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.userCircle),
@@ -38,10 +39,12 @@ abstract class HomeBasicPage extends BasicPage {
               BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
             },
           ),
+          _musicIconButton(context, isMusicOn),
         ],
       );
     } else {
       return AppBar(
+        backgroundColor: const Color.fromARGB(255, 140, 71, 153),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: Container(
@@ -57,13 +60,13 @@ abstract class HomeBasicPage extends BasicPage {
         ),
         title: Text(title!),
         actions: [
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.userCircle),
-            tooltip: AppLocalizations.of(context)!.userTooltip,
-            onPressed: () {
-              BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(FontAwesomeIcons.userCircle),
+          //   tooltip: AppLocalizations.of(context)!.userTooltip,
+          //   onPressed: () {
+          //     BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
+          //   },
+          // ),
           // RawMaterialButton(
           //   onPressed: () {
           //     BlocProvider.of<HomeBloc>(context)
@@ -84,10 +87,20 @@ abstract class HomeBasicPage extends BasicPage {
           //   ),
           //   shape: CircleBorder(),
           // ),
+          _musicIconButton(context, isMusicOn),
         ],
       );
     }
   }
+
+  Widget _musicIconButton(BuildContext context, bool isMusicOn) => IconButton(
+        onPressed: () {
+          BlocProvider.of<HomeBloc>(context).add(ChangeMuteOptionEvent());
+        },
+        icon: isMusicOn
+            ? const Icon(FontAwesomeIcons.music)
+            : const Icon(FontAwesomeIcons.pause),
+      );
 
   @override
   Widget? bottomNavigationBar(BuildContext context) => null;

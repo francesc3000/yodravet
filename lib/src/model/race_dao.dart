@@ -1,22 +1,22 @@
 class RaceDao {
-  double? kmCounter;
-  double? stageCounter;
-  double? extraCounter;
-  int? stage;
-  double? stageLimit;
-  String? stageTitle;
-  DateTime? nextStageDate;
-  DateTime? startDate;
-  DateTime? finalDate;
+  double kmCounter;
+  double stageCounter;
+  double extraCounter;
+  int stage;
+  double stageLimit;
+  String stageTitle;
+  DateTime nextStageDate;
+  DateTime startDate;
+  DateTime finalDate;
 
   RaceDao(
-      {this.kmCounter,
-      this.stageCounter,
-      this.extraCounter,
-      this.stage,
-      this.stageLimit,
-      this.stageTitle,
-      this.nextStageDate,
-      this.startDate,
-      this.finalDate});
+      {required this.kmCounter,
+      required this.stageCounter,
+      required this.extraCounter,
+      required this.stage,
+      required this.stageLimit,
+      required this.stageTitle,
+      required this.nextStageDate,
+      required this.startDate,
+      required this.finalDate});
 }

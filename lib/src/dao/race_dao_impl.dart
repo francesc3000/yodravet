@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
+import 'package:yodravet/src/model/buyer.dart';
+import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/repository/firestore_repository_impl.dart';
@@ -15,22 +17,21 @@ class RaceDaoImpl extends RaceDaoInterface {
   RaceDaoImpl(this.firestore);
 
   @override
-  Stream<Race> streamRaceInfo(String raceId) =>
-      firestore.streamRaceInfo(raceId)!.transform<Race>(
-        StreamTransformer<RaceDao, Race>.fromHandlers(
+  Stream<Race?> streamRaceInfo(String raceId) =>
+      firestore.streamRaceInfo(raceId).transform<Race?>(
+        StreamTransformer<RaceDao?, Race?>.fromHandlers(
             handleData: (raceDao, sink) {
-          sink.add(TransformModel.raceDao2Race(raceDao));
+          sink.add(
+              raceDao == null ? null : TransformModel.raceDao2Race(raceDao));
         }),
       );
 
   @override
-  Stream<List<ActivityPurchase>> streamBuyers(String raceId) =>
-      firestore.streamBuyers(raceId)!.transform<List<ActivityPurchase>>(
-        StreamTransformer<List<ActivityPurchaseDao>,
-                List<ActivityPurchase>>.fromHandlers(
-            handleData: (activitiesPurchaseDao, sink) {
-          sink.add(TransformModel.activitiesPurchaseDao2ActivitiesPurchase(
-              activitiesPurchaseDao));
+  Stream<List<Buyer>> streamBuyers(String raceId) =>
+      firestore.streamBuyers(raceId).transform<List<Buyer>>(
+        StreamTransformer<List<BuyerDao>, List<Buyer>>.fromHandlers(
+            handleData: (buyersDao, sink) {
+          sink.add(TransformModel.buyersDao2Buyers(buyersDao));
         }),
       );
 

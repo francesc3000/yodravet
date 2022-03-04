@@ -13,7 +13,9 @@ class PrivacyPolicyDesktopPage extends PrivacyPolicyBasicPage {
       : super(title, appRouterDelegate, key: key);
 
   @override
-  PreferredSizeWidget? appBar(BuildContext context, {String? title}) => null;
+  PreferredSizeWidget? appBar(BuildContext context,
+          {String? title, bool isMusicOn = false}) =>
+      null;
 
   @override
   Widget body(BuildContext context) => SafeArea(

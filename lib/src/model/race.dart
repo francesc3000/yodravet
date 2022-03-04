@@ -1,22 +1,24 @@
 class Race {
-  double? kmCounter;
-  double? stageCounter;
-  double? extraCounter;
-  int? stage;
-  double? stageLimit;
-  String? stageTitle;
-  DateTime? nextStageDate;
-  DateTime? startDate;
-  DateTime? finalDate;
+  double kmCounter;
+  double stageCounter;
+  double extraCounter;
+  int stage;
+  double stageLimit;
+  String stageTitle;
+  DateTime nextStageDate;
+  DateTime startDate;
+  DateTime finalDate;
 
   Race(
-      {this.kmCounter = 0,
-      this.stageCounter = 0,
-      this.extraCounter = 0,
-      this.stage = 1,
-      this.stageLimit = 0,
-      this.stageTitle = '',
-      this.nextStageDate,
-      this.startDate,
-      this.finalDate});
+      {required this.kmCounter,
+        required this.stageCounter,
+        required this.extraCounter,
+        required this.stage,
+        required this.stageLimit,
+        required this.stageTitle,
+        required this.nextStageDate,
+        required this.startDate,
+        required this.finalDate});
+
+  bool get isOver => DateTime.now().compareTo(finalDate) > 0;
 }

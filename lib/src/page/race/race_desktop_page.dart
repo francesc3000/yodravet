@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
-import 'package:yodravet/src/model/activity_purchase.dart';
+import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/stage_building.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
@@ -38,19 +38,20 @@ class RaceDesktopPage extends RaceBasicPage {
       double _stageLimit = 0;
       String? _stageTitle = '';
       double? _stageDayLeft = 0;
-      List<ActivityPurchase>? _buyers = [];
+      List<Buyer> _buyers = [];
       StageBuilding? _currentStageBuilding;
       List<StageBuilding>? _stagesBuilding = [];
       List<Widget> slivers = [];
+      bool _isRaceOver = false;
 
       if (state is RaceInitState) {
         BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
         _loading = true;
       } else if (state is UpdateRaceFieldsState) {
-        _kmCounter = state.kmCounter! / 1000;
-        _stageCounter = state.stageCounter! / 1000;
-        _extraCounter = state.extraCounter! / 1000;
-        _stageLimit = state.stageLimit! / 1000;
+        _kmCounter = state.kmCounter / 1000;
+        _stageCounter = state.stageCounter / 1000;
+        _extraCounter = state.extraCounter / 1000;
+        _stageLimit = state.stageLimit / 1000;
         _stageTitle = state.stageTitle;
         _riveArtboard = state.riveArtboard;
         _buyers = state.buyers;
@@ -58,6 +59,7 @@ class RaceDesktopPage extends RaceBasicPage {
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
         _stageDayLeft = state.stageDayLeft;
+        _isRaceOver = state.isRaceOver;
         if (_currentStageBuilding != null && !_isShowModalOn) {
           _isShowModalOn = true;
           SchedulerBinding.instance!.addPostFrameCallback((_) {
@@ -92,8 +94,8 @@ class RaceDesktopPage extends RaceBasicPage {
       }
 
       slivers.clear();
-      slivers.add(_buildCounters(context, _kmCounter, _stageTitle!, _stageLimit,
-          _stageCounter, _extraCounter, _stageDayLeft!));
+      slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
+          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
       slivers.add(_buildMap(context, _riveArtboard, _buyers, _stagesBuilding));
 
       return Container(
@@ -122,14 +124,17 @@ class RaceDesktopPage extends RaceBasicPage {
           double stageLimit,
           double stageCounter,
           double extraCounter,
-          double stageDayLeft) =>
+          double stageDayLeft,
+      bool isRaceOver) =>
       SliverPersistentHeader(
         pinned: false,
         delegate: SliverAppBarDelegate(
           minHeight: 140,
           maxHeight: 140,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: isRaceOver
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
             children: [
               Column(
                 children: [
@@ -139,60 +144,63 @@ class RaceDesktopPage extends RaceBasicPage {
                       fontSize: 36,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.stageTitle,
-                            style: const TextStyle(
-                              fontSize: 26,
+                  Visibility(
+                    visible: isRaceOver,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.stageTitle,
+                              style: const TextStyle(
+                                fontSize: 26,
+                              ),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Countup(
-                                begin: 0,
-                                end: stageCounter,
-                                precision: 1,
-                                duration: const Duration(seconds: 3),
-                                // separator: '.',
-                                locale: Localizations.localeOf(context),
-                                style: const TextStyle(
-                                  fontSize: 36,
+                            Row(
+                              children: [
+                                Countup(
+                                  begin: 0,
+                                  end: stageCounter,
+                                  precision: 1,
+                                  duration: const Duration(seconds: 3),
+                                  // separator: '.',
+                                  locale: Localizations.localeOf(context),
+                                  style: const TextStyle(
+                                    fontSize: 36,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                ' / ${stageLimit.round()}',
-                                style: const TextStyle(fontSize: 36),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.leftDayTitle,
-                            style: const TextStyle(
-                              fontSize: 26,
+                                Text(
+                                  ' / ${stageLimit.round()}',
+                                  style: const TextStyle(fontSize: 36),
+                                ),
+                              ],
                             ),
-                          ),
-                          Countup(
-                            begin: 0,
-                            end: stageDayLeft,
-                            precision: 0,
-                            duration: const Duration(seconds: 3),
-                            // separator: '.',
-                            locale: Localizations.localeOf(context),
-                            style: const TextStyle(
-                              fontSize: 36,
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.leftDayTitle,
+                              style: const TextStyle(
+                                fontSize: 26,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Countup(
+                              begin: 0,
+                              end: stageDayLeft,
+                              precision: 0,
+                              duration: const Duration(seconds: 3),
+                              // separator: '.',
+                              locale: Localizations.localeOf(context),
+                              style: const TextStyle(
+                                fontSize: 36,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -216,26 +224,29 @@ class RaceDesktopPage extends RaceBasicPage {
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.extraTitle,
-                    style: const TextStyle(
-                      fontSize: 36,
+              Visibility(
+                visible: isRaceOver,
+                child: Column(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.extraTitle,
+                      style: const TextStyle(
+                        fontSize: 36,
+                      ),
                     ),
-                  ),
-                  Countup(
-                    begin: 0,
-                    end: extraCounter,
-                    precision: 1,
-                    duration: const Duration(seconds: 3),
-                    // separator: '.',
-                    locale: Localizations.localeOf(context),
-                    style: const TextStyle(
-                      fontSize: 36,
+                    Countup(
+                      begin: 0,
+                      end: extraCounter,
+                      precision: 1,
+                      duration: const Duration(seconds: 3),
+                      // separator: '.',
+                      locale: Localizations.localeOf(context),
+                      style: const TextStyle(
+                        fontSize: 36,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -243,7 +254,7 @@ class RaceDesktopPage extends RaceBasicPage {
       );
 
   Widget _buildMap(BuildContext context, Artboard? riveArtboard,
-      List<ActivityPurchase>? buyers, List<StageBuilding>? stagesBuilding) {
+      List<Buyer> buyers, List<StageBuilding>? stagesBuilding) {
     Widget child;
 
     if (riveArtboard != null) {
@@ -383,7 +394,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   child: Center(
                     child: RichText(
                       text: TextSpan(
-                          text: 'Compra tus km solidarios en ',
+                          text: 'Compra tus mariposas en ',
                           style: const TextStyle(fontFamily: 'AkayaTelivigala'),
                           children: [
                             TextSpan(
@@ -412,7 +423,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   flex: 10,
                   child: Scrollbar(
                     child: ListView.builder(
-                        itemCount: buyers!.length,
+                        itemCount: buyers.length,
                         itemBuilder: (context, index) =>
                             _buildBuyer(context, index, buyers[index])),
                   ),
@@ -436,14 +447,14 @@ class RaceDesktopPage extends RaceBasicPage {
     );
   }
 
-  Widget _buildBuyer(BuildContext context, int index, ActivityPurchase buyer) {
-    double distance = buyer.distance! / 1000;
-    Widget userPhoto = buyer.userPhoto!.isEmpty
-        ? Image.asset('assets/images/defaultAvatar.png')
+  Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
+    int butterfly = buyer.butterfly.toInt();
+    Widget userPhoto = buyer.userPhoto.isEmpty
+        ? Image.asset('assets/images/avatar.png')
         : Image.network(
-            buyer.userPhoto!,
+            buyer.userPhoto,
             loadingBuilder: (context, child, imageEvent) =>
-                Image.asset('assets/images/defaultAvatar.png'),
+                Image.asset('assets/images/avatar.png'),
           );
     int poleCounter = index + 1;
 
@@ -454,12 +465,20 @@ class RaceDesktopPage extends RaceBasicPage {
             color: const Color.fromRGBO(89, 63, 153, 1),
             child: ListTile(
               leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(100), child: userPhoto),
-              title: Text('${buyer.userFullname}'),
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(color: Colors.white, child: userPhoto)),
+              title: Text(buyer.userFullname),
               subtitle: Text('${buyer.totalPurchase}' ' €'),
-              trailing: Text(
-                '${distance}Km',
-                style: const TextStyle(fontSize: 19),
+              trailing: Wrap(
+                direction: Axis.vertical,
+                alignment: WrapAlignment.center,
+                children: [
+                  Text(
+                    '$butterfly',
+                    style: const TextStyle(fontSize: 19),
+                  ),
+                  Image.asset("assets/images/butterflies.png")
+                ],
               ),
             ),
           ),

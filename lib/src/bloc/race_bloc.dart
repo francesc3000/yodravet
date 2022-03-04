@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
-import 'package:yodravet/src/model/activity_purchase.dart';
+import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/researcher.dart';
 import 'package:yodravet/src/model/stage_building.dart';
@@ -12,14 +12,14 @@ import 'event/race_event.dart';
 import 'state/race_state.dart';
 
 class RaceBloc extends Bloc<RaceEvent, RaceState> {
-  final Race _race = Race();
+  Race? _race;
   double _stageDayLeft = 0;
   final FactoryDao factoryDao;
-  final List<ActivityPurchase> _buyers = [];
+  final List<Buyer> _buyers = [];
   final RaceMapFactory _raceMapFactory = RaceMapFactory();
   StageBuilding? _currentStageBuilding;
   StageBuilding? _currentMouseStageBuilding;
-  bool? _isSpainMapSelected;
+  bool _isSpainMapSelected = true;
   final List<StageBuilding> _stagesBuilding = [
     StageBuilding('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
         'assets/images/race/stages/centrofelipe.png', [
@@ -201,24 +201,42 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     String editionId = Edition.currentEdition;
     try {
       factoryDao.raceDao.streamRaceInfo(editionId).listen((race) async {
-        _race.kmCounter = race.kmCounter;
-        _race.stageCounter = race.stageCounter;
-        _race.extraCounter = race.extraCounter;
-        _race.stage = race.stage;
-        _race.stageLimit = race.stageLimit;
-        _race.stageTitle = race.stageTitle;
-        _race.startDate = race.startDate;
-        _race.nextStageDate = race.nextStageDate;
-        Duration leftDuration = _race.startDate!.isAfter(DateTime.now())
-            ? const Duration(days: 0)
-            : _race.nextStageDate!.difference(DateTime.now());
-        int inDays = leftDuration.inDays <= 0 ? 0 : leftDuration.inDays;
-        _stageDayLeft = inDays.toDouble();
+        if (race != null) {
+          if (_race == null) {
+            _race = Race(
+              kmCounter: race.kmCounter,
+              stageCounter: race.stageCounter,
+              extraCounter: race.extraCounter,
+              stage: race.stage,
+              stageLimit: race.stageLimit,
+              stageTitle: race.stageTitle,
+              startDate: race.startDate,
+              finalDate: race.finalDate,
+              nextStageDate: race.nextStageDate,
+            );
+          } else {
+            _race!.kmCounter = race.kmCounter;
+            _race!.stageCounter = race.stageCounter;
+            _race!.extraCounter = race.extraCounter;
+            _race!.stage = race.stage;
+            _race!.stageLimit = race.stageLimit;
+            _race!.stageTitle = race.stageTitle;
+            _race!.startDate = race.startDate;
+            _race!.finalDate = race.finalDate;
+            _race!.nextStageDate = race.nextStageDate;
+          }
 
-        await _raceMapFactory.init(
-            _race.stage, _race.startDate, _race.nextStageDate);
+          Duration leftDuration = _race!.startDate.isAfter(DateTime.now())
+              ? const Duration(days: 0)
+              : _race!.nextStageDate.difference(DateTime.now());
+          int inDays = leftDuration.inDays <= 0 ? 0 : leftDuration.inDays;
+          _stageDayLeft = inDays.toDouble();
 
-        add(UpdateRaceFieldsEvent());
+          await _raceMapFactory.init(
+              _race!.stage, _race!.startDate, _race!.nextStageDate);
+
+          add(UpdateRaceFieldsEvent());
+        }
       });
 
       factoryDao.raceDao.streamBuyers(editionId).listen((buyers) {
@@ -226,16 +244,16 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         _buyers.clear();
         for (var buyer in buyers) {
           var mainBuyerList = _buyers.where(
-              (mainBuyer) => mainBuyer.userId!.compareTo(buyer.userId!) == 0);
+              (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
 
           if (mainBuyerList.isEmpty ||
-              mainBuyerList.first.userId!.compareTo('anonymous') == 0) {
+              mainBuyerList.first.userId.compareTo('anonymous') == 0) {
             _buyers.add(buyer);
           } else {
             var mainBuyer = mainBuyerList.first;
-            mainBuyer.distance = mainBuyer.distance! + buyer.distance!;
+            mainBuyer.butterfly = mainBuyer.butterfly + buyer.butterfly;
             mainBuyer.totalPurchase =
-                mainBuyer.totalPurchase! + buyer.totalPurchase!;
+                mainBuyer.totalPurchase + buyer.totalPurchase;
           }
         }
         //Ordenamos por compra total
@@ -298,23 +316,24 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
   void _changeMapSelectedEvent(
       ChangeMapSelectedEvent event, Emitter emit) async {
-    _isSpainMapSelected = !_isSpainMapSelected!;
+    _isSpainMapSelected = !_isSpainMapSelected;
 
     emit(_updateRaceFields());
   }
 
   RaceState _updateRaceFields() => UpdateRaceFieldsState(
-        kmCounter: _race.kmCounter,
-        stageCounter: _race.stageCounter,
-        extraCounter: _race.extraCounter,
-        stageLimit: _race.stageLimit,
-        stageTitle: _race.stageTitle,
+        kmCounter: _race!.kmCounter,
+        stageCounter: _race!.stageCounter,
+        extraCounter: _race!.extraCounter,
+        stageLimit: _race!.stageLimit,
+        stageTitle: _race!.stageTitle,
         stageDayLeft: _stageDayLeft,
-        riveArtboard: _raceMapFactory.riveArtboard,
+        riveArtboard: _raceMapFactory.riveArtboard!,
         buyers: _buyers,
         currentStageBuilding: _currentStageBuilding,
         currentMouseStageBuilding: _currentMouseStageBuilding,
         stagesBuilding: _stagesBuilding,
         isSpainMapSelected: _isSpainMapSelected,
+        isRaceOver: _race!.isOver,
       );
 }
