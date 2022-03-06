@@ -115,9 +115,9 @@ class UserDaoImpl extends UserDaoInterface {
   @override
   Stream<Map<String, DateTime?>> getRangeDates(String raceId) =>
       firestore.streamRaceInfo(raceId).transform<Map<String, DateTime?>>(
-        StreamTransformer<RaceDao, Map<String, DateTime?>>.fromHandlers(
+        StreamTransformer<RaceDao?, Map<String, DateTime?>>.fromHandlers(
             handleData: (raceDao, sink) {
-          sink.add({'before': raceDao.finalDate, 'after': raceDao.startDate});
+          sink.add({'before': raceDao?.finalDate, 'after': raceDao?.startDate});
         }),
       );
 

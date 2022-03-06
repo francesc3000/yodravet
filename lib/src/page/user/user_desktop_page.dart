@@ -65,7 +65,9 @@ class UserDesktopPage extends UserBasicPage {
         }
 
         if (_loading) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+              color: const Color.fromRGBO(153, 148, 86, 1),
+              child: const Center(child: CircularProgressIndicator()));
         }
 
         slivers.clear();

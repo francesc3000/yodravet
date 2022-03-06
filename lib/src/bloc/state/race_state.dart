@@ -16,7 +16,8 @@ class UpdateRaceFieldsState extends RaceState {
   final double stageLimit;
   final String stageTitle;
   final double stageDayLeft;
-  final Artboard riveArtboard;
+  final Artboard? riveArtboardSpain;
+  final Artboard? riveArtboardArgentina;
   final List<Buyer> buyers;
   final StageBuilding? currentStageBuilding;
   final StageBuilding? currentMouseStageBuilding;
@@ -26,18 +27,19 @@ class UpdateRaceFieldsState extends RaceState {
 
   UpdateRaceFieldsState(
       {required this.kmCounter,
-        required this.stageCounter,
-        required this.extraCounter,
-        required this.stageLimit,
-        required this.stageTitle,
-        required this.stageDayLeft,
-        required this.riveArtboard,
+      required this.stageCounter,
+      required this.extraCounter,
+      required this.stageLimit,
+      required this.stageTitle,
+      required this.stageDayLeft,
+      required this.riveArtboardSpain,
+      required this.riveArtboardArgentina,
       required this.buyers,
-        required this.currentStageBuilding,
-        required this.currentMouseStageBuilding,
-        required this.stagesBuilding,
-        required this.isSpainMapSelected,
-        required this.isRaceOver});
+      required this.currentStageBuilding,
+      required this.currentMouseStageBuilding,
+      required this.stagesBuilding,
+      required this.isSpainMapSelected,
+      required this.isRaceOver});
 
   @override
   String toString() => 'UploadRaceFields State';

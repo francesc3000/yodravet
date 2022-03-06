@@ -1,7 +1,8 @@
 import 'package:rive/rive.dart';
 
 class RaceMapFactory {
-  Artboard? riveArtboard;
+  Artboard? riveArtboardSpain;
+  Artboard? riveArtboardArgentina;
   bool _first = false;
   int _stage = -1;
   RiveAnimationController? _firstControllerStep;
@@ -19,12 +20,23 @@ class RaceMapFactory {
   };
 
   RaceMapFactory() {
-    RiveFile.asset('assets/images/race/spain.riv')
-        .then((file) => riveArtboard = file.mainArtboard);
+    // RiveFile.asset('assets/images/race/spain.riv')
+    //     .then((file) => riveArtboardSpain = file.mainArtboard);
+    //
+    // RiveFile.asset('assets/images/race/argentina.riv')
+    //     .then((file) => riveArtboardArgentina = file.mainArtboard);
   }
 
   Future<void> init(
       int stage, DateTime startStageDate, DateTime nextStageDate) async {
+    RiveFile riveFileSpain =
+        await RiveFile.asset('assets/images/race/spain.riv');
+    riveArtboardSpain = riveFileSpain.mainArtboard;
+
+    RiveFile riveFileArgentina =
+        await RiveFile.asset('assets/images/race/argentina.riv');
+    riveArtboardArgentina = riveFileArgentina.mainArtboard;
+
     if (_stage != stage) {
       _stage = stage;
       _first = false;
@@ -34,6 +46,8 @@ class RaceMapFactory {
 
     MySimpleAnimation? _preControllerStep;
     MySimpleAnimation _controllerStep;
+    MySimpleAnimation? _controllerSwimmerSpain;
+    MySimpleAnimation? _controllerShark;
 
     for (int i = 1; i <= stage; i++) {
       final today = DateTime.now();
@@ -59,7 +73,7 @@ class RaceMapFactory {
 
         if (_preControllerStep != null) {
           _preControllerStep.nextAnimation = _controllerStep;
-          riveArtboard!.addController(_preControllerStep);
+          riveArtboardSpain!.addController(_preControllerStep);
           _preControllerStep.isActive = false;
         }
         _preControllerStep = _controllerStep;
@@ -67,13 +81,30 @@ class RaceMapFactory {
     }
 
     if (_preControllerStep != null) {
-      riveArtboard!.addController(_preControllerStep);
+      riveArtboardSpain!.addController(_preControllerStep);
       _preControllerStep.isActive = false;
     }
 
     if (_firstControllerStep != null) {
       _firstControllerStep!.isActive = true;
     }
+
+    var swimmerController = 'Swimmer';
+    _controllerSwimmerSpain = MySimpleAnimation(swimmerController);
+    _controllerSwimmerSpain.isActive = true;
+    riveArtboardSpain!.addController(_controllerSwimmerSpain);
+
+    var sharkController = 'Shark';
+    _controllerShark = MySimpleAnimation(sharkController);
+    _controllerShark.isActive = true;
+    riveArtboardSpain!.addController(_controllerShark);
+
+    //  ARGENTINA
+    MySimpleAnimation? _controllerSwimmerArgentina;
+    var swimmerArgentinaController = 'Swimmer';
+    _controllerSwimmerArgentina = MySimpleAnimation(swimmerArgentinaController);
+    _controllerSwimmerArgentina.isActive = true;
+    riveArtboardArgentina!.addController(_controllerSwimmerArgentina);
   }
 }
 

@@ -26,9 +26,11 @@ class RaceDesktopPage extends RaceBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    Artboard? _riveArtboard;
+    Artboard? _riveArtboardSpain;
+    Artboard? _riveArtboardArgentina;
     bool _loading = false;
     bool _isShowModalOn = false;
+    bool _isSpainMapSelected = true;
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
@@ -53,13 +55,15 @@ class RaceDesktopPage extends RaceBasicPage {
         _extraCounter = state.extraCounter / 1000;
         _stageLimit = state.stageLimit / 1000;
         _stageTitle = state.stageTitle;
-        _riveArtboard = state.riveArtboard;
+        _riveArtboardSpain = state.riveArtboardSpain;
+        _riveArtboardArgentina = state.riveArtboardArgentina;
         _buyers = state.buyers;
         _stagesBuilding = state.stagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
         _stageDayLeft = state.stageDayLeft;
         _isRaceOver = state.isRaceOver;
+        _isSpainMapSelected = state.isSpainMapSelected;
         if (_currentStageBuilding != null && !_isShowModalOn) {
           _isShowModalOn = true;
           SchedulerBinding.instance!.addPostFrameCallback((_) {
@@ -96,7 +100,8 @@ class RaceDesktopPage extends RaceBasicPage {
       slivers.clear();
       slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
           _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-      slivers.add(_buildMap(context, _riveArtboard, _buyers, _stagesBuilding));
+      slivers.add(_buildMap(context, _riveArtboardSpain, _riveArtboardArgentina,
+          _buyers, _stagesBuilding, _isSpainMapSelected));
 
       return Container(
         decoration: const BoxDecoration(
@@ -125,28 +130,28 @@ class RaceDesktopPage extends RaceBasicPage {
           double stageCounter,
           double extraCounter,
           double stageDayLeft,
-      bool isRaceOver) =>
+          bool isRaceOver) =>
       SliverPersistentHeader(
         pinned: false,
         delegate: SliverAppBarDelegate(
-          minHeight: 140,
-          maxHeight: 140,
+          minHeight: 180,
+          maxHeight: 180,
           child: Row(
             mainAxisAlignment: isRaceOver
                 ? MainAxisAlignment.spaceBetween
                 : MainAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  Text(
-                    stageTitle,
-                    style: const TextStyle(
-                      fontSize: 36,
+              Visibility(
+                visible: isRaceOver,
+                child: Column(
+                  children: [
+                    Text(
+                      stageTitle,
+                      style: const TextStyle(
+                        fontSize: 36,
+                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: isRaceOver,
-                    child: Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
@@ -201,8 +206,8 @@ class RaceDesktopPage extends RaceBasicPage {
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Column(
                 children: [
@@ -220,6 +225,15 @@ class RaceDesktopPage extends RaceBasicPage {
                     style: const TextStyle(
                       fontSize: 56,
                       color: Colors.red,
+                    ),
+                  ),
+                  Visibility(
+                    visible: !isRaceOver,
+                    child: Text(
+                      stageTitle,
+                      style: const TextStyle(
+                        fontSize: 36,
+                      ),
                     ),
                   ),
                 ],
@@ -253,11 +267,16 @@ class RaceDesktopPage extends RaceBasicPage {
         ),
       );
 
-  Widget _buildMap(BuildContext context, Artboard? riveArtboard,
-      List<Buyer> buyers, List<StageBuilding>? stagesBuilding) {
+  Widget _buildMap(
+      BuildContext context,
+      Artboard? riveArtboardSpain,
+      Artboard? riveArtboardArgentina,
+      List<Buyer> buyers,
+      List<StageBuilding>? stagesBuilding,
+      bool isSpainMapSelected) {
     Widget child;
 
-    if (riveArtboard != null) {
+    if (riveArtboardSpain != null && riveArtboardArgentina != null) {
       child = Row(
         children: [
           Expanded(
@@ -270,118 +289,19 @@ class RaceDesktopPage extends RaceBasicPage {
                   height: 412,
                   width: 550,
                   child: Rive(
-                    artboard: riveArtboard,
+                    artboard: isSpainMapSelected
+                        ? riveArtboardSpain
+                        : riveArtboardArgentina,
                     fit: BoxFit.contain,
                   ),
                 ),
               ),
-              Positioned(
-                top: 190,
-                left: 340,
-                child: StageBuildingIcon(
-                  stagesBuilding![0].id,
-                  name: stagesBuilding[0].shortName,
-                  photo: stagesBuilding[0].photo,
-                ),
-              ),
-              Positioned(
-                top: 310,
-                left: 100,
-                child: StageBuildingIcon(
-                  stagesBuilding[1].id,
-                  name: stagesBuilding[1].shortName,
-                  photo: stagesBuilding[1].photo,
-                ),
-              ),
-              Positioned(
-                top: 160,
-                left: 230,
-                child: StageBuildingIcon(
-                  stagesBuilding[2].id,
-                  name: stagesBuilding[2].shortName,
-                  photo: stagesBuilding[2].photo,
-                ),
-              ),
-              Positioned(
-                top: 130,
-                left: 190,
-                child: StageBuildingIcon(
-                  stagesBuilding[3].id,
-                  name: stagesBuilding[3].shortName,
-                  photo: stagesBuilding[3].photo,
-                ),
-              ),
-              Positioned(
-                top: 110,
-                left: 235,
-                child: StageBuildingIcon(
-                  stagesBuilding[4].id,
-                  name: stagesBuilding[4].shortName,
-                  photo: stagesBuilding[4].photo,
-                ),
-              ),
-              Positioned(
-                top: 17,
-                // left: -4,
-                child: StageBuildingIcon(
-                  stagesBuilding[5].id,
-                  name: stagesBuilding[5].shortName,
-                  photo: stagesBuilding[5].photo,
-                ),
-              ),
-              Positioned(
-                top: 10,
-                left: 180,
-                child: StageBuildingIcon(
-                  stagesBuilding[6].id,
-                  name: stagesBuilding[6].shortName,
-                  photo: stagesBuilding[6].photo,
-                ),
-              ),
-              Positioned(
-                top: 23,
-                left: 228,
-                child: StageBuildingIcon(
-                  stagesBuilding[7].id,
-                  name: stagesBuilding[7].shortName,
-                  photo: stagesBuilding[7].photo,
-                ),
-              ),
-              Positioned(
-                top: 19,
-                left: 278,
-                child: StageBuildingIcon(
-                  stagesBuilding[8].id,
-                  name: stagesBuilding[8].shortName,
-                  photo: stagesBuilding[8].photo,
-                ),
-              ),
-              Positioned(
-                top: 100,
-                left: 440,
-                child: StageBuildingIcon(
-                  stagesBuilding[9].id,
-                  name: stagesBuilding[9].shortName,
-                  photo: stagesBuilding[9].photo,
-                ),
-              ),
-              Positioned(
-                top: 50,
-                left: 440,
-                child: StageBuildingIcon(
-                  stagesBuilding[10].id,
-                  name: stagesBuilding[10].shortName,
-                  photo: stagesBuilding[10].photo,
-                ),
-              ),
-              Positioned(
-                top: 90,
-                left: 379,
-                child: StageBuildingIcon(
-                  stagesBuilding[11].id,
-                  name: stagesBuilding[11].shortName,
-                  photo: stagesBuilding[11].photo,
-                ),
+              _countryLeftButton(context, isSpainMapSelected),
+              _countryRightButton(context, isSpainMapSelected),
+              Visibility(
+                  visible: isSpainMapSelected,
+                  child:
+                  _spainSpots(context, stagesBuilding),
               ),
             ]),
           ),
@@ -446,6 +366,163 @@ class RaceDesktopPage extends RaceBasicPage {
       ),
     );
   }
+
+  Widget _countryLeftButton(BuildContext context, bool isSpainMapSelected) =>
+      Visibility(
+        visible: isSpainMapSelected,
+        child: Positioned(
+          top: 190,
+          left: 60,
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
+                color: const Color.fromARGB(255, 140, 71, 153),
+                iconSize: 30,
+                onPressed: () => BlocProvider.of<RaceBloc>(context)
+                    .add(ChangeMapSelectedEvent()),
+              ),
+              const Text("Argentina")
+            ],
+          ),
+        ),
+      );
+
+  Widget _countryRightButton(BuildContext context, bool isSpainMapSelected) =>
+      Visibility(
+        visible: !isSpainMapSelected,
+        child: Positioned(
+          top: 190,
+          left: 400,
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(FontAwesomeIcons.arrowCircleRight),
+                color: const Color.fromARGB(255, 140, 71, 153),
+                iconSize: 30,
+                onPressed: () => BlocProvider.of<RaceBloc>(context)
+                    .add(ChangeMapSelectedEvent()),
+              ),
+              const Text("España")
+            ],
+          ),
+        ),
+      );
+
+  Stack _spainSpots(
+          BuildContext context, List<StageBuilding>? stagesBuilding) =>
+      Stack(
+        children: [
+          Positioned(
+            top: 190,
+            left: 340,
+            child: StageBuildingIcon(
+              stagesBuilding![0].id,
+              name: stagesBuilding[0].shortName,
+              photo: stagesBuilding[0].photo,
+            ),
+          ),
+          Positioned(
+            top: 310,
+            left: 100,
+            child: StageBuildingIcon(
+              stagesBuilding[1].id,
+              name: stagesBuilding[1].shortName,
+              photo: stagesBuilding[1].photo,
+            ),
+          ),
+          Positioned(
+            top: 160,
+            left: 230,
+            child: StageBuildingIcon(
+              stagesBuilding[2].id,
+              name: stagesBuilding[2].shortName,
+              photo: stagesBuilding[2].photo,
+            ),
+          ),
+          Positioned(
+            top: 130,
+            left: 190,
+            child: StageBuildingIcon(
+              stagesBuilding[3].id,
+              name: stagesBuilding[3].shortName,
+              photo: stagesBuilding[3].photo,
+            ),
+          ),
+          Positioned(
+            top: 110,
+            left: 235,
+            child: StageBuildingIcon(
+              stagesBuilding[4].id,
+              name: stagesBuilding[4].shortName,
+              photo: stagesBuilding[4].photo,
+            ),
+          ),
+          Positioned(
+            top: 17,
+            // left: -4,
+            child: StageBuildingIcon(
+              stagesBuilding[5].id,
+              name: stagesBuilding[5].shortName,
+              photo: stagesBuilding[5].photo,
+            ),
+          ),
+          Positioned(
+            top: 10,
+            left: 180,
+            child: StageBuildingIcon(
+              stagesBuilding[6].id,
+              name: stagesBuilding[6].shortName,
+              photo: stagesBuilding[6].photo,
+            ),
+          ),
+          Positioned(
+            top: 23,
+            left: 228,
+            child: StageBuildingIcon(
+              stagesBuilding[7].id,
+              name: stagesBuilding[7].shortName,
+              photo: stagesBuilding[7].photo,
+            ),
+          ),
+          Positioned(
+            top: 19,
+            left: 278,
+            child: StageBuildingIcon(
+              stagesBuilding[8].id,
+              name: stagesBuilding[8].shortName,
+              photo: stagesBuilding[8].photo,
+            ),
+          ),
+          Positioned(
+            top: 100,
+            left: 440,
+            child: StageBuildingIcon(
+              stagesBuilding[9].id,
+              name: stagesBuilding[9].shortName,
+              photo: stagesBuilding[9].photo,
+            ),
+          ),
+          Positioned(
+            top: 50,
+            left: 440,
+            child: StageBuildingIcon(
+              stagesBuilding[10].id,
+              name: stagesBuilding[10].shortName,
+              photo: stagesBuilding[10].photo,
+            ),
+          ),
+          Positioned(
+            top: 90,
+            left: 379,
+            child: StageBuildingIcon(
+              stagesBuilding[11].id,
+              name: stagesBuilding[11].shortName,
+              photo: stagesBuilding[11].photo,
+            ),
+          ),
+        ],
+      );
 
   Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
     int butterfly = buyer.butterfly.toInt();

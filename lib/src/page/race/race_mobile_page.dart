@@ -26,7 +26,8 @@ class RaceMobilePage extends RaceBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    Artboard? _riveArtboard;
+    Artboard? _riveArtboardSpain;
+    Artboard? _riveArtboardArgentina;
     bool _loading = false;
     bool _isSpainMapSelected = true;
 
@@ -54,7 +55,8 @@ class RaceMobilePage extends RaceBasicPage {
         _stageLimit = state.stageLimit / 1000;
         _stageTitle = state.stageTitle;
         _stageDayLeft = state.stageDayLeft;
-        _riveArtboard = state.riveArtboard;
+        _riveArtboardSpain = state.riveArtboardSpain;
+        _riveArtboardArgentina = state.riveArtboardArgentina;
         _buyers = state.buyers;
         _stagesBuilding = state.stagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
@@ -91,8 +93,8 @@ class RaceMobilePage extends RaceBasicPage {
       slivers.add(_buildTotalCounter(context, _kmCounter));
       slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
           _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-      slivers.add(_buildMap(
-          context, _riveArtboard, _stagesBuilding, _isSpainMapSelected));
+      slivers.add(_buildMap(context, _riveArtboardSpain, _riveArtboardArgentina,
+          _stagesBuilding, _isSpainMapSelected));
       slivers.add(_buildBuyersList(context, _buyers));
 
       return Container(
@@ -161,8 +163,9 @@ class RaceMobilePage extends RaceBasicPage {
                 children: [
                   Text(stageTitle),
                   Visibility(
-                      visible: isRaceOver,
-                      child: Text(AppLocalizations.of(context)!.stageTitle),),
+                    visible: isRaceOver,
+                    child: Text(AppLocalizations.of(context)!.stageTitle),
+                  ),
                   Visibility(
                     visible: isRaceOver,
                     child: Row(
@@ -235,13 +238,17 @@ class RaceMobilePage extends RaceBasicPage {
         ),
       );
 
-  Widget _buildMap(BuildContext context, Artboard? riveArtboard,
-      List<StageBuilding>? stagesBuilding, bool _isSpainMapSelected) {
+  Widget _buildMap(
+      BuildContext context,
+      Artboard? riveArtboardSpain,
+      Artboard? riveArtboardArgentina,
+      List<StageBuilding>? stagesBuilding,
+      bool _isSpainMapSelected) {
     Widget child;
     double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
     double mapHeight = 380;
 
-    if (riveArtboard != null) {
+    if (riveArtboardSpain != null && riveArtboardArgentina != null) {
       child = Stack(children: [
         Positioned(
           top: 0,
@@ -250,157 +257,18 @@ class RaceMobilePage extends RaceBasicPage {
             height: mapHeight,
             width: mapWidth,
             child: Rive(
-              artboard: riveArtboard,
+              artboard: _isSpainMapSelected
+                  ? riveArtboardSpain
+                  : riveArtboardArgentina,
               fit: BoxFit.contain,
             ),
           ),
         ),
+        _countryLeftButton(context, _isSpainMapSelected, mapHeight, mapWidth),
+        _countryRightButton(context, _isSpainMapSelected, mapHeight, mapWidth),
         Visibility(
-          visible: _isSpainMapSelected,
-          child: Positioned(
-            top: mapHeight * 0.47,
-            left: mapWidth * 0.0001,
-            child: Column(
-              children: [
-                IconButton(
-                  icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
-                  color: const Color.fromARGB(255, 140, 71, 153),
-                  iconSize: 30,
-                  onPressed: () => BlocProvider.of<RaceBloc>(context)
-                      .add(ChangeMapSelectedEvent()),
-                ),
-                const Text("Argentina")
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: !_isSpainMapSelected,
-          child: Positioned(
-            top: mapHeight * 0.47,
-            left: mapWidth * 0.83,
-            child: Column(
-              children: [
-                IconButton(
-                  icon: const Icon(FontAwesomeIcons.arrowCircleRight),
-                  color: const Color.fromARGB(255, 140, 71, 153),
-                  iconSize: 30,
-                  onPressed: () => BlocProvider.of<RaceBloc>(context)
-                      .add(ChangeMapSelectedEvent()),
-                ),
-                const Text("España")
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.47,
-          left: mapWidth * 0.57,
-          child: StageBuildingIcon(
-            stagesBuilding![0].id,
-            name: stagesBuilding[0].shortName,
-            photo: stagesBuilding[0].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.74,
-          left: mapWidth * 0.12,
-          child: StageBuildingIcon(
-            stagesBuilding[1].id,
-            name: stagesBuilding[1].shortName,
-            photo: stagesBuilding[1].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.41,
-          left: mapWidth * 0.37,
-          child: StageBuildingIcon(
-            stagesBuilding[2].id,
-            name: stagesBuilding[2].shortName,
-            photo: stagesBuilding[2].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.34,
-          left: mapWidth * 0.27,
-          child: StageBuildingIcon(
-            stagesBuilding[3].id,
-            name: stagesBuilding[3].shortName,
-            photo: stagesBuilding[3].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.24,
-          left: mapWidth * 0.38,
-          child: StageBuildingIcon(
-            stagesBuilding[4].id,
-            name: stagesBuilding[4].shortName,
-            photo: stagesBuilding[4].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.06,
-          // left: -4,
-          child: StageBuildingIcon(
-            stagesBuilding[5].id,
-            name: stagesBuilding[5].shortName,
-            photo: stagesBuilding[5].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.03,
-          left: mapWidth * 0.24,
-          child: StageBuildingIcon(
-            stagesBuilding[6].id,
-            name: stagesBuilding[6].shortName,
-            photo: stagesBuilding[6].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.08,
-          left: mapWidth * 0.38,
-          child: StageBuildingIcon(
-            stagesBuilding[7].id,
-            name: stagesBuilding[7].shortName,
-            photo: stagesBuilding[7].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.07,
-          left: mapWidth * 0.51,
-          child: StageBuildingIcon(
-            stagesBuilding[8].id,
-            name: stagesBuilding[8].shortName,
-            photo: stagesBuilding[8].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.29,
-          left: mapWidth * 0.74,
-          child: StageBuildingIcon(
-            stagesBuilding[9].id,
-            name: stagesBuilding[9].shortName,
-            photo: stagesBuilding[9].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.12,
-          left: mapWidth * 0.76,
-          child: StageBuildingIcon(
-            stagesBuilding[10].id,
-            name: stagesBuilding[10].shortName,
-            photo: stagesBuilding[10].photo,
-          ),
-        ),
-        Positioned(
-          top: mapHeight * 0.25,
-          left: mapWidth * 0.6,
-          child: StageBuildingIcon(
-            stagesBuilding[11].id,
-            name: stagesBuilding[11].shortName,
-            photo: stagesBuilding[11].photo,
-          ),
-        ),
+            visible: _isSpainMapSelected,
+            child: _spainSpots(context, mapHeight, mapWidth, stagesBuilding)),
       ]);
     } else {
       child = Container();
@@ -415,6 +283,165 @@ class RaceMobilePage extends RaceBasicPage {
       ),
     );
   }
+
+  Widget _countryLeftButton(BuildContext context, bool isSpainMapSelected,
+          double mapHeight, double mapWidth) =>
+      Visibility(
+        visible: isSpainMapSelected,
+        child: Positioned(
+          top: mapHeight * 0.47,
+          left: mapWidth * 0.0001,
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
+                color: const Color.fromARGB(255, 140, 71, 153),
+                iconSize: 30,
+                onPressed: () => BlocProvider.of<RaceBloc>(context)
+                    .add(ChangeMapSelectedEvent()),
+              ),
+              const Text("Argentina")
+            ],
+          ),
+        ),
+      );
+
+  Widget _countryRightButton(BuildContext context, bool isSpainMapSelected,
+          double mapHeight, double mapWidth) =>
+      Visibility(
+        visible: !isSpainMapSelected,
+        child: Positioned(
+          top: mapHeight * 0.47,
+          left: mapWidth * 0.83,
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(FontAwesomeIcons.arrowCircleRight),
+                color: const Color.fromARGB(255, 140, 71, 153),
+                iconSize: 30,
+                onPressed: () => BlocProvider.of<RaceBloc>(context)
+                    .add(ChangeMapSelectedEvent()),
+              ),
+              const Text("España")
+            ],
+          ),
+        ),
+      );
+
+  Stack _spainSpots(BuildContext context, double mapHeight, double mapWidth,
+          List<StageBuilding>? stagesBuilding) =>
+      Stack(
+        children: [
+          Positioned(
+            top: mapHeight * 0.47,
+            left: mapWidth * 0.57,
+            child: StageBuildingIcon(
+              stagesBuilding![0].id,
+              name: stagesBuilding[0].shortName,
+              photo: stagesBuilding[0].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.74,
+            left: mapWidth * 0.12,
+            child: StageBuildingIcon(
+              stagesBuilding[1].id,
+              name: stagesBuilding[1].shortName,
+              photo: stagesBuilding[1].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.41,
+            left: mapWidth * 0.37,
+            child: StageBuildingIcon(
+              stagesBuilding[2].id,
+              name: stagesBuilding[2].shortName,
+              photo: stagesBuilding[2].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.34,
+            left: mapWidth * 0.27,
+            child: StageBuildingIcon(
+              stagesBuilding[3].id,
+              name: stagesBuilding[3].shortName,
+              photo: stagesBuilding[3].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.24,
+            left: mapWidth * 0.38,
+            child: StageBuildingIcon(
+              stagesBuilding[4].id,
+              name: stagesBuilding[4].shortName,
+              photo: stagesBuilding[4].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.06,
+            // left: -4,
+            child: StageBuildingIcon(
+              stagesBuilding[5].id,
+              name: stagesBuilding[5].shortName,
+              photo: stagesBuilding[5].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.03,
+            left: mapWidth * 0.24,
+            child: StageBuildingIcon(
+              stagesBuilding[6].id,
+              name: stagesBuilding[6].shortName,
+              photo: stagesBuilding[6].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.08,
+            left: mapWidth * 0.38,
+            child: StageBuildingIcon(
+              stagesBuilding[7].id,
+              name: stagesBuilding[7].shortName,
+              photo: stagesBuilding[7].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.07,
+            left: mapWidth * 0.51,
+            child: StageBuildingIcon(
+              stagesBuilding[8].id,
+              name: stagesBuilding[8].shortName,
+              photo: stagesBuilding[8].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.29,
+            left: mapWidth * 0.74,
+            child: StageBuildingIcon(
+              stagesBuilding[9].id,
+              name: stagesBuilding[9].shortName,
+              photo: stagesBuilding[9].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.12,
+            left: mapWidth * 0.76,
+            child: StageBuildingIcon(
+              stagesBuilding[10].id,
+              name: stagesBuilding[10].shortName,
+              photo: stagesBuilding[10].photo,
+            ),
+          ),
+          Positioned(
+            top: mapHeight * 0.25,
+            left: mapWidth * 0.6,
+            child: StageBuildingIcon(
+              stagesBuilding[11].id,
+              name: stagesBuilding[11].shortName,
+              photo: stagesBuilding[11].photo,
+            ),
+          ),
+        ],
+      );
 
   Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) =>
       SliverList(

@@ -33,6 +33,12 @@ abstract class HomeBasicPage extends BasicPage {
         backgroundColor: const Color.fromARGB(255, 140, 71, 153),
         actions: [
           IconButton(
+            icon: const Icon(FontAwesomeIcons.home),
+            onPressed: () {
+              BlocProvider.of<HomeBloc>(context).add(HomeStaticEvent());
+            },
+          ),
+          IconButton(
             icon: const Icon(FontAwesomeIcons.userCircle),
             tooltip: AppLocalizations.of(context)!.userTooltip,
             onPressed: () {
@@ -64,7 +70,8 @@ abstract class HomeBasicPage extends BasicPage {
           //   icon: const Icon(FontAwesomeIcons.userCircle),
           //   tooltip: AppLocalizations.of(context)!.userTooltip,
           //   onPressed: () {
-          //     BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
+          //     BlocProvider.of<HomeBloc>(context)
+          //     .add(Navigate2UserPageEvent());
           //   },
           // ),
           // RawMaterialButton(

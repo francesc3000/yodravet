@@ -59,10 +59,15 @@ class UserMobilePage extends UserBasicPage {
           donors = state.donors;
           _loading = false;
           // _churro = state.usuarios;
+        } else if (state is UserStateError) {
+          //TODO: Mostrar errores en Pages
+          // CustomSnackBar
         }
 
         if (_loading) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+              color: const Color.fromRGBO(153, 148, 86, 1),
+              child: const Center(child: CircularProgressIndicator()));
         }
 
         slivers.clear();
@@ -113,7 +118,7 @@ class UserMobilePage extends UserBasicPage {
                           height: 50,
                           width: 50,
                         ),
-                )
+                      )
                     : Image.network(photoUrl)),
             title: Text(fullName),
             trailing: ElevatedButton(

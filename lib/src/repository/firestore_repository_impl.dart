@@ -236,8 +236,8 @@ class FirestoreRepositoryImpl implements Repository {
   Stream<List<ActivityPurchaseDao>>? streamDonors(String raceId) =>
       raceCollectionEndpoint
           .doc(raceId)
-          .collection('butterflies')
-          // .where('isDonate', isEqualTo: true)
+          .collection('pools')
+          .where('isDonate', isEqualTo: true)
           .snapshots()
           .transform<List<ActivityPurchaseDao>>(
         StreamTransformer<QuerySnapshot<Map<String, dynamic>>,

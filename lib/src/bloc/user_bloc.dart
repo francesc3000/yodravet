@@ -15,7 +15,7 @@ import 'state/user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final FactoryDao factoryDao;
   SessionBloc session;
-  User _user = User();
+  late User _user;
   DateTime? _beforeDate;
   DateTime? _afterDate;
   List<ActivityPurchase> _donors = [];
@@ -36,6 +36,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _user = state.user;
       }
     });
+
+    _user = session.user;
 
     on<UserLogOutEvent>(_userLogOutEvent);
     on<UserLogInEvent>(_userLogInEvent);

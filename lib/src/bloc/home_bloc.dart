@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/home_event.dart';
 import 'session_bloc.dart';
@@ -11,7 +12,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final FactoryDao factoryDao;
   SessionBloc session;
   // User _user = User();
-  final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  AssetsAudioPlayer? _assetsAudioPlayer;
   bool _isMusicOn = true;
 
   HomeBloc(this.session, this.factoryDao) : super(HomeInitState()) {
@@ -54,27 +55,37 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _homeInitDataEvent(HomeInitDataEvent event, Emitter emit) async {
-    _assetsAudioPlayer.open(
-      Audio("assets/music/gisela_hidalgo.mp3"),
-      showNotification: false,
-    );
-
-    _assetsAudioPlayer.setLoopMode(LoopMode.single);
-
-    _assetsAudioPlayer.loopMode.listen((loopMode){
-      //listen to loop
-    });
-
-    _assetsAudioPlayer.play();
+    if(PlatformDiscover.isWeb()) {
+      _isMusicOn = false;
+    } else {
+      await _setupMusic();
+    }
 
     emit(_uploadHomeFields());
   }
 
-  void _changeMuteOptionEvent(ChangeMuteOptionEvent event, Emitter emit) {
+  Future<void> _setupMusic() async{
+    _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+    await _assetsAudioPlayer!.open(
+      Audio("assets/music/gisela_hidalgo.mp3"),
+      showNotification: false,
+    );
+    await _assetsAudioPlayer!.setLoopMode(LoopMode.single);
+
+    // _assetsAudioPlayer!.loopMode.listen((loopMode){
+    //   //listen to loop
+    // });
+    await _assetsAudioPlayer!.play();
+  }
+
+  void _changeMuteOptionEvent(ChangeMuteOptionEvent event, Emitter emit) async{
+    if(_assetsAudioPlayer==null) {
+      await _setupMusic();
+    }
     if(_isMusicOn) {
-      _assetsAudioPlayer.pause();
+      _assetsAudioPlayer!.pause();
     } else {
-      _assetsAudioPlayer.play();
+      _assetsAudioPlayer!.play();
     }
     _isMusicOn = !_isMusicOn;
 

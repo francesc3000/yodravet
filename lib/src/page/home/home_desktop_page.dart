@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
 import 'package:yodravet/src/bloc/state/home_state.dart';
 import 'package:yodravet/src/page/race/race_page.dart';
+import 'package:yodravet/src/page/user/user_page.dart';
 
 import '../../bloc/event/home_event.dart';
 import '../../route/app_router_delegate.dart';
@@ -33,9 +33,7 @@ class HomeDesktopPage extends HomeBasicPage {
       } else if (state is UploadHomeFields) {
         _currentIndex = state.index;
       } else if (state is Navigate2UserPageState) {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
-          routerDelegate.pushPage(name: '/userPage');
-        });
+        return UserPage(routerDelegate);
       }
       return _pages[_currentIndex];
     });

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
@@ -63,7 +63,7 @@ class HomeMobilePage extends HomeBasicPage {
     items.add(const BottomNavigationBarItem(
         icon: Icon(FontAwesomeIcons.handsHelping), label: 'Patrocinadores'));
     items.add(const BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.users), label: 'Usuario'));
+        icon: Icon(FontAwesomeIcons.running), label: 'Donar Km'));
 
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, state) {

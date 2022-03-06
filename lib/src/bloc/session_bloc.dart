@@ -25,12 +25,18 @@ class SessionBloc extends Session {
       print('userId: $userId');
     }
 
-    user = await _populateUser(userId);
-    if (user.isLogin) {
-      add(SignedEvent(true, true));
-    } else {
+    if(userId==null) {
       add(SignedEvent(false, true));
+    } else {
+      user = await _populateUser(userId);
+      if (user.isLogin) {
+        add(SignedEvent(true, true));
+      } else {
+        add(SignedEvent(false, true));
+      }
     }
+
+
   }
 
   Future<String?> _isUserLoggedIn() async {
