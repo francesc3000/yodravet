@@ -6,7 +6,7 @@ import 'package:yodravet/src/model/user_dao.dart';
 import 'endpoints.dart';
 
 abstract class Repository implements Endpoints {
-  Future<UserDao> getUserById(String userId);
+  Future<UserDao> getUserById(String userId, String raceId);
   Future<bool> createUser(
       {required String id,
       required String email,

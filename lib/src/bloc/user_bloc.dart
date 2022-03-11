@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
@@ -47,6 +48,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadInitialDataEvent>(_loadInitialDataEvent);
     on<ChangeUserPodiumTabEvent>(_changeUserPodiumTabEvent);
     on<UploadUserFieldsEvent>(_uploadUserFieldsEvent);
+    on<ShareActivityEvent>(_shareActivityEvent);
   }
 
   void _userLogOutEvent(UserLogOutEvent event, Emitter emit) async {
@@ -227,9 +229,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  void _uploadUserFieldsEvent(
-      UploadUserFieldsEvent event, Emitter emit) async {
+  void _uploadUserFieldsEvent(UploadUserFieldsEvent event, Emitter emit) async {
     emit(_uploadUserFields());
+  }
+
+  void _shareActivityEvent(ShareActivityEvent event, Emitter emit) async {
+    Share.share(event.message2Share);
   }
 
   UserState _uploadUserFields() => UploadUserFieldsState(
@@ -243,7 +248,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       _filterDonorTab,
       _filterDonors
       // _usuarios
-  );
+      );
 
   List<Activity> _consolidateActivities(
       List<Activity> userActivities, List<Activity> stravaActivities) {

@@ -166,5 +166,22 @@
   "leftDayTitle": "Días Fin Etapa:",
   "@leftDayTitle": {
     "description": "leftDayTitle"
+  },
+  "shareText": "He donado {km}Km en apoyo a la investigación para el Dravet. https://yocorroporeldravet.es",
+  "@shareText": {
+    "description": "shareText",
+    "placeholders": {
+      "km": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "10.00",
+        "optionalParameters": {
+          "decimalDigits": 2,
+          "name": "Kilometros",
+          "symbol": "Km",
+          "customPattern": "¤#0.00"
+        }
+      }
+    }
   }
 }

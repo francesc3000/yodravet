@@ -22,6 +22,7 @@ class LoginDesktopPage extends LoginBasicPage {
 
   @override
   Widget body(BuildContext context) {
+    bool _someoneIsLoading = false;
     bool _isLoading = false;
     bool _isLoadingGoogle = false;
     bool _isLoadingApple = false;
@@ -41,6 +42,7 @@ class LoginDesktopPage extends LoginBasicPage {
         //   routerDelegate.pushPageAndRemoveUntil(name: '/userPage');
         // });
       } else if (state is AuthLoadingState) {
+        _someoneIsLoading = true;
         _isLoading = state.isLoading;
         _isLoadingGoogle = state.isLoadingGoogle;
         _isLoadingApple = state.isLoadingApple;
@@ -58,6 +60,7 @@ class LoginDesktopPage extends LoginBasicPage {
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
         });
       } else if (state is AuthStateError) {
+        _someoneIsLoading = false;
         _isLoading = false;
         _isLoadingGoogle = false;
         _isLoadingApple = false;
@@ -93,8 +96,8 @@ class LoginDesktopPage extends LoginBasicPage {
                           ],
                         ),
                   color: Colors.red,
-                  onPressed: () {
-                    routerDelegate.popRoute();
+                  onPressed: _someoneIsLoading ? null : () {
+                    // routerDelegate.popRoute();
                     BlocProvider.of<AuthBloc>(context).add(GoogleLogInEvent());
                   },
                 ),
@@ -122,8 +125,8 @@ class LoginDesktopPage extends LoginBasicPage {
                               ],
                             ),
                       color: Colors.black,
-                      onPressed: () {
-                        routerDelegate.popRoute();
+                      onPressed: _someoneIsLoading ? null : () {
+                        // routerDelegate.popRoute();
                         BlocProvider.of<AuthBloc>(context)
                             .add(AppleLogInEvent());
                       },
@@ -164,8 +167,8 @@ class LoginDesktopPage extends LoginBasicPage {
                           backgroundColor: Colors.white)
                       : Text(AppLocalizations.of(context)!.logIn,
                           style: const TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    routerDelegate.popRoute();
+                  onPressed: _someoneIsLoading ? null : () {
+                    // routerDelegate.popRoute();
                     BlocProvider.of<AuthBloc>(context).add(LogInEvent(
                         email: emailTextController.text,
                         pass: passTextController.text));

@@ -8,7 +8,7 @@ abstract class UserDaoInterface {
   Future<bool> stravaLogIn();
   Future<bool> stravaLogout();
   Future<bool> logOut();
-  Future<User> populateUser(String userId);
+  Future<User> populateUser(String userId, String raceId);
   Future<String?> isUserLoggedIn();
   Future<bool> changePassword(String email);
   Future<String> createAuthUser(String email, String password);

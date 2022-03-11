@@ -20,7 +20,7 @@ class FirestoreRepositoryImpl implements Repository {
   get raceCollectionEndpoint => _firestore.collection('races');
 
   @override
-  Future<UserDao> getUserById(String? userId) async {
+  Future<UserDao> getUserById(String? userId, String raceId) async {
     UserDao userDao = UserDao();
     DocumentSnapshot snapshot = await userCollectionEndpoint.doc(userId).get();
     if (snapshot.exists) {
@@ -31,6 +31,7 @@ class FirestoreRepositoryImpl implements Repository {
       QuerySnapshot queryActivites = await userCollectionEndpoint
           .doc(userId)
           .collection('activities')
+          .where("raceId", isEqualTo: raceId)
           .get();
 
       if (queryActivites.docs.isNotEmpty) {
@@ -236,7 +237,7 @@ class FirestoreRepositoryImpl implements Repository {
   Stream<List<ActivityPurchaseDao>>? streamDonors(String raceId) =>
       raceCollectionEndpoint
           .doc(raceId)
-          .collection('pools')
+          .collection('pool')
           .where('isDonate', isEqualTo: true)
           .snapshots()
           .transform<List<ActivityPurchaseDao>>(

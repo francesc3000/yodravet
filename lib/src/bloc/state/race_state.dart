@@ -21,7 +21,8 @@ class UpdateRaceFieldsState extends RaceState {
   final List<Buyer> buyers;
   final StageBuilding? currentStageBuilding;
   final StageBuilding? currentMouseStageBuilding;
-  final List<StageBuilding> stagesBuilding;
+  final List<StageBuilding> spainStagesBuilding;
+  final List<StageBuilding> argentinaStagesBuilding;
   final bool isSpainMapSelected;
   final bool isRaceOver;
 
@@ -37,7 +38,8 @@ class UpdateRaceFieldsState extends RaceState {
       required this.buyers,
       required this.currentStageBuilding,
       required this.currentMouseStageBuilding,
-      required this.stagesBuilding,
+      required this.spainStagesBuilding,
+      required this.argentinaStagesBuilding,
       required this.isSpainMapSelected,
       required this.isRaceOver});
 

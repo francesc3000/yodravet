@@ -72,9 +72,9 @@ class LoginMobilePage extends LoginBasicPage {
                   left: 20.0, right: 20.0, top: 16.0, bottom: 2.0),
               child: CustomButton(
                 child: _isLoadingGoogle
-                ? null
-                    // ? const CircularProgressIndicator(
-                    //     backgroundColor: Colors.white)
+                // ? null
+                    ? const CircularProgressIndicator(
+                        backgroundColor: Colors.white)
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [

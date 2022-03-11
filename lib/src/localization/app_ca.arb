@@ -11,11 +11,11 @@
   "@loginTitle": {
     "description": "loginTitle for the App application"
   },
-  "logInO": "O inicia sesión con tu correo electrónico",
+  "logInO": "O inicia sessió amb el teu correu electrònic",
   "@logInO": {
     "description": "signInO"
   },
-  "logIn": "Iniciar Sesión",
+  "logIn": "Iniciar Sessió",
   "@logIn": {
     "description": "signIn"
   },
@@ -23,63 +23,64 @@
   "@stageTitle": {
     "description": "stageTitle"
   },
-  "totalTitle": "Km Totales",
+  "totalTitle": "Km Totals",
   "@totalTitle": {
     "description": "totalTitle"
   },
-  "extraTitle": "Km Acumulado",
+  "extraTitle": "Km Acumulats",
   "@extraTitle": {
     "description": "extraTitle"
   },
-  "signIn": "Registrarme",
+  "signIn": "Registrar-me",
   "@signIn": {
     "description": "Registrarme"
   },
-  "logOut": "Cerrar Sesión",
+  "logOut": "Tancar Sessió",
   "@logOut": {
     "description": "logOut"
   },
-  "stravaConnect": "Conectar con Strava",
+  "stravaConnect": "Connectar amb Strava",
   "@stravaConnect": {
     "description": "Conectar con Strava"
   },
-  "donerTitle": "Sube tus kilómetros entre el",
+  "donerTitle": "Puja els teus quilòmetres entre el",
   "@donerTitle": {
     "description": "Sube tus kilómetros entre el"
   },
-  "donerMiddleTitle": " y el ",
+  "donerMiddleTitle": " i el ",
   "@donerMiddleTitle": {
     "description": "donerMiddleTitle"
   },
-  "donerOutTitle": "Podrás subir tus Km en la siguiente edición",
+  "donerOutTitle": "Podràs pujar els teus Km en la següent edició",
   "@donerOutTitle": {
     "description": "donerOutTitle"
   },
-  "doner": "Subir",
+  "doner": "Pujar",
   "@doner": {
     "description": "Subir"
   },
-  "manualKm": "km manuales",
+  "manualKm": "km manuals",
   "@manualKm": {
     "description": "km manuales"
   },
-  "donerKm": "Km Subidos",
+  "donerKm": "Km Pujats",
   "@donerKm": {
-    "description": "Km Subidos"
+    "description": "Km Pujats"
   },
-  "rankingDonerKm": "Ranking Km Subidos",
+  "rankingDonerKm": "Ranking Km Pujats",
   "@rankingDonerKm": {
     "description": "Ranking Km Subidos"
   },
-  "noStravaActivities": "¡Aún no has subido ninguna actividad!",
+  "noStravaActivities": "Encara no has pujat cap activitat!",
   "@noStravaActivities": {
     "description": "noStravaActivities"
   },
-  "rangeOut": "¡Gracias por tu colaboración!\\nNos vemos en la próxima edición.",
+
+  "rangeOut": "Gràcies per la teva col·laboració!\\nEns veiem en la pròxima edició.",
   "@rangeOut": {
     "description": "rangeOut"
   },
-  "beforeRange": "Podrás subir km a partir del",
+  "beforeRange": "Podràs pujar km a partir del",
   "@beforeRange": {
     "description": "beforeRange"
   },
@@ -163,8 +164,25 @@
   "@privacyPolicyParagraph10": {
     "description": "privacyPolicyParagraph10"
   },
-  "leftDayTitle": "Días Fin Etapa:",
+  "leftDayTitle": "Dies Fi Etapa:",
   "@leftDayTitle": {
     "description": "leftDayTitle"
+  },
+  "shareText": "He donat {km}Km en suport a la recerca per al Dravet. https://yocorroporeldravet.es",
+  "@shareText": {
+    "description": "shareText",
+    "placeholders": {
+      "km": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "10.00",
+        "optionalParameters": {
+          "decimalDigits": 2,
+          "name": "Kilometre",
+          "symbol": "Km",
+          "customPattern": "¤#0.00"
+        }
+      }
+    }
   }
 }

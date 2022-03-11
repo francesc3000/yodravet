@@ -51,3 +51,11 @@ class ChangeUserPodiumTabEvent extends UserEvent {
   @override
   String toString() => 'ChangeUserPodiumTab Event';
 }
+
+class ShareActivityEvent extends UserEvent {
+  final String message2Share;
+
+  ShareActivityEvent(this.message2Share);
+  @override
+  String toString() => 'ShareActivity Event';
+}

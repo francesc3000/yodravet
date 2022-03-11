@@ -41,7 +41,8 @@ class RaceMobilePage extends RaceBasicPage {
       double? _stageDayLeft = 0;
       List<Buyer> _buyers = [];
       StageBuilding? _currentStageBuilding;
-      List<StageBuilding>? _stagesBuilding = [];
+      List<StageBuilding>? _spainStagesBuilding = [];
+      List<StageBuilding>? _argentinaStagesBuilding = [];
       List<Widget> slivers = [];
       bool _isRaceOver = false;
 
@@ -58,7 +59,8 @@ class RaceMobilePage extends RaceBasicPage {
         _riveArtboardSpain = state.riveArtboardSpain;
         _riveArtboardArgentina = state.riveArtboardArgentina;
         _buyers = state.buyers;
-        _stagesBuilding = state.stagesBuilding;
+        _spainStagesBuilding = state.spainStagesBuilding;
+        _argentinaStagesBuilding = state.argentinaStagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
         _isSpainMapSelected = state.isSpainMapSelected;
         _isRaceOver = state.isRaceOver;
@@ -94,7 +96,7 @@ class RaceMobilePage extends RaceBasicPage {
       slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
           _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
       slivers.add(_buildMap(context, _riveArtboardSpain, _riveArtboardArgentina,
-          _stagesBuilding, _isSpainMapSelected));
+          _spainStagesBuilding, _argentinaStagesBuilding, _isSpainMapSelected));
       slivers.add(_buildBuyersList(context, _buyers));
 
       return Container(
@@ -242,8 +244,9 @@ class RaceMobilePage extends RaceBasicPage {
       BuildContext context,
       Artboard? riveArtboardSpain,
       Artboard? riveArtboardArgentina,
-      List<StageBuilding>? stagesBuilding,
-      bool _isSpainMapSelected) {
+      List<StageBuilding>? spainStagesBuilding,
+      List<StageBuilding>? argentinaStagesBuilding,
+      bool isSpainMapSelected) {
     Widget child;
     double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
     double mapHeight = 380;
@@ -257,18 +260,19 @@ class RaceMobilePage extends RaceBasicPage {
             height: mapHeight,
             width: mapWidth,
             child: Rive(
-              artboard: _isSpainMapSelected
+              artboard: isSpainMapSelected
                   ? riveArtboardSpain
                   : riveArtboardArgentina,
               fit: BoxFit.contain,
             ),
           ),
         ),
-        _countryLeftButton(context, _isSpainMapSelected, mapHeight, mapWidth),
-        _countryRightButton(context, _isSpainMapSelected, mapHeight, mapWidth),
-        Visibility(
-            visible: _isSpainMapSelected,
-            child: _spainSpots(context, mapHeight, mapWidth, stagesBuilding)),
+        _countryLeftButton(context, isSpainMapSelected, mapHeight, mapWidth),
+        _countryRightButton(context, isSpainMapSelected, mapHeight, mapWidth),
+        isSpainMapSelected
+            ? _spainSpots(context, mapHeight, mapWidth, spainStagesBuilding)
+            : _argentinaSpots(
+                context, mapHeight, mapWidth, argentinaStagesBuilding),
       ]);
     } else {
       child = Container();
@@ -438,6 +442,22 @@ class RaceMobilePage extends RaceBasicPage {
               stagesBuilding[11].id,
               name: stagesBuilding[11].shortName,
               photo: stagesBuilding[11].photo,
+            ),
+          ),
+        ],
+      );
+
+  Stack _argentinaSpots(BuildContext context, double mapHeight, double mapWidth,
+          List<StageBuilding>? stagesBuilding) =>
+      Stack(
+        children: [
+          Positioned(
+            top: mapHeight * 0.26,
+            left: mapWidth * 0.32,
+            child: StageBuildingIcon(
+              stagesBuilding![0].id,
+              name: stagesBuilding[0].shortName,
+              photo: stagesBuilding[0].photo,
             ),
           ),
         ],

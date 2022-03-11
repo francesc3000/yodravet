@@ -68,6 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
     await _assetsAudioPlayer!.open(
       Audio("assets/music/gisela_hidalgo.mp3"),
+      // Audio.network("https://www.youtube.com/watch?v=7JYfZCA4O5c"),
       showNotification: false,
     );
     await _assetsAudioPlayer!.setLoopMode(LoopMode.single);

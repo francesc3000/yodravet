@@ -13,6 +13,7 @@ import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/stage_building.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
+import 'package:yodravet/src/page/sponsor/sponsor_page.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
@@ -42,7 +43,8 @@ class RaceDesktopPage extends RaceBasicPage {
       double? _stageDayLeft = 0;
       List<Buyer> _buyers = [];
       StageBuilding? _currentStageBuilding;
-      List<StageBuilding>? _stagesBuilding = [];
+      List<StageBuilding>? _spainStagesBuilding = [];
+      List<StageBuilding>? _argentinaStagesBuilding = [];
       List<Widget> slivers = [];
       bool _isRaceOver = false;
 
@@ -58,7 +60,8 @@ class RaceDesktopPage extends RaceBasicPage {
         _riveArtboardSpain = state.riveArtboardSpain;
         _riveArtboardArgentina = state.riveArtboardArgentina;
         _buyers = state.buyers;
-        _stagesBuilding = state.stagesBuilding;
+        _spainStagesBuilding = state.spainStagesBuilding;
+        _argentinaStagesBuilding = state.argentinaStagesBuilding;
         _currentStageBuilding = state.currentStageBuilding;
         _loading = false;
         _stageDayLeft = state.stageDayLeft;
@@ -100,8 +103,24 @@ class RaceDesktopPage extends RaceBasicPage {
       slivers.clear();
       slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
           _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-      slivers.add(_buildMap(context, _riveArtboardSpain, _riveArtboardArgentina,
-          _buyers, _stagesBuilding, _isSpainMapSelected));
+      slivers.add(_buildMap(
+          context,
+          _riveArtboardSpain,
+          _riveArtboardArgentina,
+          _buyers,
+          _spainStagesBuilding,
+          _argentinaStagesBuilding,
+          _isSpainMapSelected));
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: false,
+          delegate: SliverAppBarDelegate(
+            minHeight: 412,
+            maxHeight: 550,
+            child: SponsorPage(routerDelegate),
+          ),
+        ),
+      );
 
       return Container(
         decoration: const BoxDecoration(
@@ -272,7 +291,8 @@ class RaceDesktopPage extends RaceBasicPage {
       Artboard? riveArtboardSpain,
       Artboard? riveArtboardArgentina,
       List<Buyer> buyers,
-      List<StageBuilding>? stagesBuilding,
+      List<StageBuilding>? spainStagesBuilding,
+      List<StageBuilding>? argentinaStagesBuilding,
       bool isSpainMapSelected) {
     Widget child;
 
@@ -298,11 +318,9 @@ class RaceDesktopPage extends RaceBasicPage {
               ),
               _countryLeftButton(context, isSpainMapSelected),
               _countryRightButton(context, isSpainMapSelected),
-              Visibility(
-                  visible: isSpainMapSelected,
-                  child:
-                  _spainSpots(context, stagesBuilding),
-              ),
+              isSpainMapSelected
+                  ? _spainSpots(context, spainStagesBuilding)
+                  : _argentinaSpots(context, argentinaStagesBuilding),
             ]),
           ),
           Expanded(
@@ -519,6 +537,22 @@ class RaceDesktopPage extends RaceBasicPage {
               stagesBuilding[11].id,
               name: stagesBuilding[11].shortName,
               photo: stagesBuilding[11].photo,
+            ),
+          ),
+        ],
+      );
+
+  Stack _argentinaSpots(
+          BuildContext context, List<StageBuilding>? stagesBuilding) =>
+      Stack(
+        children: [
+          Positioned(
+            top: 100,
+            left: 220,
+            child: StageBuildingIcon(
+              stagesBuilding![0].id,
+              name: stagesBuilding[0].shortName,
+              photo: stagesBuilding[0].photo,
             ),
           ),
         ],

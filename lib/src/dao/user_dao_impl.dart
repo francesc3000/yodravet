@@ -31,11 +31,11 @@ class UserDaoImpl extends UserDaoInterface {
       TransformModel.userDao2User(await _auth.appleLogIn());
 
   @override
-  Future<User> populateUser(String? userId) async {
+  Future<User> populateUser(String? userId, String raceId) async {
     UserDao userDao;
 
     try {
-      userDao = await firestore.getUserById(userId);
+      userDao = await firestore.getUserById(userId, raceId);
     } catch (e) {
       userDao = UserDao();
     }

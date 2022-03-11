@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/route/app_router_delegate.dart';
 import 'package:yodravet/src/route/app_router_delegate_impl.dart';
 
@@ -41,6 +42,9 @@ void main() async {
     ),
     BlocProvider<SignupBloc>(
       create: (context) => SignupBloc(_sessionBloc),
+    ),
+    BlocProvider<SponsorBloc>(
+      create: (context) => SponsorBloc(_factoryDao),
     ),
   ], child: App(_factoryDao.routeService)));
 }

@@ -20,7 +20,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   StageBuilding? _currentStageBuilding;
   StageBuilding? _currentMouseStageBuilding;
   bool _isSpainMapSelected = true;
-  final List<StageBuilding> _stagesBuilding = [
+  final List<StageBuilding> _spainStagesBuilding = [
     StageBuilding('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
         'assets/images/race/stages/centrofelipe.png', [
       Researcher(
@@ -48,7 +48,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage3.1',
+      'Stage4.1',
       'Facultad Medicina Madrid',
       'Facultad Medicina Madrid',
       'assets/images/race/stages/fmedicinamadrid.png',
@@ -61,7 +61,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage3.2',
+      'Stage4.2',
       'Hospital Ruber Internacional Madrid',
       'H.Ruber',
       'assets/images/race/stages/rubermadrid.png',
@@ -74,7 +74,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage3.3',
+      'Stage4.3',
       'Universidad Nebrija',
       'U.Nebrija',
       'assets/images/race/stages/universidadnebrija.png',
@@ -87,7 +87,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage4',
+      'Stage5',
       'Facultad de Ciencias de la Salud Campus Oza Universidad A Coruña',
       'Uni. A Coruña',
       'assets/images/race/stages/universidadacoruna.png',
@@ -100,7 +100,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage5.1',
+      'Stage6.1',
       'Biocruces Health Research Institute',
       'Biocruces',
       'assets/images/race/stages/biocruces.png',
@@ -113,7 +113,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage5.2',
+      'Stage6.2',
       'Achucarro Basque Center for Neuroscience',
       'Achucarro',
       'assets/images/race/stages/achucarro.png',
@@ -132,7 +132,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage6',
+      'Stage7',
       'Biobide',
       'Biobide',
       'assets/images/race/stages/biobide.png',
@@ -145,7 +145,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage7.1',
+      'Stage8.1',
       'Universitat Pompeu Fabra',
       'Uni. Pompeu Fabra',
       'assets/images/race/stages/pompeufabra.png',
@@ -158,7 +158,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage7.2',
+      'Stage8.2',
       "Vall d'Hebron",
       "Vall d'Hebron",
       'assets/images/race/stages/vallhebron.png',
@@ -171,7 +171,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       ],
     ),
     StageBuilding(
-      'Stage8',
+      'Stage9',
       'Ajuntament de Sant Feliu de Llobregat',
       'Ajuntament Sant Feliu',
       'assets/images/race/stages/ajsantfeliu.png',
@@ -187,6 +187,20 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ),
   ];
 
+  final List<StageBuilding> _argentinaStagesBuilding = [
+    StageBuilding(
+        'Stage3',
+        'Universidad De la Plata. Laboratorio de investigación y desarrollo de bioactivos (LIDeB)',
+        'Uni. De la Plata',
+        'assets/images/race/stages/uni_plata.png', [
+      // Researcher(
+      //     'Máximo Ibo Galindo',
+      //     'Medicina de precisión mediante la utilización de modelo Drosophila.',
+      //     'assets/images/race/stages/researchers/maximoibogalindo.png',
+      //     'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
+    ]),
+  ];
+
   RaceBloc(this.factoryDao) : super(RaceInitState()) {
     on<InitRaceFieldsEvent>(_initRaceFieldsEvent);
     on<UpdateRaceFieldsEvent>(_updateRaceFieldsEvent);
@@ -195,6 +209,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     on<MouseOnEnterEvent>(_mouseOnEnterEvent);
     on<MouseOnExitEvent>(_mouseOnExitEvent);
     on<ChangeMapSelectedEvent>(_changeMapSelectedEvent);
+    on<AutoMapChange4ArgentinaEvent>(_autoMapChange4ArgentinaEvent);
+    on<AutoMapChange4SpainEvent>(_autoMapChange4SpainEvent);
   }
 
   void _initRaceFieldsEvent(InitRaceFieldsEvent event, Emitter emit) async {
@@ -234,6 +250,14 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
           await _raceMapFactory.init(
               _race!.stage, _race!.startDate, _race!.nextStageDate);
+
+          if (_raceMapFactory.isArgentinaActive4AutoChange) {
+            add(AutoMapChange4ArgentinaEvent());
+          }
+
+          if (_raceMapFactory.isSpainActive4AutoChange) {
+            add(AutoMapChange4SpainEvent());
+          }
 
           add(UpdateRaceFieldsEvent());
         }
@@ -278,8 +302,13 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
   void _clickOnMapEvent(ClickOnMapEvent event, Emitter emit) async {
     try {
-      _currentStageBuilding = _stagesBuilding.firstWhere(
-          (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      try {
+        _currentStageBuilding = _spainStagesBuilding.firstWhere(
+                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      } on StateError catch(_) {
+        _currentStageBuilding = _argentinaStagesBuilding.firstWhere(
+                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      }
 
       emit(_updateRaceFields());
     } catch (error) {
@@ -297,8 +326,13 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
   void _mouseOnEnterEvent(MouseOnEnterEvent event, Emitter emit) async {
     try {
-      _currentMouseStageBuilding = _stagesBuilding.firstWhere(
-          (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      try {
+        _currentMouseStageBuilding = _spainStagesBuilding.firstWhere(
+                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      } on StateError catch(_) {
+        _currentMouseStageBuilding = _argentinaStagesBuilding.firstWhere(
+                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      }
 
       emit(_updateRaceFields());
     } catch (error) {
@@ -321,6 +355,22 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     emit(_updateRaceFields());
   }
 
+  void _autoMapChange4ArgentinaEvent(
+      AutoMapChange4ArgentinaEvent event, Emitter emit) async {
+    await Future.delayed(const Duration(seconds: 6));
+    _isSpainMapSelected = false;
+
+    emit(_updateRaceFields());
+  }
+
+  void _autoMapChange4SpainEvent(
+      AutoMapChange4SpainEvent event, Emitter emit) async {
+    await Future.delayed(const Duration(seconds: 13));
+    _isSpainMapSelected = true;
+
+    emit(_updateRaceFields());
+  }
+
   RaceState _updateRaceFields() => UpdateRaceFieldsState(
         kmCounter: _race!.kmCounter,
         stageCounter: _race!.stageCounter,
@@ -333,7 +383,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         buyers: _buyers,
         currentStageBuilding: _currentStageBuilding,
         currentMouseStageBuilding: _currentMouseStageBuilding,
-        stagesBuilding: _stagesBuilding,
+        spainStagesBuilding: _spainStagesBuilding,
+        argentinaStagesBuilding: _argentinaStagesBuilding,
         isSpainMapSelected: _isSpainMapSelected,
         isRaceOver: _race!.isOver,
       );

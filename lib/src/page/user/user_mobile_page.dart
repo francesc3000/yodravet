@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/user_event.dart';
@@ -135,7 +136,50 @@ class UserMobilePage extends UserBasicPage {
     ));
 
     //Switch Strava login
-    if (!PlatformDiscover.isWeb()) {
+    if (PlatformDiscover.isWeb()) {
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: SliverAppBarDelegate(
+            minHeight: 115,
+            maxHeight: 115,
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              color: const Color.fromRGBO(153, 148, 86, 1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                      "Puedes donar tus kilometros a través de nuestra app"),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        width: 130,
+                        child: GestureDetector(
+                          child: Image.asset("assets/images/stores/android.png"),
+                          onTap: () => launch(
+                              "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 80,
+                        width: 130,
+                        child: GestureDetector(
+                          child: Image.asset("assets/images/stores/apple.png"),
+                          onTap: () => launch(
+                              "https://apps.apple.com/es/app/yo-dravet/id1564711228"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
       slivers.add(
         SliverPersistentHeader(
           pinned: true,
@@ -364,11 +408,21 @@ class UserMobilePage extends UserBasicPage {
             onPressed: null);
         break;
       default:
-        result = ElevatedButton(
-            child: Text(AppLocalizations.of(context)!.donerKm),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.green)),
-            onPressed: null);
+        // result = ElevatedButton(
+        //     child: Text(AppLocalizations.of(context)!.donerKm),
+        //     style: ButtonStyle(
+        //         backgroundColor: MaterialStateProperty.all(Colors.green)),
+        //     onPressed: null);
+        result = IconButton(
+            icon: const Icon(FontAwesomeIcons.shareAlt),
+            color: Colors.green,
+            onPressed: () {
+              double km = activity.distance! / 1000;
+              String message = AppLocalizations.of(context)!.shareText(km);
+              BlocProvider.of<UserBloc>(context)
+                  .add(ShareActivityEvent(message));
+
+            });
     }
 
     return result;

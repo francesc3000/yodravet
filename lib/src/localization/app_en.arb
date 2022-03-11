@@ -11,75 +11,75 @@
   "@loginTitle": {
     "description": "loginTitle for the App application"
   },
-  "logInO": "O inicia sesión con tu correo electrónico",
+  "logInO": "Or log in with your email address",
   "@logInO": {
     "description": "signInO"
   },
-  "logIn": "Iniciar Sesión",
+  "logIn": "Login",
   "@logIn": {
     "description": "signIn"
   },
-  "stageTitle": "Km/Etapa",
+  "stageTitle": "Km/Stage",
   "@stageTitle": {
     "description": "stageTitle"
   },
-  "totalTitle": "Km Totales",
+  "totalTitle": "Total km",
   "@totalTitle": {
     "description": "totalTitle"
   },
-  "extraTitle": "Km Acumulado",
+  "extraTitle": "Km Accumulated",
   "@extraTitle": {
     "description": "extraTitle"
   },
-  "signIn": "Registrarme",
+  "signIn": "Register",
   "@signIn": {
     "description": "Registrarme"
   },
-  "logOut": "Cerrar Sesión",
+  "logOut": "Logout",
   "@logOut": {
     "description": "logOut"
   },
-  "stravaConnect": "Conectar con Strava",
+  "stravaConnect": "Connect to Strava",
   "@stravaConnect": {
     "description": "Conectar con Strava"
   },
-  "donerTitle": "Sube tus kilómetros entre el",
+  "donerTitle": "Upload your km between",
   "@donerTitle": {
     "description": "Sube tus kilómetros entre el"
   },
-  "donerMiddleTitle": " y el ",
+  "donerMiddleTitle": " and ",
   "@donerMiddleTitle": {
     "description": "donerMiddleTitle"
   },
-  "donerOutTitle": "Podrás subir tus Km en la siguiente edición",
+  "donerOutTitle": "You will be able to upload your Km in the next edition",
   "@donerOutTitle": {
     "description": "donerOutTitle"
   },
-  "doner": "Subir",
+  "doner": "Upload",
   "@doner": {
     "description": "Subir"
   },
-  "manualKm": "km manuales",
+  "manualKm": "manual km",
   "@manualKm": {
     "description": "km manuales"
   },
-  "donerKm": "Km Subidos",
+  "donerKm": "Uploaded km",
   "@donerKm": {
     "description": "Km Subidos"
   },
-  "rankingDonerKm": "Ranking Km Subidos",
+  "rankingDonerKm": "Ranking Uploaded Km",
   "@rankingDonerKm": {
     "description": "Ranking Km Subidos"
   },
-  "noStravaActivities": "¡Aún no has subido ninguna actividad!",
+  "noStravaActivities": "You haven't uploaded any activity yet!",
   "@noStravaActivities": {
     "description": "noStravaActivities"
   },
-  "rangeOut": "¡Gracias por tu colaboración!\\nNos vemos en la próxima edición.",
+  "rangeOut": "Thank you for your collaboration!\\nSee you in the next edition.",
   "@rangeOut": {
     "description": "rangeOut"
   },
-  "beforeRange": "Podrás subir km a partir del",
+  "beforeRange": "You will be able to upload km from",
   "@beforeRange": {
     "description": "beforeRange"
   },
@@ -163,8 +163,25 @@
   "@privacyPolicyParagraph10": {
     "description": "privacyPolicyParagraph10"
   },
-  "leftDayTitle": "Días Fin Etapa:",
+  "leftDayTitle": "Days End Stage:",
   "@leftDayTitle": {
     "description": "leftDayTitle"
+  },
+  "shareText": "I have donated {km}Km in support of Dravet research. https://yocorroporeldravet.es",
+  "@shareText": {
+    "description": "shareText",
+    "placeholders": {
+      "km": {
+        "type": "double",
+        "format": "decimalPattern",
+        "example": "10.00",
+        "optionalParameters": {
+          "decimalDigits": 2,
+          "name": "Kilometer",
+          "symbol": "Km",
+          "customPattern": "¤#0.00"
+        }
+      }
+    }
   }
 }

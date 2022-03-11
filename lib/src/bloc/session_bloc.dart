@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/bloc/state/session_state.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
+import 'package:yodravet/src/shared/edition.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/session_event.dart';
@@ -130,8 +131,10 @@ class SessionBloc extends Session {
     return user;
   }
 
-  Future<User> _populateUser(String? userId) async =>
-      await _factoryDao.userDao.populateUser(userId);
+  Future<User> _populateUser(String? userId) async {
+    String raceId = Edition.currentEdition;
+    return await _factoryDao.userDao.populateUser(userId, raceId);
+  }
 
   @override
   Future<bool> stravaLogIn() async => await _factoryDao.userDao.stravaLogIn();
