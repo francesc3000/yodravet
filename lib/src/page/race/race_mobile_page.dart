@@ -12,6 +12,7 @@ import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
@@ -484,13 +485,16 @@ class RaceMobilePage extends RaceBasicPage {
                   style: const TextStyle(
                     fontSize: 16.0,
                     color: Colors.blue,
-                    fontFamily: 'AkayaTelivigala',
                     decoration: TextDecoration.underline,
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launch(
-                          'https://www.apoyodravet.eu/tienda-solidaria/donacion/compra-kilometros-solidarios-dravet-tour?utm_source=app&utm_medium=enlace&utm_campaign=compra-kilometros-dravet-tour');
+                          'https://www.apoyodravet.eu/tienda-solidaria/'
+                              'donacion/compra-kilometros-solidarios-dravet'
+                              '-tour?utm_source=app&utm_medium='
+                              'enlace&utm_campaign=compra-'
+                              'kilometros-dravet-tour');
                     },
                 ),
                 const WidgetSpan(
@@ -502,59 +506,7 @@ class RaceMobilePage extends RaceBasicPage {
     );
 
     for (Buyer buyer in buyers) {
-      int butterfly = buyer.butterfly.toInt();
-      Widget userPhoto = buyer.userPhoto.isEmpty
-          ? Image.asset('assets/images/avatar.png')
-          : Image.network(
-              buyer.userPhoto,
-              loadingBuilder: (context, child, imageEvent) =>
-                  Image.asset('assets/images/avatar.png'),
-            );
-
-      slivers.add(
-        Stack(
-          children: [
-            Positioned(
-              child: Card(
-                color: const Color.fromRGBO(89, 63, 153, 1),
-                child: ListTile(
-                  leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Container(color: Colors.white, child: userPhoto)),
-                  title: Text(buyer.userFullname),
-                  subtitle: Text('${buyer.totalPurchase}' ' €'),
-                  trailing: Wrap(
-                    direction: Axis.vertical,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      Text(
-                        '$butterfly',
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                      Image.asset(
-                        "assets/images/butterflies.png",
-                        height: 50,
-                        width: 50,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: poleCounter > 3 ? false : true,
-              child: Positioned(
-                left: 55.0,
-                top: 40.0,
-                width: 35,
-                child: Image.asset(
-                    'assets/images/medallas/medalla$poleCounter.png'),
-              ),
-            ),
-          ],
-        ),
-      );
-
+      slivers.add(ButterflyCard(buyer, poleCounter));
       poleCounter++;
     }
 

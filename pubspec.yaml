@@ -117,3 +117,8 @@ flutter:
     - assets/images/race/stages/
     - assets/images/race/stages/researchers/
     - assets/music/
+
+  fonts:
+    - family: AkayaTelivigala
+      fonts:
+        - asset: fonts/AkayaTelivigala-Regular.ttf

@@ -91,7 +91,10 @@ class _AppState extends State<App> {
     // Define a function to handle named routes in order to support
     // Flutter web url navigation and deep linking.
     // onGenerateRoute: generateRoute,
-    theme: ThemeData(primaryColor: const Color.fromARGB(255, 140, 71, 153)),
+    theme: ThemeData(
+        primaryColor: const Color.fromARGB(255, 140, 71, 153),
+      fontFamily: 'AkayaTelivigala'
+    ),
     // initialRoute: '/',
     // navigatorKey: navigationService.navigatorKey,
     routerDelegate: routerDelegate,

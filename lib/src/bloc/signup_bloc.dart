@@ -11,6 +11,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   bool _isLoading = false;
 
   SignupBloc(this.session) : super(SignupInitState()) {
+    on<SignupEventEmpty>((event, emit) => emit(SignupInitState()));
     on<SignUpEvent>(_signUpEvent);
   }
 

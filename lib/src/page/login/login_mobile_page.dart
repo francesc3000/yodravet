@@ -101,10 +101,12 @@ class LoginMobilePage extends LoginBasicPage {
                 margin: const EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
                 child: CustomButton(
-                  child: _isLoadingApple
+                  child:
+                  _isLoadingApple
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      : Row(
+                      :
+                  Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Icon(FontAwesomeIcons.apple, color: Colors.white),
@@ -119,7 +121,7 @@ class LoginMobilePage extends LoginBasicPage {
                         ),
                   color: Colors.black,
                   onPressed: () {
-                    routerDelegate.popRoute();
+                    // routerDelegate.popRoute();
                     BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
                   },
                 ),
@@ -154,13 +156,15 @@ class LoginMobilePage extends LoginBasicPage {
               ),
             ),
             CustomButton(
-              child: _isLoading
+              child: 
+          _isLoading
                   ? const CircularProgressIndicator(
                       backgroundColor: Colors.white)
-                  : Text(AppLocalizations.of(context)!.logIn,
+                  : 
+              Text(AppLocalizations.of(context)!.logIn,
                       style: const TextStyle(color: Colors.white)),
               onPressed: () {
-                routerDelegate.popRoute();
+                // routerDelegate.popRoute();
                 BlocProvider.of<AuthBloc>(context).add(LogInEvent(
                     email: emailTextController.text,
                     pass: passTextController.text));

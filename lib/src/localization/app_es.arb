@@ -75,7 +75,7 @@
   "@noStravaActivities": {
     "description": "noStravaActivities"
   },
-  "rangeOut": "¡Gracias por tu colaboración!\\nNos vemos en la próxima edición.",
+  "rangeOut": "¡Gracias por tu colaboración!\nNos vemos en la próxima edición.",
   "@rangeOut": {
     "description": "rangeOut"
   },
@@ -83,7 +83,7 @@
   "@beforeRange": {
     "description": "beforeRange"
   },
-  "privacyPolicyTitle": "Privacy Policy\\n",
+  "privacyPolicyTitle": "Privacy Policy\n",
   "@privacyPolicyTitle": {
     "description": "privacyPolicyTitle"
   },

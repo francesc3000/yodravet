@@ -12,6 +12,7 @@ import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
 import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
 import 'package:yodravet/src/page/sponsor/sponsor_page.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
@@ -340,7 +341,6 @@ class RaceDesktopPage extends RaceBasicPage {
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 color: Colors.blue,
-                                fontFamily: 'AkayaTelivigala',
                                 decoration: TextDecoration.underline,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -559,52 +559,8 @@ class RaceDesktopPage extends RaceBasicPage {
       );
 
   Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
-    int butterfly = buyer.butterfly.toInt();
-    Widget userPhoto = buyer.userPhoto.isEmpty
-        ? Image.asset('assets/images/avatar.png')
-        : Image.network(
-            buyer.userPhoto,
-            loadingBuilder: (context, child, imageEvent) =>
-                Image.asset('assets/images/avatar.png'),
-          );
     int poleCounter = index + 1;
 
-    return Stack(
-      children: [
-        Positioned(
-          child: Card(
-            color: const Color.fromRGBO(89, 63, 153, 1),
-            child: ListTile(
-              leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Container(color: Colors.white, child: userPhoto)),
-              title: Text(buyer.userFullname),
-              subtitle: Text('${buyer.totalPurchase}' ' €'),
-              trailing: Wrap(
-                direction: Axis.vertical,
-                alignment: WrapAlignment.center,
-                children: [
-                  Text(
-                    '$butterfly',
-                    style: const TextStyle(fontSize: 19),
-                  ),
-                  Image.asset("assets/images/butterflies.png")
-                ],
-              ),
-            ),
-          ),
-        ),
-        Visibility(
-          visible: poleCounter > 3 ? false : true,
-          child: Positioned(
-            left: 45.0,
-            top: 40.0,
-            width: 35,
-            child:
-                Image.asset('assets/images/medallas/medalla$poleCounter.png'),
-          ),
-        ),
-      ],
-    );
+    return ButterflyCard(buyer, poleCounter);
   }
 }

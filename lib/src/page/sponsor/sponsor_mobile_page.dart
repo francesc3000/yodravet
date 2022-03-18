@@ -87,10 +87,10 @@ Widget _buildPromoterGrid(BuildContext context, List<Sponsor> promoters) =>
     );
 
 Widget _buildSponsor(BuildContext context, Sponsor sponsor) => GestureDetector(
-      child: Image.asset(sponsor.logoPath),
+      child: ClipOval(child: Image.asset(sponsor.logoPath)),
       onTap: () => BlocProvider.of<SponsorBloc>(context)
           .add(Navigate2WebsiteEvent(sponsor.id)),
     );
 
 Widget _buildPromoter(BuildContext context, Sponsor sponsor) =>
-    Image.asset(sponsor.logoPath);
+    ClipOval(child: Image.asset(sponsor.logoPath));

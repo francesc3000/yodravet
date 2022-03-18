@@ -23,20 +23,27 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
         id: "1",
         name: "2 Set",
         logoPath: "assets/images/sponsors/2set.jpeg",
-        website: "https://2set.com",
+        website: "https://www.instagram.com/2setpadel",
         type: SponsorType.promoter));
 
     _sponsors!.add(Sponsor(
         id: "2",
         name: "Apoyo Dravet",
         logoPath: "assets/images/sponsors/apoyo_dravet.jpeg",
-        website: "https://apoyodravet.com"));
+        website: "https://www.apoyodravet.eu/"));
 
     _sponsors!.add(Sponsor(
         id: "3",
         name: "Indre",
         logoPath: "assets/images/sponsors/indre.jpeg",
         website: "https://indre.com"));
+
+    _sponsors!.add(Sponsor(
+        id: "4",
+        name: "Mar Coronado Ilustració",
+        logoPath: "assets/images/sponsors/marcoronadoilustracio.jpeg",
+        website: "https://www.instagram.com/invites/contact/"
+            "?i=et8ngn1nyro9&utm_content=hthwao"));
 
     emit(_uploadSponsorFields());
   }
