@@ -118,7 +118,14 @@ class UserDesktopPage extends UserBasicPage {
                         height: 50,
                         width: 50,
                       )
-                    : Image.network(photoUrl),
+                    : Image.network(
+                        photoUrl,
+                        loadingBuilder: (context, child, imageEvent) =>
+                            Image.asset(
+                          'assets/images/avatar.png',
+                          height: 75,
+                        ),
+                      ),
               ),
             ),
             title: Text(fullName),

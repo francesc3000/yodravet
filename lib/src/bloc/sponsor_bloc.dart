@@ -36,7 +36,7 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
         id: "3",
         name: "Indre",
         logoPath: "assets/images/sponsors/indre.jpeg",
-        website: "https://indre.com"));
+        website: "https://www.indrenetwork.com/es"));
 
     _sponsors!.add(Sponsor(
         id: "4",

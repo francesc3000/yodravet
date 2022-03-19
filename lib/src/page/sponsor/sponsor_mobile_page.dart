@@ -4,6 +4,8 @@ import 'package:yodravet/src/bloc/event/sponsor_event.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/bloc/state/sponsor_state.dart';
 import 'package:yodravet/src/model/sponsor.dart';
+import 'package:yodravet/src/page/sponsor/widget/promoter_widget.dart';
+import 'package:yodravet/src/page/sponsor/widget/sponsor_widget.dart';
 
 import '../../route/app_router_delegate.dart';
 import 'sponsor_basic_page.dart';
@@ -67,7 +69,7 @@ Widget _buildSponsorGrid(BuildContext context, List<Sponsor> sponsors) =>
         // childAspectRatio: 2.0,
       ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) => _buildSponsor(context, sponsors[index]),
+        (context, index) => SponsorWidget(sponsors[index]),
         childCount: sponsors.length,
       ),
     );
@@ -81,16 +83,7 @@ Widget _buildPromoterGrid(BuildContext context, List<Sponsor> promoters) =>
         childAspectRatio: 1.5,
       ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) => _buildPromoter(context, promoters[index]),
+        (context, index) => PromoterWidget(promoters[index]),
         childCount: promoters.length,
       ),
     );
-
-Widget _buildSponsor(BuildContext context, Sponsor sponsor) => GestureDetector(
-      child: ClipOval(child: Image.asset(sponsor.logoPath)),
-      onTap: () => BlocProvider.of<SponsorBloc>(context)
-          .add(Navigate2WebsiteEvent(sponsor.id)),
-    );
-
-Widget _buildPromoter(BuildContext context, Sponsor sponsor) =>
-    ClipOval(child: Image.asset(sponsor.logoPath));

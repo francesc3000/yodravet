@@ -63,7 +63,7 @@ class ButterflyCard extends StatelessWidget {
         Positioned(
           top: 10,
           left: 100,
-          width: 243,
+          width: MediaQuery.of(context).size.width - 100 - 100,
           child: Text(
             buyer.userFullname,
             style: const TextStyle(fontSize: 25),
