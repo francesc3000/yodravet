@@ -45,6 +45,20 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
         website: "https://www.instagram.com/invites/contact/"
             "?i=et8ngn1nyro9&utm_content=hthwao"));
 
+    _promoters!.add(Sponsor(
+        id: "5",
+        name: "Gisela Hidalgo",
+        logoPath: "assets/images/sponsors/gisela_hidalgo.jpeg",
+        website: "",
+        type: SponsorType.promoter));
+
+    _promoters!.add(Sponsor(
+        id: "6",
+        name: "Actitud Dravet Argentina",
+        logoPath: "assets/images/sponsors/dravet_argentina.jpeg",
+        website: "",
+        type: SponsorType.promoter));
+
     emit(_uploadSponsorFields());
   }
 

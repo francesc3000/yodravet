@@ -42,9 +42,8 @@ class AuthFirebaseRepositoryImpl implements AuthRepository {
     }
 
     if (kDebugMode) {
-      print(
-        'Estoy en login en auth con respuesta de '
-            'firebase authResult= $authResult');
+      print('Estoy en login en auth con respuesta de '
+          'firebase authResult= $authResult');
     }
     final User user = authResult.user!;
     if (kDebugMode) {
@@ -134,7 +133,8 @@ class AuthFirebaseRepositoryImpl implements AuthRepository {
     return TransformModel.raw2UserDao(
         id: userCredential.user!.uid,
         email: userCredential.user!.email,
-        name: '${appleCredential.givenName!} ${appleCredential.familyName!}',
+        name: '${appleCredential.givenName ?? ""} '
+            '${appleCredential.familyName ?? ""}',
         // name: userCredential.user.displayName ?? 'Anónimo',
         lastname: '',
         photo: userCredential.user!.photoURL ?? '',
