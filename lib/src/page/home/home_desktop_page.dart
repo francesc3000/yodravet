@@ -15,14 +15,14 @@ import '../../route/app_router_delegate.dart';
 import 'home_basic_page.dart';
 
 class HomeDesktopPage extends HomeBasicPage {
-  const HomeDesktopPage(
-      String title, AppRouterDelegate appRouterDelegate, bool isMusicOn,
+  const HomeDesktopPage(String title, AppRouterDelegate appRouterDelegate,
+      bool isMusicOn, bool isFirstTime,
       {Key? key})
-      : super(title, appRouterDelegate, isMusicOn, key: key);
+      : super(title, appRouterDelegate, isMusicOn, isFirstTime, key: key);
 
   @override
   PreferredSizeWidget appBar(BuildContext context,
-          {String? title, bool isMusicOn = false}) =>
+          {String? title, bool isMusicOn = false, bool isFirstTime = false}) =>
       AppBar(
         title: Container(
           // color: Color.fromRGBO(177, 237, 100, 93),

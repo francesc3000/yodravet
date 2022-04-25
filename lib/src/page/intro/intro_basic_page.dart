@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../route/app_router_delegate.dart';
 import '../basic_page.dart';
 
-abstract class UnknownBasicPage extends BasicPage {
-  const UnknownBasicPage(AppRouterDelegate routerDelegate, {Key? key})
+abstract class IntroBasicPage extends BasicPage {
+  const IntroBasicPage(AppRouterDelegate routerDelegate, {Key? key})
       : super("", routerDelegate, key: key);
 
   @override

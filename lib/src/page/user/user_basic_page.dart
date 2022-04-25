@@ -10,10 +10,12 @@ abstract class UserBasicPage extends BasicPage {
 
   @override
   PreferredSizeWidget? appBar(BuildContext context,
-          {String? title, bool isMusicOn = false}) => null;
+          {String? title, bool isMusicOn = false, bool isFirstTime = false}) =>
+      null;
 
   @override
-  Widget? bottomNavigationBar(BuildContext context) => null;
+  Widget? bottomNavigationBar(BuildContext context, {isFirstTime = false}) =>
+      null;
 
   @override
   Widget? floatingActionButton(BuildContext context) => null;

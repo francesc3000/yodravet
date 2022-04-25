@@ -193,11 +193,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         'Universidad De la Plata. Laboratorio de investigación y desarrollo de bioactivos (LIDeB)',
         'Uni. De la Plata',
         'assets/images/race/stages/uni_plata.png', [
-      // Researcher(
-      //     'Máximo Ibo Galindo',
-      //     'Medicina de precisión mediante la utilización de modelo Drosophila.',
-      //     'assets/images/race/stages/researchers/maximoibogalindo.png',
-      //     'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
+      Researcher(
+          'Alan Talevi',
+          'Diseño de bloqueantes altamente selectivos de canales NaV1.2 y NaV1.6 (sin efecto sobre canales NaV1.1). La idea es diseñar nuevos fármacos específicamente concebidos para tratar Dravet, que no interactúen con el canal de sodio cuya mutación usualmente está asociada a la enfermedad. Servicio de monitoreo de fármacos anticonvulsivantes usualmente utilizados en la terapéutica del síndrome de Dravet, el cual será accesible a la comunidad Dravet Argentina con la posibilidad de envío de muestras por correo postal.',
+          'assets/images/race/stages/researchers/alantalevi.png',
+          ''),
     ]),
   ];
 

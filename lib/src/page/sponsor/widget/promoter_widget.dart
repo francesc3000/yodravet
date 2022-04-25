@@ -1,14 +1,15 @@
+import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
-import 'package:yodravet/src/model/sponsor.dart';
+import 'package:yodravet/src/model/collaborator.dart';
 
 class PromoterWidget extends StatelessWidget {
-  final Sponsor promoter;
+  final Collaborator promoter;
   const PromoterWidget(this.promoter, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 150,
-        width: 150,
+        height: 110,
+        width: 110,
         child: Card(
           elevation: 4.0,
           shape: const RoundedRectangleBorder(
@@ -16,8 +17,21 @@ class PromoterWidget extends StatelessWidget {
                   bottomRight: Radius.circular(10),
                   topRight: Radius.circular(10)),
               side: BorderSide(width: 2, color: Colors.green)),
-          child: Center(
-            child: Image.asset(promoter.logoPath,
+          // child: SizedBox(
+          //     height: 110,
+          //     width: 110,
+          // child: CachedNetworkImageBuilder(
+          //   url: promoter.logoPath,
+          //   builder: (image) => Image.asset("assets/images/avatar.png"),
+          // ),
+          // ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+                bottomRight: Radius.circular(10),
+                topRight: Radius.circular(10)),
+            child: Image(
+              image: FirebaseImage(promoter.logoPath),
+              // fit: BoxFit.fitWidth,
               height: 110,
               width: 110,
             ),

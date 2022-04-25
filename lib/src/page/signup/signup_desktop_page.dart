@@ -21,7 +21,7 @@ class SignupDesktopPage extends SignupBasicPage {
 
   @override
   PreferredSizeWidget? appBar(BuildContext context,
-          {String? title, bool isMusicOn = false}) =>
+          {String? title, bool isMusicOn = false, bool isFirstTime = false}) =>
       null;
 
   @override

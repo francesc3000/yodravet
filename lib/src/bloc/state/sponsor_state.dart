@@ -1,4 +1,4 @@
-import 'package:yodravet/src/model/sponsor.dart';
+import 'package:yodravet/src/model/collaborator.dart';
 
 abstract class SponsorState {}
 
@@ -8,8 +8,8 @@ class SponsorInitState extends SponsorState {
 }
 
 class UploadSponsorFields extends SponsorState {
-  final List<Sponsor> sponsors;
-  final List<Sponsor> promoters;
+  final List<Collaborator> sponsors;
+  final List<Collaborator> promoters;
 
   UploadSponsorFields({required this.sponsors, required this.promoters});
 

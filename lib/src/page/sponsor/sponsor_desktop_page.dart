@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/event/sponsor_event.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/bloc/state/sponsor_state.dart';
-import 'package:yodravet/src/model/sponsor.dart';
+import 'package:yodravet/src/model/collaborator.dart';
 import 'package:yodravet/src/page/sponsor/widget/promoter_widget.dart';
 import 'package:yodravet/src/page/sponsor/widget/sponsor_widget.dart';
 
@@ -18,8 +18,8 @@ class SponsorDesktopPage extends SponsorBasicPage {
   Widget body(BuildContext context) => BlocBuilder<SponsorBloc, SponsorState>(
         builder: (context, state) {
           List<Widget> _slivers = [];
-          List<Sponsor> _sponsors = [];
-          List<Sponsor> _promoters = [];
+          List<Collaborator> _sponsors = [];
+          List<Collaborator> _promoters = [];
           bool _loading = false;
 
           if (state is SponsorInitState) {
@@ -60,7 +60,7 @@ class SponsorDesktopPage extends SponsorBasicPage {
       );
 }
 
-Widget _buildSponsorGrid(BuildContext context, List<Sponsor> sponsors) =>
+Widget _buildSponsorGrid(BuildContext context, List<Collaborator> sponsors) =>
     SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
@@ -74,7 +74,7 @@ Widget _buildSponsorGrid(BuildContext context, List<Sponsor> sponsors) =>
       ),
     );
 
-Widget _buildPromoterGrid(BuildContext context, List<Sponsor> promoters) =>
+Widget _buildPromoterGrid(BuildContext context, List<Collaborator> promoters) =>
     SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,

@@ -4,6 +4,8 @@ import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
+import 'package:yodravet/src/model/collaborator.dart';
+import 'package:yodravet/src/model/collaborator_dao.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/user.dart';
@@ -206,4 +208,30 @@ class TransformModel {
           userId: userId,
           userFullname: userFullname,
           userPhoto: userPhoto);
+
+  static CollaboratorDao raw2CollaboratorDao(
+          {required String id,
+          required name,
+          required logoPath,
+          required website,
+          required type}) =>
+      CollaboratorDao(
+          id: id, name: name, logoPath: logoPath, website: website, type: type);
+
+  static List<Collaborator> collaboratorsDao2Collaborators(
+          List<CollaboratorDao> collaboratorsDao) =>
+      collaboratorsDao.map(collaboratorDao2Collaborator).toList();
+
+  static Collaborator collaboratorDao2Collaborator(
+      CollaboratorDao collaboratorDao) {
+    CollaboratorType type = CollaboratorType.values.firstWhere(
+        (e) => e.toString() == "CollaboratorType.${collaboratorDao.type}");
+    return Collaborator(
+      id: collaboratorDao.id,
+      name: collaboratorDao.name,
+      logoPath: collaboratorDao.logoPath,
+      website: collaboratorDao.website,
+      type: type,
+    );
+  }
 }

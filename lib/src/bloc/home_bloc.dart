@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 
@@ -14,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   // User _user = User();
   AssetsAudioPlayer? _assetsAudioPlayer;
   bool _isMusicOn = true;
+  bool _firstTime = false;
 
   HomeBloc(this.session, this.factoryDao) : super(HomeInitState()) {
     // session.stream.listen((state) {
@@ -55,35 +57,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _homeInitDataEvent(HomeInitDataEvent event, Emitter emit) async {
-    if(PlatformDiscover.isWeb()) {
+    if (PlatformDiscover.isWeb()) {
       _isMusicOn = false;
     } else {
-      await _setupMusic();
+      _firstTime = await _isFirstTime();
+      if(!_firstTime) {
+        await _setupMusic();
+      }
     }
 
     emit(_uploadHomeFields());
   }
 
-  Future<void> _setupMusic() async{
-    _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-    await _assetsAudioPlayer!.open(
-      Audio("assets/music/gisela_hidalgo.mp3"),
-      // Audio.network("https://www.youtube.com/watch?v=7JYfZCA4O5c"),
-      showNotification: false,
-    );
-    await _assetsAudioPlayer!.setLoopMode(LoopMode.single);
+  Future<bool> _isFirstTime() async {
+    bool? firstTime;
+    final prefs = await SharedPreferences.getInstance();
 
-    // _assetsAudioPlayer!.loopMode.listen((loopMode){
-    //   //listen to loop
-    // });
-    await _assetsAudioPlayer!.play();
+    firstTime = prefs.getBool('firstTime');
+    if(firstTime==null) {
+      firstTime = true;
+      await prefs.setBool('firstTime', false);
+    }
+
+    return firstTime;
+    // return Future.value(false);
   }
 
-  void _changeMuteOptionEvent(ChangeMuteOptionEvent event, Emitter emit) async{
-    if(_assetsAudioPlayer==null) {
+  Future<void> _setupMusic() async {
+    if(_assetsAudioPlayer == null) {
+      _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+      await _assetsAudioPlayer!.open(
+        Audio("assets/music/gisela_hidalgo.mp3"),
+        // Audio.network("https://www.youtube.com/watch?v=7JYfZCA4O5c"),
+        showNotification: false,
+      );
+      await _assetsAudioPlayer!.setLoopMode(LoopMode.single);
+
+      // _assetsAudioPlayer!.loopMode.listen((loopMode){
+      //   //listen to loop
+      // });
+      await _assetsAudioPlayer!.play();
+    }
+  }
+
+  void _changeMuteOptionEvent(ChangeMuteOptionEvent event, Emitter emit) async {
+    if (_assetsAudioPlayer == null) {
       await _setupMusic();
     }
-    if(_isMusicOn) {
+    if (_isMusicOn) {
       _assetsAudioPlayer!.pause();
     } else {
       _assetsAudioPlayer!.play();
@@ -93,6 +114,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(_uploadHomeFields());
   }
 
-  HomeState _uploadHomeFields() =>
-      UploadHomeFields(index: _currentIndex, isMusicOn: _isMusicOn);
+  HomeState _uploadHomeFields() => UploadHomeFields(
+      index: _currentIndex, isMusicOn: _isMusicOn, isFirstTime: _firstTime);
 }

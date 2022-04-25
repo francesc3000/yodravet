@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
+import 'package:yodravet/src/model/collaborator_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/user_dao.dart';
 import 'package:yodravet/src/shared/transform_model.dart';
@@ -18,6 +19,9 @@ class FirestoreRepositoryImpl implements Repository {
 
   @override
   get raceCollectionEndpoint => _firestore.collection('races');
+
+  @override
+  get collaboratorCollectionEndpoint => _firestore.collection('sponsors');
 
   @override
   Future<UserDao> getUserById(String? userId, String raceId) async {
@@ -206,8 +210,7 @@ class FirestoreRepositoryImpl implements Repository {
       );
 
   @override
-  Stream<List<BuyerDao>> streamBuyers(String raceId) =>
-      raceCollectionEndpoint
+  Stream<List<BuyerDao>> streamBuyers(String raceId) => raceCollectionEndpoint
           .doc(raceId)
           .collection('butterflies')
           .snapshots()
@@ -263,4 +266,29 @@ class FirestoreRepositoryImpl implements Repository {
           sink.add(doners);
         }),
       );
+
+  @override
+  Future<List<CollaboratorDao>> getCollaborators() async {
+    List<CollaboratorDao> collaboratorsDao = [];
+
+    QuerySnapshot queryCollaborators =
+        await _firestore.collection("sponsors").get();
+
+    if (queryCollaborators.docs.isNotEmpty) {
+      collaboratorsDao =
+          queryCollaborators.docs.map<CollaboratorDao>((snapshot) {
+        Map data = snapshot.data() as Map;
+
+        return TransformModel.raw2CollaboratorDao(
+          id: snapshot.id,
+          name: data['name'],
+          logoPath: data['logoPath'],
+          website: data['website'],
+          type: data['type'],
+        );
+      }).toList();
+    }
+
+    return collaboratorsDao;
+  }
 }
