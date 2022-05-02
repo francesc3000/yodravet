@@ -20,5 +20,5 @@ class Race {
         required this.startDate,
         required this.finalDate});
 
-  bool get isOver => DateTime.now().compareTo(finalDate) > 0;
+  bool get isOver => DateTime.now().compareTo(finalDate) < 0;
 }

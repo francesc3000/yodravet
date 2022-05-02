@@ -333,7 +333,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   child: Center(
                     child: RichText(
                       text: TextSpan(
-                          text: 'Compra tus mariposas en ',
+                          text: 'Compra tus mariposas solidarias en ',
                           style: const TextStyle(fontFamily: 'AkayaTelivigala'),
                           children: [
                             TextSpan(

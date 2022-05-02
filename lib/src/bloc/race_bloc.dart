@@ -146,9 +146,9 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ),
     StageBuilding(
       'Stage8.1',
-      'Universitat Pompeu Fabra',
-      'Uni. Pompeu Fabra',
-      'assets/images/race/stages/pompeufabra.png',
+      'Universitat de Barcelona',
+      'U.B.',
+      'assets/images/race/stages/ub.png',
       [
         Researcher(
             'Sandra Acosta',
