@@ -114,16 +114,23 @@ class SessionBloc extends Session {
     if (appleUser.isLogin) {
       user = await _populateUser(appleUser.id);
       if (!user.isLogin) {
-        user = appleUser;
-        //Si no se encuentra en base de datos se crea el usuario
-        await _factoryDao.userDao.createUser(
-            user.id, user.email, user.name, user.lastname, user.photo);
+        if(appleUser.name != null && appleUser.name!.isNotEmpty) {
+          user = appleUser;
+          //Si no se encuentra en base de datos se crea el usuario
+          await _factoryDao.userDao.createUser(
+              user.id, user.email, user.name, user.lastname, user.photo);
+
+          add(SignedEvent(true, false));
+        } else {
+          _factoryDao.userDao.logOut();
+          add(SignedEvent(false, false));
+        }
+      } else {
+        add(SignedEvent(true, false));
       }
       if (kDebugMode) {
         print('Salgo de login en session_bloc ha ido bien el login');
       }
-
-      add(SignedEvent(true, false));
     } else {
       add(SignedEvent(false, false));
     }
