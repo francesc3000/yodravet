@@ -184,5 +184,33 @@
         }
       }
     }
+  },
+  "map": "Mapa",
+  "@map": {
+    "description": "Map"
+  },
+  "kmDonor": "Donar Km",
+  "@kmDonor": {
+    "description": "km Donor"
+  },
+  "sponsors": "Patrocinadors",
+  "@sponsors": {
+    "description": "Sponsors"
+  },
+  "play": "Reproduir",
+  "@play": {
+    "description": "Play"
+  },
+  "pause": "Pausar",
+  "@pause": {
+    "description": "Pause"
+  },
+  "buySong": "Comprar Cançó",
+  "@buySong": {
+    "description": "Buy Song"
+  },
+  "showRanking": "Veure Clasificació",
+  "@showRanking": {
+    "description": "Show Ranking"
   }
 }

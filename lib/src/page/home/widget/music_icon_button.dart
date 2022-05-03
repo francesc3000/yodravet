@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/event/home_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
@@ -18,23 +19,23 @@ class MusicIconButton extends StatelessWidget {
             PopupMenuItem(
               child: isMusicOn
                   ? Row(
-                      children: const [
+                      children: [
                         Text(
-                          "Pausar",
-                          style: TextStyle(color: Colors.white),
+                          AppLocalizations.of(context)!.pause,
+                          style: const TextStyle(color: Colors.white),
                         ),
-                        Spacer(),
-                        Icon(FontAwesomeIcons.pause),
+                        const Spacer(),
+                        const Icon(FontAwesomeIcons.pause),
                       ],
                     )
                   : Row(
-                      children: const [
+                      children: [
                         Text(
-                          "Reproducir",
-                          style: TextStyle(color: Colors.white),
+                          AppLocalizations.of(context)!.play,
+                          style: const TextStyle(color: Colors.white),
                         ),
-                        Spacer(),
-                        Icon(FontAwesomeIcons.music),
+                        const Spacer(),
+                        const Icon(FontAwesomeIcons.music),
                       ],
                     ),
               value: 1,
@@ -44,13 +45,13 @@ class MusicIconButton extends StatelessWidget {
             ),
             PopupMenuItem(
               child: Row(
-                children: const [
+                children: [
                   Text(
-                    "Comprar Canción",
-                    style: TextStyle(color: Colors.white),
+                    AppLocalizations.of(context)!.buySong,
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  Spacer(),
-                  Icon(FontAwesomeIcons.shoppingCart),
+                  const Spacer(),
+                  const Icon(FontAwesomeIcons.shoppingCart),
                 ],
               ),
               value: 2,

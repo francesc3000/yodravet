@@ -430,26 +430,10 @@ class UserMobilePage extends UserBasicPage {
 
   Widget _buildDonorsList(BuildContext context, int filterDonorTab,
           List<ActivityPurchase> donors) =>
-      donors.isEmpty
-          ? SliverPersistentHeader(
-              pinned: true,
-              delegate: SliverAppBarDelegate(
-                minHeight: 40,
-                maxHeight: 40,
-                child: ElevatedButton(
-                    onPressed: () => BlocProvider.of<UserBloc>(context)
-                        .add(ShowPodiumEvent()),
-                    child: const Text("Ver Clasificación"),
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 140, 71, 153),
-                  ),
-                ),
-              ),
-            )
-          : SliverList(
-              delegate: SliverChildListDelegate(
-                  _buildDonors(context, filterDonorTab, donors)),
-            );
+      SliverList(
+        delegate: SliverChildListDelegate(
+            _buildDonors(context, filterDonorTab, donors)),
+      );
 
   List<Widget> _buildDonors(
       BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {
@@ -464,14 +448,6 @@ class UserMobilePage extends UserBasicPage {
         children: [
           Text(AppLocalizations.of(context)!.rankingDonerKm),
           ButtonBar(alignment: MainAxisAlignment.spaceAround, children: [
-            // IconButton(
-            //   color: filterDonorTab == 0 ? Theme.of(context).primaryColor :
-            //   Colors.black,
-            //   icon: Icon(FontAwesomeIcons.star), onPressed: () {
-            //     BlocProvider.of<UserBloc>(context)
-            //     .add(ChangeUserPodiumTabEvent(0));
-            //    },
-            // ),
             IconButton(
               color: filterDonorTab == 2 ? Colors.blue : Colors.black,
               icon: const Icon(FontAwesomeIcons.running),
@@ -500,6 +476,19 @@ class UserMobilePage extends UserBasicPage {
         ],
       ),
     ));
+
+    if (donors.isEmpty) {
+      slivers.add(
+        ElevatedButton(
+          onPressed: () =>
+              BlocProvider.of<UserBloc>(context).add(ShowPodiumEvent()),
+          child: Text(AppLocalizations.of(context)!.showRanking),
+          style: ElevatedButton.styleFrom(
+            primary: const Color.fromARGB(255, 140, 71, 153),
+          ),
+        ),
+      );
+    }
 
     for (ActivityPurchase donor in donors) {
       double distance = donor.distance! / 1000;

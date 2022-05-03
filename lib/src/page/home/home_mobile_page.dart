@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
@@ -91,12 +91,15 @@ class HomeMobilePage extends HomeBasicPage {
       {bool isFirstTime = false}) {
     List<BottomNavigationBarItem> items = [];
 
-    items.add(const BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.map), label: 'Mapa'));
-    items.add(const BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.handsHelping), label: 'Patrocinadores'));
-    items.add(const BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.running), label: 'Donar Km'));
+    items.add(BottomNavigationBarItem(
+        icon: const Icon(FontAwesomeIcons.map),
+        label: AppLocalizations.of(context)!.map));
+    items.add(BottomNavigationBarItem(
+        icon: const Icon(FontAwesomeIcons.handsHelping),
+        label: AppLocalizations.of(context)!.sponsors));
+    items.add(BottomNavigationBarItem(
+        icon: const Icon(FontAwesomeIcons.running),
+        label: AppLocalizations.of(context)!.kmDonor));
 
     return isFirstTime
         ? null
