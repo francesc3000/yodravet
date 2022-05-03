@@ -38,15 +38,15 @@ class Activity implements Comparable {
 
   @override
   int compareTo(other) {
-    if (distance! < other.butterfly) {
+    if (distance! < other.distance) {
       return 1;
     }
 
-    if (distance! > other.butterfly) {
+    if (distance! > other.distance) {
       return -1;
     }
 
-    if (distance == other.butterfly) {
+    if (distance == other.distance) {
       return 0;
     }
 

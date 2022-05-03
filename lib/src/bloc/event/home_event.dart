@@ -28,7 +28,13 @@ class HomeInitDataEvent extends HomeEvent {
   @override
   String toString() => 'HomeInitData Event';
 }
+
 class ChangeMuteOptionEvent extends HomeEvent {
   @override
   String toString() => 'ChangeMuteOption Event';
+}
+
+class PurchaseSongEvent extends HomeEvent {
+  @override
+  String toString() => 'PurchaseSong Event';
 }

@@ -4,6 +4,7 @@ import 'package:yodravet/src/bloc/event/sponsor_event.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/bloc/state/sponsor_state.dart';
 import 'package:yodravet/src/model/collaborator.dart';
+import 'package:yodravet/src/page/sponsor/widget/club_widget.dart';
 import 'package:yodravet/src/page/sponsor/widget/promoter_widget.dart';
 import 'package:yodravet/src/page/sponsor/widget/sponsor_widget.dart';
 
@@ -20,6 +21,7 @@ class SponsorMobilePage extends SponsorBasicPage {
           List<Widget> _slivers = [];
           List<Collaborator> _sponsors = [];
           List<Collaborator> _promoters = [];
+          List<Collaborator> _clubs = [];
           bool _loading = false;
 
           if (state is SponsorInitState) {
@@ -29,6 +31,7 @@ class SponsorMobilePage extends SponsorBasicPage {
             _loading = false;
             _sponsors = state.sponsors;
             _promoters = state.promoters;
+            _clubs = state.clubs;
           }
 
           if (_loading) {
@@ -46,6 +49,10 @@ class SponsorMobilePage extends SponsorBasicPage {
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
           _slivers.add(_buildPromoterGrid(context, _promoters));
+          _slivers.add(
+            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
+          );
+          _slivers.add(_buildClubGrid(context, _clubs));
 
           return Container(
             height: double.infinity,
@@ -85,5 +92,19 @@ Widget _buildPromoterGrid(BuildContext context, List<Collaborator> promoters) =>
       delegate: SliverChildBuilderDelegate(
         (context, index) => PromoterWidget(promoters[index]),
         childCount: promoters.length,
+      ),
+    );
+
+Widget _buildClubGrid(BuildContext context, List<Collaborator> clubs) =>
+    SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      delegate: SliverChildBuilderDelegate(
+            (context, index) => ClubWidget(clubs[index]),
+        childCount: clubs.length,
       ),
     );

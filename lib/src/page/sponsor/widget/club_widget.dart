@@ -5,15 +5,15 @@ import 'package:yodravet/src/bloc/event/sponsor_event.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/model/collaborator.dart';
 
-class SponsorWidget extends StatelessWidget {
-  final Collaborator sponsor;
-  const SponsorWidget(this.sponsor, {Key? key}) : super(key: key);
+class ClubWidget extends StatelessWidget {
+  final Collaborator club;
+  const ClubWidget(this.club, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        child: Container(
-          height: 200,
-          width: 200,
+    child: Container(
+          height: 110,
+          width: 110,
           child: Card(
             elevation: 4.0,
             shape: const RoundedRectangleBorder(
@@ -22,39 +22,30 @@ class SponsorWidget extends StatelessWidget {
                     topRight: Radius.circular(10)),
                 side: BorderSide(width: 2, color: Colors.green)),
             // child: SizedBox(
-            //   height: 140,
-            //   width: 140,
-            //   child: CachedNetworkImageBuilder(
-            //     url: sponsor.logoPath,
-            //     builder: (image) => Image.asset("assets/images/avatar.png"),
-            //   ),
+            //     height: 110,
+            //     width: 110,
+            // child: CachedNetworkImageBuilder(
+            //   url: club.logoPath,
+            //   builder: (image) => Image.asset("assets/images/avatar.png"),
+            // ),
             // ),
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                   bottomRight: Radius.circular(10),
                   topRight: Radius.circular(10)),
               child: Image(
-                image: FirebaseImage(sponsor.logoPath),
+                image: FirebaseImage(club.logoPath),
                 // fit: BoxFit.fitWidth,
-                fit: BoxFit.scaleDown,
-                height: 70,
-                width: 70,
+                height: 110,
+                width: 110,
               ),
             ),
           ),
           decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(255, 140, 71, 153),
-                blurRadius: 5.0,
-                offset: Offset(0, 10),
-                spreadRadius: 0.5,
-              ),
-            ],
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onTap: () => BlocProvider.of<SponsorBloc>(context)
-            .add(Navigate2SponsorWebsiteEvent(sponsor.id)),
-      );
+    onTap: () => BlocProvider.of<SponsorBloc>(context)
+        .add(Navigate2ClubWebsiteEvent(club.id)),
+  );
 }

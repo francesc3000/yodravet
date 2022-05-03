@@ -10,8 +10,10 @@ class SponsorInitState extends SponsorState {
 class UploadSponsorFields extends SponsorState {
   final List<Collaborator> sponsors;
   final List<Collaborator> promoters;
+  final List<Collaborator> clubs;
 
-  UploadSponsorFields({required this.sponsors, required this.promoters});
+  UploadSponsorFields(
+      {required this.sponsors, required this.promoters, required this.clubs});
 
   @override
   String toString() => 'UploadSponsorFields State';

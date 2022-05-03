@@ -37,12 +37,25 @@ class ActivityPurchase extends Activity {
     }
 
     if (totalPurchase == other.totalPurchase) {
-      if (distance! < other.butterfly) {
+      // if (other?.butterfly != null) {
+      //   if (distance! < other.butterfly) {
+      //     return 1;
+      //   }
+      //
+      //   if (distance! > other.butterfly) {
+      //     return -1;
+      //   }
+      // }
+      if (distance! < other.distance) {
         return 1;
       }
 
-      if (distance! > other.butterfly) {
+      if (distance! > other.distance) {
         return -1;
+      }
+
+      if (distance == other.distance) {
+        return 0;
       }
 
       return 0;

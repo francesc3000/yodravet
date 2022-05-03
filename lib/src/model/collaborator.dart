@@ -1,6 +1,7 @@
 enum CollaboratorType {
   sponsor,
   promoter,
+  club,
 }
 
 class Collaborator {
@@ -12,6 +13,7 @@ class Collaborator {
 
   bool get isSponsor => type == CollaboratorType.sponsor;
   bool get isPromoter => type == CollaboratorType.promoter;
+  bool get isClub => type == CollaboratorType.club;
 
   Collaborator(
       {required this.id,
