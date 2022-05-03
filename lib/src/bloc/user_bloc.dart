@@ -40,15 +40,45 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     _user = session.user;
 
+    on<LoadInitialDataEvent>(_loadInitialDataEvent);
     on<UserLogOutEvent>(_userLogOutEvent);
     on<UserLogInEvent>(_userLogInEvent);
     on<ConnectWithStravaEvent>(_connectWithStravaEvent);
     on<GetStravaActivitiesEvent>(_getStravaActivitiesEvent);
     on<DonateKmEvent>(_donateKmEvent);
-    on<LoadInitialDataEvent>(_loadInitialDataEvent);
+    on<ShowPodiumEvent>(_showPodiumEvent);
     on<ChangeUserPodiumTabEvent>(_changeUserPodiumTabEvent);
     on<UploadUserFieldsEvent>(_uploadUserFieldsEvent);
     on<ShareActivityEvent>(_shareActivityEvent);
+  }
+
+  void _loadInitialDataEvent(LoadInitialDataEvent event, Emitter emit) async {
+    String currentEdition = Edition.currentEdition;
+    try {
+      factoryDao.userDao
+          .getRangeDates(currentEdition)
+          .listen((rangeDates) async {
+        if (rangeDates.isNotEmpty) {
+          _beforeDate = rangeDates['before'];
+          _afterDate = rangeDates['after'];
+
+          add(UploadUserFieldsEvent());
+        }
+
+        if (_user.isStravaLogin!) {
+          if (!PlatformDiscover.isWeb()) {
+            if (await factoryDao.userDao.stravaLogIn()) {
+              add(GetStravaActivitiesEvent());
+            }
+          }
+        }
+      });
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError(
+              'Algo fue mal al cargar los datos iniciales del usuario!'));
+    }
   }
 
   void _userLogOutEvent(UserLogOutEvent event, Emitter emit) async {
@@ -149,49 +179,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  void _loadInitialDataEvent(LoadInitialDataEvent event, Emitter emit) async {
-    // QuerySnapshot query =
-    //     await FirebaseFirestore.instance.collection('users').get();
-    //
-    // for (var snapshot in query.docs) {
-    //   DocumentSnapshot data = snapshot.data() as DocumentSnapshot<Object>;
-    //   String email = data['email'];
-    //   String name = data['name'];
-    //
-    //   _usuarios = '$_usuarios$name,$email\n';
-    // }
-
+  void _showPodiumEvent(ShowPodiumEvent event, Emitter emit) async {
     String currentEdition = Edition.currentEdition;
     try {
-      factoryDao.userDao
-          .getRangeDates(currentEdition)
-          .listen((rangeDates) async {
-        if (rangeDates.isNotEmpty) {
-          _beforeDate = rangeDates['before'];
-          _afterDate = rangeDates['after'];
+      factoryDao.raceDao.streamDonors(currentEdition).listen((donors) {
+        _donors = donors;
 
-          add(UploadUserFieldsEvent());
-        }
+        // this._filterDonors = _copyDonorsList(this._donors);
 
-        factoryDao.raceDao.streamDonors(currentEdition).listen((donors) {
-          _donors = donors;
+        // this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
 
-          // this._filterDonors = _copyDonorsList(this._donors);
+        // this.add(UploadUserFieldsEvent());
 
-          // this._filterDonors = _consolidateAndSortDonors(this._filterDonors);
-
-          // this.add(UploadUserFieldsEvent());
-
-          add(ChangeUserPodiumTabEvent(_filterDonorTab));
-        });
-
-        if (_user.isStravaLogin!) {
-          if (!PlatformDiscover.isWeb()) {
-            if (await factoryDao.userDao.stravaLogIn()) {
-              add(GetStravaActivitiesEvent());
-            }
-          }
-        }
+        add(ChangeUserPodiumTabEvent(_filterDonorTab));
       });
     } catch (error) {
       emit(error is UserStateError

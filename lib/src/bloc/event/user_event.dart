@@ -6,6 +6,11 @@ class UserEventEmpty extends UserEvent{
   String toString() => 'Empty Event';
 }
 
+class LoadInitialDataEvent extends UserEvent{
+  @override
+  String toString() => 'LoadInitialData Event';
+}
+
 class UserLogOutEvent extends UserEvent {
   @override
   String toString() => 'UserLogOut Event';
@@ -34,9 +39,9 @@ class DonateKmEvent extends UserEvent {
   String toString() => 'DonateKmEvent Event';
 }
 
-class LoadInitialDataEvent extends UserEvent {
+class ShowPodiumEvent extends UserEvent {
   @override
-  String toString() => 'LoadInitialData Event';
+  String toString() => 'ShowPodium Event';
 }
 
 class UploadUserFieldsEvent extends UserEvent {

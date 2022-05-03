@@ -157,7 +157,8 @@ class UserMobilePage extends UserBasicPage {
                         height: 80,
                         width: 130,
                         child: GestureDetector(
-                          child: Image.asset("assets/images/stores/android.png"),
+                          child:
+                              Image.asset("assets/images/stores/android.png"),
                           onTap: () => launch(
                               "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet"),
                         ),
@@ -421,7 +422,6 @@ class UserMobilePage extends UserBasicPage {
               String message = AppLocalizations.of(context)!.shareText(km);
               BlocProvider.of<UserBloc>(context)
                   .add(ShareActivityEvent(message));
-
             });
     }
 
@@ -430,10 +430,26 @@ class UserMobilePage extends UserBasicPage {
 
   Widget _buildDonorsList(BuildContext context, int filterDonorTab,
           List<ActivityPurchase> donors) =>
-      SliverList(
-        delegate: SliverChildListDelegate(
-            _buildDonors(context, filterDonorTab, donors)),
-      );
+      donors.isEmpty
+          ? SliverPersistentHeader(
+              pinned: true,
+              delegate: SliverAppBarDelegate(
+                minHeight: 40,
+                maxHeight: 40,
+                child: ElevatedButton(
+                    onPressed: () => BlocProvider.of<UserBloc>(context)
+                        .add(ShowPodiumEvent()),
+                    child: const Text("Ver Clasificación"),
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromARGB(255, 140, 71, 153),
+                  ),
+                ),
+              ),
+            )
+          : SliverList(
+              delegate: SliverChildListDelegate(
+                  _buildDonors(context, filterDonorTab, donors)),
+            );
 
   List<Widget> _buildDonors(
       BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {

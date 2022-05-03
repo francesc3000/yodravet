@@ -427,10 +427,26 @@ class UserDesktopPage extends UserBasicPage {
 
   Widget _buildDonorsList(BuildContext context, int filterDonorTab,
           List<ActivityPurchase> donors) =>
-      SliverList(
-        delegate: SliverChildListDelegate(
-            _buildDonors(context, filterDonorTab, donors)),
-      );
+      donors.isEmpty
+          ? SliverPersistentHeader(
+              pinned: true,
+              delegate: SliverAppBarDelegate(
+                minHeight: 40,
+                maxHeight: 40,
+                child: ElevatedButton(
+                  onPressed: () =>
+                      BlocProvider.of<UserBloc>(context).add(ShowPodiumEvent()),
+                  child: const Text("Ver Clasificación"),
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color.fromARGB(255, 140, 71, 153),
+                  ),
+                ),
+              ),
+            )
+          : SliverList(
+              delegate: SliverChildListDelegate(
+                  _buildDonors(context, filterDonorTab, donors)),
+            );
 
   List<Widget> _buildDonors(
       BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {
