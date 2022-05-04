@@ -4,7 +4,7 @@ description: Una app de A.E Yo corro por el Dravet.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 2.0.0+24
+version: 2.0.0+25
 
 environment:
   sdk: ">=2.16.0-80.1.beta <3.0.0"
@@ -72,7 +72,7 @@ dependencies:
   # https://pub.dev/packages/share_plus
   share_plus: ^3.1.0
   # https://pub.dev/packages/cached_network_image_builder
-  cached_network_image_builder: ^0.2.0
+#  cached_network_image_builder: ^0.2.0
   # https://pub.dev/packages/firebase_image
   firebase_image: ^1.1.1
   # https://pub.dev/packages/intro_slider

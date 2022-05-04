@@ -208,7 +208,7 @@
   "@buySong": {
     "description": "Buy Song"
   },
-  "showRanking": "Show Podium",
+  "showRanking": "Show Ranking",
   "@showRanking": {
     "description": "Show Ranking"
   }
