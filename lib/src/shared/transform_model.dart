@@ -108,7 +108,9 @@ class TransformModel {
       stageTitle: raceDao.stageTitle,
       nextStageDate: raceDao.nextStageDate,
       startDate: raceDao.startDate,
-      finalDate: raceDao.finalDate);
+      finalDate: raceDao.finalDate,
+      purchaseButterfliesSite: raceDao.purchaseButterfliesSite,
+      purchaseSongSite: raceDao.purchaseSongSite);
 
   static RaceDao raw2RaceDao(
           double kmCounter,
@@ -119,7 +121,9 @@ class TransformModel {
           String stageTitle,
           DateTime nextStageDate,
           DateTime startDate,
-          DateTime finalDate) =>
+          DateTime finalDate,
+          String purchaseButterfliesSite,
+          String purchaseSongSite) =>
       RaceDao(
           kmCounter: kmCounter,
           stageCounter: stageCounter,
@@ -129,7 +133,9 @@ class TransformModel {
           stageTitle: stageTitle,
           nextStageDate: nextStageDate,
           startDate: startDate,
-          finalDate: finalDate);
+          finalDate: finalDate,
+          purchaseButterfliesSite: purchaseButterfliesSite,
+          purchaseSongSite: purchaseSongSite);
 
   static ActivityPurchaseDao raw2ActivityPurchaseDao(
           {String? id,

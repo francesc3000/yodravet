@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/event/home_event.dart';
+import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
+import 'package:yodravet/src/bloc/race_bloc.dart';
 
 class MusicIconButton extends StatelessWidget {
   final bool isMusicOn;
@@ -56,7 +58,7 @@ class MusicIconButton extends StatelessWidget {
               ),
               value: 2,
               onTap: () =>
-                  BlocProvider.of<HomeBloc>(context).add(PurchaseSongEvent()),
+                  BlocProvider.of<RaceBloc>(context).add(PurchaseSongEvent()),
             ),
           ]);
 }

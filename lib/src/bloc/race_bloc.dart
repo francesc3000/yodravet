@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race.dart';
@@ -83,6 +84,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'Jon Andoni Duñabeitia',
             'Caracterización del desarrollo cognitivo en el Síndrome de Dravet.',
             'assets/images/race/stages/researchers/jonandonidunabeitia.png',
+            'https://www.indrenetwork.com/es/grupos-investigacion/centro-ciencia-cognitiva-c3'),
+        Researcher(
+            'Rafael Salom Borras',
+            'Especializado en Psicología General de la Salud, ha desempeñado diversas funciones en la investigación.',
+            'assets/images/race/stages/researchers/rafaelsalom.png',
             'https://www.indrenetwork.com/es/grupos-investigacion/centro-ciencia-cognitiva-c3'),
       ],
     ),
@@ -211,6 +217,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     on<ChangeMapSelectedEvent>(_changeMapSelectedEvent);
     on<AutoMapChange4ArgentinaEvent>(_autoMapChange4ArgentinaEvent);
     on<AutoMapChange4SpainEvent>(_autoMapChange4SpainEvent);
+    on<PurchaseButterfliesEvent>(_purchaseButterfliesEvent);
+    on<PurchaseSongEvent>(_purchaseSongEvent);
   }
 
   void _initRaceFieldsEvent(InitRaceFieldsEvent event, Emitter emit) async {
@@ -229,6 +237,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
               startDate: race.startDate,
               finalDate: race.finalDate,
               nextStageDate: race.nextStageDate,
+              purchaseButterfliesSite: race.purchaseButterfliesSite,
+              purchaseSongSite: race.purchaseSongSite,
             );
           } else {
             _race!.kmCounter = race.kmCounter;
@@ -304,10 +314,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     try {
       try {
         _currentStageBuilding = _spainStagesBuilding.firstWhere(
-                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
-      } on StateError catch(_) {
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      } on StateError catch (_) {
         _currentStageBuilding = _argentinaStagesBuilding.firstWhere(
-                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -328,10 +338,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     try {
       try {
         _currentMouseStageBuilding = _spainStagesBuilding.firstWhere(
-                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
-      } on StateError catch(_) {
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+      } on StateError catch (_) {
         _currentMouseStageBuilding = _argentinaStagesBuilding.firstWhere(
-                (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -369,6 +379,18 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     _isSpainMapSelected = true;
 
     emit(_updateRaceFields());
+  }
+
+  void _purchaseButterfliesEvent(PurchaseButterfliesEvent event, Emitter emit) {
+    if (_race != null && _race!.purchaseButterfliesSite.isNotEmpty) {
+      launch(_race!.purchaseButterfliesSite);
+    }
+  }
+
+  void _purchaseSongEvent(PurchaseSongEvent event, Emitter emit) {
+    if (_race != null && _race!.purchaseSongSite.isNotEmpty) {
+      launch(_race!.purchaseSongSite);
+    }
   }
 
   RaceState _updateRaceFields() => UpdateRaceFieldsState(

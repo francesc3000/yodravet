@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
@@ -345,8 +344,8 @@ class RaceDesktopPage extends RaceBasicPage {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  launch(
-                                      'https://www.apoyodravet.eu/tienda-solidaria/donacion/compra-kilometros-solidarios-dravet-tour?utm_source=app&utm_medium=enlace&utm_campaign=compra-kilometros-dravet-tour');
+                                  BlocProvider.of<RaceBloc>(context)
+                                      .add(PurchaseButterfliesEvent());
                                 },
                             ),
                             const WidgetSpan(

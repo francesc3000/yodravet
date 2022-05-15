@@ -201,7 +201,9 @@ class FirestoreRepositoryImpl implements Repository {
                   data['stageTitle'],
                   data['nextStageDate'].toDate(),
                   data['startDate'].toDate(),
-                  data['finalDate'].toDate());
+                  data['finalDate'].toDate(),
+                  data['purchaseButterfliesSite'],
+                  data['purchaseSongSite']);
             }
           }
 

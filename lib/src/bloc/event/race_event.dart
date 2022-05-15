@@ -56,3 +56,13 @@ class AutoMapChange4SpainEvent extends RaceEvent{
   @override
   String toString() => 'AutoMapChange4Spain Event';
 }
+
+class PurchaseButterfliesEvent extends RaceEvent{
+  @override
+  String toString() => 'PurchaseButterflies Event';
+}
+
+class PurchaseSongEvent extends RaceEvent{
+  @override
+  String toString() => 'PurchaseSongEvent Event';
+}

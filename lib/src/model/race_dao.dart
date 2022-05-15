@@ -8,6 +8,8 @@ class RaceDao {
   DateTime nextStageDate;
   DateTime startDate;
   DateTime finalDate;
+  String purchaseButterfliesSite;
+  String purchaseSongSite;
 
   RaceDao(
       {required this.kmCounter,
@@ -18,5 +20,7 @@ class RaceDao {
       required this.stageTitle,
       required this.nextStageDate,
       required this.startDate,
-      required this.finalDate});
+      required this.finalDate,
+      required this.purchaseButterfliesSite,
+      required this.purchaseSongSite});
 }

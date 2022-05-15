@@ -1,7 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 
@@ -35,7 +34,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeStaticEvent>(_homeStaticEvent);
     on<HomeInitDataEvent>(_homeInitDataEvent);
     on<ChangeMuteOptionEvent>(_changeMuteOptionEvent);
-    on<PurchaseSongEvent>(_purchaseSongEvent);
   }
 
   void _changeTabEvent(ChangeTabEvent event, Emitter emit) async {
@@ -114,15 +112,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     _isMusicOn = !_isMusicOn;
 
     emit(_uploadHomeFields());
-  }
-
-  void _purchaseSongEvent(PurchaseSongEvent event, Emitter emit) async {
-    launch(
-        'https://www.apoyodravet.eu/tienda-solidaria/'
-            'donacion/compra-kilometros-solidarios-dravet'
-            '-tour?utm_source=app&utm_medium='
-            'enlace&utm_campaign=compra-'
-            'kilometros-dravet-tour');
   }
 
   HomeState _uploadHomeFields() => UploadHomeFields(

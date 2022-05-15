@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
@@ -158,7 +157,7 @@ class RaceMobilePage extends RaceBasicPage {
           minHeight: 80,
           maxHeight: 80,
           child: Row(
-            mainAxisAlignment: isRaceOver
+            mainAxisAlignment: !isRaceOver
                 ? MainAxisAlignment.spaceBetween
                 : MainAxisAlignment.center,
             children: [
@@ -166,11 +165,11 @@ class RaceMobilePage extends RaceBasicPage {
                 children: [
                   Text(stageTitle),
                   Visibility(
-                    visible: isRaceOver,
+                    visible: !isRaceOver,
                     child: Text(AppLocalizations.of(context)!.stageTitle),
                   ),
                   Visibility(
-                    visible: isRaceOver,
+                    visible: !isRaceOver,
                     child: Row(
                       children: [
                         Countup(
@@ -194,11 +193,11 @@ class RaceMobilePage extends RaceBasicPage {
                 ],
               ),
               Visibility(
-                visible: isRaceOver,
+                visible: !isRaceOver,
                 child: const Spacer(),
               ),
               Visibility(
-                visible: isRaceOver,
+                visible: !isRaceOver,
                 child: Column(
                   children: [
                     Text(AppLocalizations.of(context)!.leftDayTitle),
@@ -216,9 +215,9 @@ class RaceMobilePage extends RaceBasicPage {
                   ],
                 ),
               ),
-              Visibility(visible: isRaceOver, child: const Spacer()),
+              Visibility(visible: !isRaceOver, child: const Spacer()),
               Visibility(
-                visible: isRaceOver,
+                visible: !isRaceOver,
                 child: Column(
                   children: [
                     Text(AppLocalizations.of(context)!.extraTitle),
@@ -489,12 +488,8 @@ class RaceMobilePage extends RaceBasicPage {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      launch(
-                          'https://www.apoyodravet.eu/tienda-solidaria/'
-                              'donacion/compra-kilometros-solidarios-dravet'
-                              '-tour?utm_source=app&utm_medium='
-                              'enlace&utm_campaign=compra-'
-                              'kilometros-dravet-tour');
+                      BlocProvider.of<RaceBloc>(context)
+                          .add(PurchaseButterfliesEvent());
                     },
                 ),
                 const WidgetSpan(
