@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
   final String hintText;
   final String errorText;
   final ValueChanged<String> onChanged;
-  final void Function(String) onSubmitted;
+  final void Function(String)? onSubmitted;
 
   const CustomTextField(
-      {Key key,
-      @required this.controller,
+      {Key? key,
+      required this.controller,
       this.keyboardType,
-      @required this.hintText,
-      @required this.errorText,
-      @required this.onChanged,
+      required this.hintText,
+      required this.errorText,
+      required this.onChanged,
       this.onSubmitted})
       : super(key: key);
 
@@ -31,21 +31,21 @@ class CustomTextField extends StatelessWidget {
         fillColor: Colors.grey[100],
         filled: true,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.grey,
           ),
           borderRadius: BorderRadius.circular(6.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blueAccent, width: 0.0),
+          borderSide: const BorderSide(color: Colors.blueAccent, width: 0.0),
           borderRadius: BorderRadius.circular(6.0),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 0.0),
+          borderSide: const BorderSide(color: Colors.red, width: 0.0),
           borderRadius: BorderRadius.circular(6.0),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.redAccent, width: 0.0),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 0.0),
           borderRadius: BorderRadius.circular(6.0),
         ),
       ),

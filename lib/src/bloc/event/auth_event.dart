@@ -1,5 +1,4 @@
 import 'package:yodravet/src/model/user.dart';
-import 'package:flutter/material.dart';
 
 abstract class AuthEvent {}
 
@@ -17,7 +16,7 @@ class LogInEvent extends AuthEvent {
   String email;
   String pass;
 
-  LogInEvent({@required this.email, @required this.pass});
+  LogInEvent({required this.email, required this.pass});
 
   @override
   String toString() => 'Login Event';
@@ -69,13 +68,13 @@ class CreateUserEvent extends AuthEvent {
   final String password;
   final String name;
   final String lastname;
-  final String photo;
+  final String? photo;
 
   CreateUserEvent({
-      @required this.email,
-      @required this.password,
-      @required this.name,
-      @required this.lastname,
+      required this.email,
+      required this.password,
+      required this.name,
+      required this.lastname,
       this.photo});
 
   @override

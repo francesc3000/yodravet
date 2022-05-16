@@ -1,20 +1,23 @@
+import 'package:yodravet/src/dao/collaborator_dao_impl.dart';
 import 'package:yodravet/src/repository/firestore_repository_impl.dart';
-import 'package:yodravet/src/routes/navigation_service.dart';
 
+import '../route/app_router_delegate.dart';
 import 'race_dao_impl.dart';
 import 'user_dao_impl.dart';
 
 class FactoryDao {
-  static const String MOCK = 'Mock';
+  static const String mock = 'Mock';
   final FirestoreRepositoryImpl _firestore = FirestoreRepositoryImpl();
+  final AppRouterDelegate routeService;
 
-  final NavigationService navigationService = NavigationService();
-  UserDaoImpl userDao;
-  RaceDaoImpl raceDao;
+  late UserDaoImpl userDao;
+  late RaceDaoImpl raceDao;
+  late CollaboratorDaoImpl collaboratorDao;
 
-  FactoryDao(){
+  FactoryDao(this.routeService){
     userDao = UserDaoImpl(_firestore);
     raceDao = RaceDaoImpl(_firestore);
+    collaboratorDao = CollaboratorDaoImpl(_firestore);
   }
 
 

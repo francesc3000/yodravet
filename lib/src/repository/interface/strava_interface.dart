@@ -4,5 +4,6 @@ abstract class StravaInterface {
   Future<bool> stravaLogIn();
   Future<bool> logOut();
   Future<bool> isLogIn();
-  Future<List<ActivityDao>> getStravaActivities(DateTime before, DateTime after);
+  Future<List<ActivityDao>> getStravaActivities(
+      DateTime before, DateTime after);
 }

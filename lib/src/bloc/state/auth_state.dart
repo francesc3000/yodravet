@@ -48,7 +48,7 @@ class Go2SignupState extends AuthState {
 }
 
 class AuthStateError extends AuthState {
-  final String message;
+  final String? message;
 
   AuthStateError(this.message);
 

@@ -7,8 +7,13 @@ class HomeInitState extends HomeState {
 
 class UploadHomeFields extends HomeState {
   final int index;
-  
-  UploadHomeFields({this.index});
+  final bool isMusicOn;
+  final bool isFirstTime;
+
+  UploadHomeFields(
+      {required this.index,
+      required this.isMusicOn,
+      required this.isFirstTime});
 
   @override
   String toString() => 'UploadHomeFields State';
@@ -16,22 +21,7 @@ class UploadHomeFields extends HomeState {
 
 class Navigate2UserPageState extends HomeState {
   @override
-  String toString() => 'Navigate2UserPageState State';
-}
-
-class Navigate2LoginState extends HomeState {
-  @override
-  String toString() => 'Navigate2LoginState State';
-}
-
-class Navigate2LoginSuccess extends HomeState {
-  @override
-  String toString() => 'Navigate2LoginSuccess';
-}
-
-class HomeLogOutState extends HomeState {
-  @override
-  String toString() => 'HomeLogOut State';
+  String toString() => 'Navigate2UserPage State';
 }
 
 class HomeStateError extends HomeState {

@@ -1,73 +1,119 @@
-import 'package:yodravet/src/dao/factory_dao.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:yodravet/src/model/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yodravet/src/dao/factory_dao.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/home_event.dart';
 import 'session_bloc.dart';
 import 'state/home_state.dart';
-import 'state/session_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   int _currentIndex = 0;
   final FactoryDao factoryDao;
   SessionBloc session;
-  User _user = User();
+  // User _user = User();
+  AssetsAudioPlayer? _assetsAudioPlayer;
+  bool _isMusicOn = true;
+  bool _firstTime = false;
 
-  HomeBloc(this.session, this.factoryDao) {
-    this.session.listen((state) {
-      if (state is LogInState) {
-        if (state.isSignedIn) {
-          this._user = this.session.user;
-          if (!state.isAutoLogin) {
-            this.add(Navigate2UserPageEvent());
-          }
-        }
-      } else if (state is LogOutState) {
-        this._user.logout();
-        this.add(HomeLogOutEvent());
-      } else if (state is UserChangeState) {
-        this._user = state.user;
-      }
-    });
+  HomeBloc(this.session, this.factoryDao) : super(HomeInitState()) {
+    // session.stream.listen((state) {
+    //   if (state is LogInState) {
+    //     if (state.isSignedIn) {
+    //       _user = session.user;
+    //     }
+    //   } else if (state is UserChangeState) {
+    //     _user = state.user;
+    //   }
+    // });
+
+    on<HomeEventEmpty>((event, emit) => emit(HomeInitState()));
+    on<ChangeTabEvent>(_changeTabEvent);
+    on<Navigate2UserPageEvent>(_navigate2UserPageEvent);
+    on<HomeStaticEvent>(_homeStaticEvent);
+    on<HomeInitDataEvent>(_homeInitDataEvent);
+    on<ChangeMuteOptionEvent>(_changeMuteOptionEvent);
   }
 
-  @override
-  HomeState get initialState => HomeInitState();
-
-  @override
-  Stream<HomeState> mapEventToState(HomeEvent event) async* {
-    if (event is HomeEventEmpty) {
-      yield HomeInitState();
-    } else if (event is ChangeTabEvent) {
-      try {
-        _currentIndex = event.index;
-        if (!this._user.isLogin) {
-          yield Navigate2LoginState();
-        } else {
-          yield _uploadHomeFields(index: _currentIndex);
-        }
-      } catch (error) {
-        yield error is HomeStateError
-            ? HomeStateError(error.message)
-            : HomeStateError('Algo fue mal en el AutoLogIn!');
-      }
-    } else if (event is Navigate2UserPageEvent) {
-      if (!this._user.isLogin) {
-        yield Navigate2LoginState();
-      } else {
-        yield Navigate2UserPageState();
-      }
-    } else if (event is Navigate2LoginSuccessEvent) {
-      yield Navigate2LoginSuccess();
-    } else if (event is HomeLogOutEvent) {
-      yield HomeLogOutState();
-    } else if (event is HomeStaticEvent) {
-      yield _uploadHomeFields(index: _currentIndex);
+  void _changeTabEvent(ChangeTabEvent event, Emitter emit) async {
+    try {
+      _currentIndex = event.index;
+      emit(_uploadHomeFields());
+    } catch (error) {
+      emit(error is HomeStateError
+          ? HomeStateError(error.message)
+          : HomeStateError('Algo fue mal en el AutoLogIn!'));
     }
   }
 
-  HomeState _uploadHomeFields({@required int index}) {
-    return UploadHomeFields(index: index);
+  void _navigate2UserPageEvent(
+      Navigate2UserPageEvent event, Emitter emit) async {
+    emit(Navigate2UserPageState());
   }
+
+  void _homeStaticEvent(HomeStaticEvent event, Emitter emit) async {
+    emit(_uploadHomeFields());
+  }
+
+  void _homeInitDataEvent(HomeInitDataEvent event, Emitter emit) async {
+    if (PlatformDiscover.isWeb()) {
+      _isMusicOn = false;
+    } else {
+      _firstTime = await _isFirstTime();
+      if(!_firstTime) {
+        await _setupMusic();
+      }
+    }
+
+    emit(_uploadHomeFields());
+  }
+
+  Future<bool> _isFirstTime() async {
+    bool? firstTime;
+    final prefs = await SharedPreferences.getInstance();
+
+    firstTime = prefs.getBool('firstTime');
+    if(firstTime==null) {
+      firstTime = true;
+      await prefs.setBool('firstTime', false);
+    }
+
+    return firstTime;
+    // return Future.value(false);
+  }
+
+  Future<void> _setupMusic() async {
+    if(_assetsAudioPlayer == null) {
+      _assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+      await _assetsAudioPlayer!.open(
+        Audio("assets/music/gisela_hidalgo.mp3"),
+        // Audio.network("https://www.youtube.com/watch?v=7JYfZCA4O5c"),
+        showNotification: false,
+      );
+      await _assetsAudioPlayer!.setLoopMode(LoopMode.single);
+
+      // _assetsAudioPlayer!.loopMode.listen((loopMode){
+      //   //listen to loop
+      // });
+      await _assetsAudioPlayer!.play();
+    }
+  }
+
+  void _changeMuteOptionEvent(ChangeMuteOptionEvent event, Emitter emit) async {
+    if (_assetsAudioPlayer == null) {
+      await _setupMusic();
+    }
+    if (_isMusicOn) {
+      _assetsAudioPlayer!.pause();
+    } else {
+      _assetsAudioPlayer!.play();
+    }
+    _isMusicOn = !_isMusicOn;
+
+    emit(_uploadHomeFields());
+  }
+
+  HomeState _uploadHomeFields() => UploadHomeFields(
+      index: _currentIndex, isMusicOn: _isMusicOn, isFirstTime: _firstTime);
 }

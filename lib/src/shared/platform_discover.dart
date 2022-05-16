@@ -2,11 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PlatformDiscover {
-  static bool isWeb() {
-    return kIsWeb;
-  }
+  static bool isWeb() => kIsWeb;
 
-  static bool isMacOs(BuildContext context) {
-    return Theme.of(context).platform == TargetPlatform.macOS;
-  }
+  static bool isMacOs(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.macOS;
 }

@@ -12,7 +12,8 @@ class SignUpEvent extends SignupEvent {
   final String password;
   final String passwordCopy;
 
-  SignUpEvent(this.email, this.name, this.lastname, this.password, this.passwordCopy);
+  SignUpEvent(
+      this.email, this.name, this.lastname, this.password, this.passwordCopy);
 
   @override
   String toString() => 'SignUp Event';

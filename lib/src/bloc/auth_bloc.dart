@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/foundation.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/repository/interface/preferences.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 
 import 'event/auth_event.dart';
-import 'event/session_event.dart' as sessionEvent;
+import 'event/session_event.dart' as session_event;
 import 'event/session_event.dart';
 import 'interface/session_interface.dart';
 import 'state/auth_state.dart';
@@ -16,149 +17,166 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Preferences preferences;
   Session session;
 
-  AuthBloc(this.preferences, this.session) {
-    this.session.listen((state) {
+  AuthBloc(this.preferences, this.session) : super(AuthInitState()) {
+    session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
-          this._user = this.session.user;
-          this.add(SignedInEvent(this._user));
+          _user = session.user;
+          add(SignedInEvent(_user));
         } else {
-          this.add(LogOutSuccessEvent());
+          add(LogOutSuccessEvent());
         }
       } else if (state is LogOutState) {
-        this.add(LogOutSuccessEvent());
+        add(LogOutSuccessEvent());
       } else if (state is UserChangeState) {
-        this._user = state.user;
+        _user = state.user;
       }
     });
+
+    on<AuthEventEmpty>((event, emit) => emit(AuthInitState()));
+    on<AutoLogInEvent>(_autoLoginEvent);
+    on<LogInEvent>(_loginEvent);
+    on<GoogleLogInEvent>(_googleLogInEvent);
+    on<AppleLogInEvent>(_appleLogInEvent);
+    on<StravaLogInEvent>(_stravaLogInEvent);
+    on<LogOutEvent>(_logOutEvent);
+    on<LogOutSuccessEvent>(_logOutSuccessEvent);
+    on<SignedInEvent>(_signedInEvent);
+    on<ChangePasswordEvent>(_changePasswordEvent);
+    on<Go2SignupEvent>(_go2SignupEvent);
   }
 
-  @override
-  AuthState get initialState => AuthInitState();
+  void _autoLoginEvent(AutoLogInEvent event, Emitter emit) async {
+    String? userEmail = '';
+    String? password = '';
 
-  @override
-  Stream<AuthState> mapEventToState(AuthEvent event) async* {
-    if (event is AuthEventEmpty) {
-      yield AuthInitState();
-    } else if (event is AutoLogInEvent) {
-      try {
-        await _autoLogin(this.session, preferences);
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el AutoLogIn!');
-      }
-    } else if (event is LogInEvent) {
-      try {
-        yield AuthLoadingState(isLoading: true);
-        try {
-          this._user = await this.session.logIn(event.email, event.pass);
-        } catch (error) {
-          throw AuthStateError(error.message);
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el LogIn!');
-      }
-    } else if (event is GoogleLogInEvent) {
-      try {
-        yield AuthLoadingState(isLoadingGoogle: true);
-        try {
-          this._user = await this.session.googleLogIn();
-        } catch (error) {
-          throw error is auth.FirebaseAuthException ?
-           AuthStateError(error.message) :
-           AuthStateError(error.message);
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el LogIn de Google!');
-      }
-    } else if (event is AppleLogInEvent) {
-      try {
-        yield AuthLoadingState(isLoadingApple: true);
-        try {
-          this._user = await this.session.appleLogIn();
-        } catch (error) {
-          throw error is auth.FirebaseAuthException ?
-           AuthStateError(error.message) :
-           AuthStateError(error.message);
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el LogIn de Apple!');
-      }
-    } else if (event is StravaLogInEvent) {
-      try {
-        // yield AuthLoadingState();
-        try {
-          if (!PlatformDiscover.isWeb()) {
-            this._user.isStravaLogin = await this.session.stravaLogIn();
-          }
-          this.session.add(UserChangeEvent(this._user));
-        } catch (error) {
-          throw AuthStateError(error.message);
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el LogIn de Strava!');
-      }
-    } else if (event is LogOutEvent) {
-      try {
-        if(this._user.isLogin) {
-          this.preferences.logout();
-          this.session.add(sessionEvent.LogoutEvent());
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en al cerrar la sessión!');
-      }
-    } else if (event is LogOutSuccessEvent) {
-      yield LogOutSuccessState();
-    } else if (event is SignedInEvent) {
-      try {
-        _keepUser(this.preferences, this._user, this.session.password);
-        yield LogInSuccessState(this._user);
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en al cerrar la sessión!');
-      }
-    } else if (event is ChangePasswordEvent) {
-      try {
-        if(event.email.isEmpty) {
-          throw AuthStateError('Por favor rellenar campo usuario con su correo electrónico');
-        }
-        if (await this.session.changePassword(event.email)) {
-          this.add(LogOutEvent());
-          yield ChangePasswordSuccessState(this._user);
-        }
-      } catch (error) {
-        yield error is AuthStateError
-            ? AuthStateError(error.message)
-            : AuthStateError('Algo fue mal en el cambio de contraseña!');
-      }
-    } else if (event is Go2SignupEvent) {
-      yield Go2SignupState();
+    if (kDebugMode) {
+      print('Estoy en autologin en auth_bloc');
+    }
+    userEmail = preferences.getString('userEmail');
+    password = preferences.getString('password');
+    try {
+      await session.autoLogIn(userEmail, password);
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el AutoLogIn!'));
     }
   }
 
-  _autoLogin(Session session, Preferences preferences) async {
-    String userEmail = '';
-    String password = '';
+  void _loginEvent(LogInEvent event, Emitter emit) async {
+    try {
+      emit(AuthLoadingState(isLoading: true));
+      try {
+        _user = await session.logIn(event.email, event.pass);
+      } on String catch (error) {
+        throw AuthStateError(error);
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el LogIn!'));
+    }
+  }
 
-    print('Estoy en autologin en auth_bloc');
-    userEmail = preferences.getString('userEmail');
-    password = preferences.getString('password');
+  void _googleLogInEvent(GoogleLogInEvent event, Emitter emit) async {
+    try {
+      emit(AuthLoadingState(isLoadingGoogle: true));
+      try {
+        _user = await session.googleLogIn();
+      } on auth.FirebaseAuthException catch (error) {
+        throw AuthStateError(error.message);
+      } on String catch (error) {
+        throw AuthStateError(error);
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el LogIn de Google!'));
+    }
+  }
 
-    await session.autoLogIn(userEmail, password);
+  void _appleLogInEvent(AppleLogInEvent event, Emitter emit) async {
+    try {
+      emit(AuthLoadingState(isLoadingApple: true));
+      try {
+        _user = await session.appleLogIn();
+      } on auth.FirebaseAuthException catch (error) {
+        throw AuthStateError(error.message);
+      } on String catch (error) {
+        throw AuthStateError(error);
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el LogIn de Apple!'));
+    }
+  }
 
-    print('Salgo de autologin en auth_bloc');
+  void _stravaLogInEvent(StravaLogInEvent event, Emitter emit) async {
+    try {
+      try {
+        if (!PlatformDiscover.isWeb()) {
+          _user.isStravaLogin = await session.stravaLogIn();
+        }
+        session.add(UserChangeEvent(_user));
+      } on String catch (error) {
+        throw AuthStateError(error);
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el LogIn de Strava!'));
+    }
+  }
+
+  void _logOutEvent(LogOutEvent event, Emitter emit) async {
+    try {
+      if (_user.isLogin) {
+        preferences.logout();
+        session.add(session_event.LogoutEvent());
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en al cerrar la sessión!'));
+    }
+  }
+
+  void _logOutSuccessEvent(LogOutSuccessEvent event, Emitter emit) async {
+    emit(LogOutSuccessState());
+  }
+
+  void _signedInEvent(SignedInEvent event, Emitter emit) async {
+    try {
+      _keepUser(preferences, _user, session.password);
+      emit(LogInSuccessState(_user));
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en al cerrar la sessión!'));
+    }
+  }
+
+  void _changePasswordEvent(ChangePasswordEvent event, Emitter emit) async {
+    try {
+      if (event.email.isEmpty) {
+        throw AuthStateError(
+            'Por favor rellenar campo usuario con su correo electrónico');
+      }
+      if (await session.changePassword(event.email)) {
+        add(LogOutEvent());
+        emit(ChangePasswordSuccessState(_user));
+      }
+    } catch (error) {
+      emit(error is AuthStateError
+          ? AuthStateError(error.message)
+          : AuthStateError('Algo fue mal en el cambio de contraseña!'));
+    }
+  }
+
+  void _go2SignupEvent(Go2SignupEvent event, Emitter emit) async {
+    emit(Go2SignupState());
   }
 
   Future<bool> _keepUser(

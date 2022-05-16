@@ -1,18 +1,18 @@
 import 'package:yodravet/src/model/activity.dart';
 
 class ActivityPurchase extends Activity {
-  String userId;
-  String userFullname;
-  String userPhoto;
+  String? userId;
+  String? userFullname;
+  String? userPhoto;
 
   ActivityPurchase(
-      {String id,
-      String stravaId,
-      String raceId,
-      double distance,
-      DateTime startDate,
-      double totalPurchase,
-      ActivityType type,
+      {String? id,
+      String? stravaId,
+      String? raceId,
+      double? distance,
+      DateTime? startDate,
+      double? totalPurchase,
+      ActivityType? type,
       this.userId = '',
       this.userFullname = '',
       this.userPhoto = ''})
@@ -28,30 +28,38 @@ class ActivityPurchase extends Activity {
 
   @override
   int compareTo(other) {
-    if (this.totalPurchase == null || other.totalPurchase == null) {
-      return null;
-    }
-
-    if (this.totalPurchase < other.totalPurchase) {
+    if (totalPurchase! < other.totalPurchase) {
       return 1;
     }
 
-    if (this.totalPurchase > other.totalPurchase) {
+    if (totalPurchase! > other.totalPurchase) {
       return -1;
     }
 
-    if (this.totalPurchase == other.totalPurchase) {
-      if (this.distance < other.distance) {
+    if (totalPurchase == other.totalPurchase) {
+      // if (other?.butterfly != null) {
+      //   if (distance! < other.butterfly) {
+      //     return 1;
+      //   }
+      //
+      //   if (distance! > other.butterfly) {
+      //     return -1;
+      //   }
+      // }
+      if (distance! < other.distance) {
         return 1;
       }
 
-      if (this.distance > other.distance) {
+      if (distance! > other.distance) {
         return -1;
+      }
+
+      if (distance == other.distance) {
+        return 0;
       }
 
       return 0;
     }
-
-    return null;
+    return 0;
   }
 }

@@ -1,9 +1,9 @@
 import 'package:yodravet/src/model/activity.dart';
 
 class ActivityPurchaseDao extends Activity {
-  String userId;
-  String userFullname;
-  String userPhoto;
+  String? userId;
+  String? userFullname;
+  String? userPhoto;
 
   ActivityPurchaseDao(
       {id,

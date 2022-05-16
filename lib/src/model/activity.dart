@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum ActivityStatus {
   nodonate,
   donate,
@@ -14,15 +12,15 @@ enum ActivityType {
 }
 
 class Activity implements Comparable {
-  String id;
-  final String stravaId;
-  String raceId;
-  double distance;
-  DateTime startDate;
+  String? id;
+  final String? stravaId;
+  String? raceId;
+  double? distance;
+  DateTime? startDate;
   ActivityStatus status;
-  double totalPurchase;
-  ActivityType type;
-  bool manual;
+  double? totalPurchase;
+  ActivityType? type;
+  bool? manual;
 
   get isDonate => status == ActivityStatus.donate ? true : false;
   get isPurchase => status == ActivityStatus.purchase ? true : false;
@@ -30,7 +28,7 @@ class Activity implements Comparable {
 
   Activity(
       {this.id,
-      @required this.stravaId,
+      required this.stravaId,
       this.raceId,
       this.distance,
       this.startDate,
@@ -40,22 +38,18 @@ class Activity implements Comparable {
 
   @override
   int compareTo(other) {
-    if (this.distance == null || other.distance == null) {
-      return null;
-    }
-
-    if (this.distance < other.distance) {
+    if (distance! < other.distance) {
       return 1;
     }
 
-    if (this.distance > other.distance) {
+    if (distance! > other.distance) {
       return -1;
     }
 
-    if (this.distance == other.distance) {
+    if (distance == other.distance) {
       return 0;
     }
 
-    return null;
+    return 0;
   }
 }

@@ -7,7 +7,7 @@ abstract class AuthRepository {
   Future<UserDao> googleLogIn();
   Future<UserDao> appleLogIn();
   Future<bool> logOut();
-  Future<String> isUserLoggedIn();
+  Future<String?> isUserLoggedIn();
   Future<bool> changePassword(String email);
   Future<String> createAuthUser(String email, String password);
 }

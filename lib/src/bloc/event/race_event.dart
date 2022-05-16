@@ -41,3 +41,28 @@ class UpdateRaceFieldsEvent extends RaceEvent{
   @override
   String toString() => 'UpdateRaceFields Event';
 }
+
+class ChangeMapSelectedEvent extends RaceEvent{
+  @override
+  String toString() => 'ChangeMapSelected Event';
+}
+
+class AutoMapChange4ArgentinaEvent extends RaceEvent{
+  @override
+  String toString() => 'AutoMapChange4Argentina Event';
+}
+
+class AutoMapChange4SpainEvent extends RaceEvent{
+  @override
+  String toString() => 'AutoMapChange4Spain Event';
+}
+
+class PurchaseButterfliesEvent extends RaceEvent{
+  @override
+  String toString() => 'PurchaseButterflies Event';
+}
+
+class PurchaseSongEvent extends RaceEvent{
+  @override
+  String toString() => 'PurchaseSongEvent Event';
+}

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:yodravet/src/model/signup.dart';
 
 abstract class SignupState {}
@@ -14,8 +13,8 @@ class UpdateSignupFieldsState extends SignupState {
   bool showError;
 
   UpdateSignupFieldsState(
-      {@required this.signup,
-      @required this.isLoading,
+      {required this.signup,
+      required this.isLoading,
       this.showError = true});
   @override
   String toString() => 'SignUpFieldsState State';
