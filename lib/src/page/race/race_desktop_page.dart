@@ -69,7 +69,7 @@ class RaceDesktopPage extends RaceBasicPage {
         _isSpainMapSelected = state.isSpainMapSelected;
         if (_currentStageBuilding != null && !_isShowModalOn) {
           _isShowModalOn = true;
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             Future future = showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(
@@ -161,7 +161,7 @@ class RaceDesktopPage extends RaceBasicPage {
                 : MainAxisAlignment.center,
             children: [
               Visibility(
-                visible: isRaceOver,
+                visible: !isRaceOver,
                 child: Column(
                   children: [
                     Text(
@@ -247,7 +247,7 @@ class RaceDesktopPage extends RaceBasicPage {
                     ),
                   ),
                   Visibility(
-                    visible: !isRaceOver,
+                    visible: isRaceOver,
                     child: Text(
                       stageTitle,
                       style: const TextStyle(
@@ -258,7 +258,7 @@ class RaceDesktopPage extends RaceBasicPage {
                 ],
               ),
               Visibility(
-                visible: isRaceOver,
+                visible: !isRaceOver,
                 child: Column(
                   children: [
                     Text(

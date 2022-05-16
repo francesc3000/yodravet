@@ -54,7 +54,7 @@ class LoginDesktopPage extends LoginBasicPage {
                     'con instrucciones',
             iconData: FontAwesomeIcons.exclamationCircle);
       } else if (state is Go2SignupState) {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           // Navigator.pop(context);
           routerDelegate.pushPage(name: '/signupPage');
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());

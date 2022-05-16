@@ -8,7 +8,7 @@ class CustomSnackBar {
       {required BuildContext context,
         required String? message,
         IconData iconData = FontAwesomeIcons.exclamationCircle}) {
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       showFlash(
         context: context,
         duration: const Duration(seconds: 3),

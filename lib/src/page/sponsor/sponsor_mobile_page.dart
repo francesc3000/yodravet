@@ -53,6 +53,9 @@ class SponsorMobilePage extends SponsorBasicPage {
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
           _slivers.add(_buildClubGrid(context, _clubs));
+          _slivers.add(
+            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
+          );
 
           return Container(
             height: double.infinity,

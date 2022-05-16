@@ -4,10 +4,10 @@ description: Una app de A.E Yo corro por el Dravet.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 2.0.0+26
+version: 2.0.0+27
 
 environment:
-  sdk: ">=2.16.0-80.1.beta <3.0.0"
+  sdk: ">=2.17.0-0 <3.0.0"
 
 dependencies:
   flutter:
@@ -74,7 +74,15 @@ dependencies:
   # https://pub.dev/packages/cached_network_image_builder
 #  cached_network_image_builder: ^0.2.0
   # https://pub.dev/packages/firebase_image
-  firebase_image: ^1.1.1
+#  firebase_image: ^1.1.1
+# https://pub.dev/packages/image_cacheing
+#  image_cacheing: ^0.0.2
+# https://pub.dev/packages/image_network
+#  image_network: ^2.5.1
+# https://pub.dev/packages/extended_image
+  extended_image: ^6.2.0
+# https://pub.dev/packages/paulonia_cache_image
+#  paulonia_cache_image: ^1.0.0
   # https://pub.dev/packages/intro_slider
   intro_slider: ^3.0.4
   # https://pub.dev/packages/shared_preferences

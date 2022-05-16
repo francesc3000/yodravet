@@ -1,4 +1,5 @@
-import 'package:firebase_image/firebase_image.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/event/sponsor_event.dart';
@@ -33,11 +34,12 @@ class PromoterWidget extends StatelessWidget {
               borderRadius: const BorderRadius.only(
                   bottomRight: Radius.circular(10),
                   topRight: Radius.circular(10)),
-              child: Image(
-                image: FirebaseImage(promoter.logoPath),
-                // fit: BoxFit.fitWidth,
-                height: 110,
+              child: ExtendedImage.network(
+                promoter.logoPath,
                 width: 110,
+                height: 110,
+                fit: BoxFit.scaleDown,
+                cache: true,
               ),
             ),
           ),
