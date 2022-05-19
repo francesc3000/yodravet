@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/route/app_router_delegate.dart';
 import 'package:yodravet/src/route/app_router_delegate_impl.dart';
@@ -24,6 +25,7 @@ void main() async {
   );
   final PreferencesInterfaceImpl _prefs = PreferencesInterfaceImpl();
   await _prefs.initPreferences();
+  await PCacheImage.init();
   AppRouterDelegate routeService = AppRouterDelegateImpl();
   FactoryDao _factoryDao = FactoryDao(routeService);
   //ignore: close_sinks

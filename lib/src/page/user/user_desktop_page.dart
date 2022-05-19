@@ -49,7 +49,7 @@ class UserDesktopPage extends UserBasicPage {
         } else if (state is UserLogInState) {
           // BlocProvider.of<UserBloc>(context).add(GetStravaActivitiesEvent());
         } else if (state is UserLogOutState) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
+          SchedulerBinding.instance?.addPostFrameCallback((_) {
             routerDelegate.pushPageAndRemoveUntil(name: '/');
           });
         } else if (state is UploadUserFieldsState) {

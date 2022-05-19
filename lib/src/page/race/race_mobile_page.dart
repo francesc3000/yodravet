@@ -67,7 +67,7 @@ class RaceMobilePage extends RaceBasicPage {
         _loading = false;
         if (_currentStageBuilding != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
-          SchedulerBinding.instance.addPostFrameCallback((_) {
+          SchedulerBinding.instance?.addPostFrameCallback((_) {
             showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(

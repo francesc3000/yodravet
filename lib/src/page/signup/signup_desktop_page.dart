@@ -55,7 +55,7 @@ class SignupDesktopPage extends SignupBasicPage {
       } else if (state is SignUpSuccessState) {
         _isLoading = false;
         BlocProvider.of<SignupBloc>(context).add(SignupEventEmpty());
-        SchedulerBinding.instance.addPostFrameCallback((_) {
+        SchedulerBinding.instance?.addPostFrameCallback((_) {
           routerDelegate.pushPageAndRemoveUntil(name: '/');
         });
       } else if (state is SignupStateError) {

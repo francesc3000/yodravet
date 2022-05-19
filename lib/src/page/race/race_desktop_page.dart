@@ -69,7 +69,7 @@ class RaceDesktopPage extends RaceBasicPage {
         _isSpainMapSelected = state.isSpainMapSelected;
         if (_currentStageBuilding != null && !_isShowModalOn) {
           _isShowModalOn = true;
-          SchedulerBinding.instance.addPostFrameCallback((_) {
+          SchedulerBinding.instance?.addPostFrameCallback((_) {
             Future future = showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(

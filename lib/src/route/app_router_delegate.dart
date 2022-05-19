@@ -37,7 +37,7 @@ abstract class AppRouterDelegate extends RouterDelegate<List<RouteSettings>>
   Future<bool> popRoute() async {
     if (_pages.length > 1) {
       _pages.removeLast();
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
         notifyListeners();
       });
       return Future.value(true);
