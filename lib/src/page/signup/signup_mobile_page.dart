@@ -50,7 +50,7 @@ class SignupMobilePage extends SignupBasicPage {
       } else if (state is SignUpSuccessState) {
         _isLoading = false;
         BlocProvider.of<SignupBloc>(context).add(SignupEventEmpty());
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           routerDelegate.pushPageAndRemoveUntil(name: '/');
         });
       } else if (state is SignupStateError) {
@@ -58,7 +58,7 @@ class SignupMobilePage extends SignupBasicPage {
         CustomSnackBar().show(
             context: context,
             message: state.message,
-            iconData: FontAwesomeIcons.exclamationCircle);
+            iconData: FontAwesomeIcons.circleExclamation);
       }
       //TODO:Quitar WillPopScope
       return WillPopScope(

@@ -46,9 +46,9 @@ class LoginMobilePage extends LoginBasicPage {
             context: context,
             message: 'Se ha enviado un correo electrónico a tu cuenta '
                 'con instrucciones',
-            iconData: FontAwesomeIcons.exclamationCircle);
+            iconData: FontAwesomeIcons.circleExclamation);
       } else if (state is Go2SignupState) {
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           // Navigator.pop(context);
           routerDelegate.pushPage(name: '/signupPage');
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
@@ -60,11 +60,11 @@ class LoginMobilePage extends LoginBasicPage {
         CustomSnackBar().show(
             context: context,
             message: state.message,
-            iconData: FontAwesomeIcons.exclamationCircle);
+            iconData: FontAwesomeIcons.circleExclamation);
       }
 
       return Container(
-        color: const Color.fromRGBO(153, 148, 86, 60),
+        color: const Color.fromRGBO(153, 148, 86, 1),
         child: ListView(
           children: <Widget>[
             Container(
@@ -72,12 +72,12 @@ class LoginMobilePage extends LoginBasicPage {
                   left: 20.0, right: 20.0, top: 16.0, bottom: 2.0),
               child: CustomButton(
                 child: _isLoadingGoogle
-                // ? null
+                    // ? null
                     ? const CircularProgressIndicator(
                         backgroundColor: Colors.white)
-                    : Row(
+                    : const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(FontAwesomeIcons.google, color: Colors.white),
                           SizedBox(
                             width: 5.0,
@@ -101,14 +101,12 @@ class LoginMobilePage extends LoginBasicPage {
                 margin: const EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
                 child: CustomButton(
-                  child:
-                  _isLoadingApple
+                  child: _isLoadingApple
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      :
-                  Row(
+                      : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(FontAwesomeIcons.apple, color: Colors.white),
                             SizedBox(
                               width: 5.0,
@@ -156,12 +154,10 @@ class LoginMobilePage extends LoginBasicPage {
               ),
             ),
             CustomButton(
-              child: 
-          _isLoading
+              child: _isLoading
                   ? const CircularProgressIndicator(
                       backgroundColor: Colors.white)
-                  : 
-              Text(AppLocalizations.of(context)!.logIn,
+                  : Text(AppLocalizations.of(context)!.logIn,
                       style: const TextStyle(color: Colors.white)),
               onPressed: () {
                 // routerDelegate.popRoute();

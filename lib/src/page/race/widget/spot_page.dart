@@ -3,17 +3,17 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/model/researcher.dart';
-import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/model/spot.dart';
 
-class StageBuildingPage extends StatelessWidget {
-  final StageBuilding? stageBuilding;
+class SpotPage extends StatelessWidget {
+  final Spot? spot;
   final double expandedHeight;
   final double leadingWidth;
   final BoxFit imageFit;
 
-  const StageBuildingPage(
+  const SpotPage(
       {Key? key,
-      this.stageBuilding,
+      this.spot,
       this.expandedHeight = 300,
       this.leadingWidth = 300,
       this.imageFit = BoxFit.fitHeight})
@@ -23,9 +23,9 @@ class StageBuildingPage extends StatelessWidget {
     List<Widget> slivers = [];
 
     slivers.clear();
-    slivers.add(_buildHeader(context, stageBuilding!.name, stageBuilding!.photo,
+    slivers.add(_buildHeader(context, spot!.name, spot!.photo,
         expandedHeight, leadingWidth, imageFit));
-    slivers.add(_buildBody(context, stageBuilding!.researchers));
+    slivers.add(_buildBody(context, spot!.researchers));
 
     return CustomScrollView(
       slivers: slivers,
@@ -100,7 +100,7 @@ class StageBuildingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 1,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -124,7 +124,7 @@ class StageBuildingPage extends StatelessWidget {
                             'Más información',
                             style: TextStyle(color: Colors.blueAccent),
                           ),
-                          onTap: () => launch(researcher.link)),
+                          onTap: () => launchUrl(Uri.parse(researcher.link))),
                     ),
                   ),
                 ],
@@ -169,7 +169,7 @@ class StageBuildingPage extends StatelessWidget {
                       'Más información',
                       style: TextStyle(color: Colors.blueAccent),
                     ),
-                    onTap: () => launch(researcher.link)),
+                    onTap: () => launchUrl(Uri.parse(researcher.link))),
               ),
             ),
             Visibility(

@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:yodravet/src/bloc/event/sponsor_event.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/model/collaborator.dart';
+import 'package:yodravet/src/shared/platform_discover.dart';
 
 class SponsorWidget extends StatelessWidget {
   final Collaborator sponsor;
@@ -26,7 +27,7 @@ class SponsorWidget extends StatelessWidget {
                   bottomRight: Radius.circular(10),
                   topRight: Radius.circular(10)),
               child: Image(
-                image: PCacheImage(sponsor.logoPath, enableInMemory: true),
+                image: _getImage(),
                 width: 110,
                 height: 110,
                 fit: BoxFit.scaleDown,
@@ -48,4 +49,12 @@ class SponsorWidget extends StatelessWidget {
         onTap: () => BlocProvider.of<SponsorBloc>(context)
             .add(Navigate2SponsorWebsiteEvent(sponsor.id)),
       );
+
+  ImageProvider<Object> _getImage() {
+    if ( PlatformDiscover.isWeb() ) {
+      return NetworkImage(sponsor.logoPath);
+    } else {
+      return CachedNetworkImageProvider(sponsor.logoPath);
+    }
+  }
 }

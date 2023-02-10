@@ -22,57 +22,62 @@ class HomeDesktopPage extends HomeBasicPage {
 
   @override
   PreferredSizeWidget appBar(BuildContext context,
-          {String? title, bool isMusicOn = false, bool isFirstTime = false}) =>
-      AppBar(
-        title: Container(
-          // color: Color.fromRGBO(177, 237, 100, 93),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            title!,
-            style:
-                TextStyle(color: Theme.of(context).primaryColor, fontSize: 58),
-          ),
+          {String? title, bool isMusicOn = false, bool isFirstTime = false}) {
+    MusicIconButton _musicIconButton = MusicIconButton(context);
+    return AppBar(
+      title: Container(
+        // color: Color.fromRGBO(177, 237, 100, 93),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title!,
+          style:
+          TextStyle(color: Theme
+              .of(context)
+              .primaryColor, fontSize: 58),
         ),
-        elevation: 0.0,
-        backgroundColor: const Color.fromRGBO(153, 148, 86, 60),
-        // backgroundColor: const Color.fromARGB(255, 140, 71, 153),
-        actions: [
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.home),
-            onPressed: () {
-              BlocProvider.of<HomeBloc>(context).add(HomeStaticEvent());
-            },
-          ),
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.userCircle),
-            tooltip: AppLocalizations.of(context)!.userTooltip,
-            onPressed: () {
-              BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
-            },
-          ),
-          MusicIconButton(isMusicOn: isMusicOn),
-        ],
-      );
+      ),
+      elevation: 0.0,
+      backgroundColor: const Color.fromRGBO(153, 148, 86, 60),
+      // backgroundColor: const Color.fromARGB(255, 140, 71, 153),
+      actions: [
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.house),
+          onPressed: () {
+            BlocProvider.of<HomeBloc>(context).add(HomeStaticEvent());
+          },
+        ),
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.circleUser),
+          tooltip: AppLocalizations.of(context)!.userTooltip,
+          onPressed: () {
+            BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
+          },
+        ),
+        _musicIconButton.getMusicIcon(isMusicOn),
+        _musicIconButton.getPurchaseMusicIcon(),
+      ],
+    );
+  }
 
-  @override
-  Widget body(BuildContext context) {
-    Widget _racePage = RacePage(routerDelegate);
+    @override
+    Widget body(BuildContext context) {
+      Widget _racePage = RacePage(routerDelegate);
 
-    List<Widget> _pages = [_racePage];
+      List<Widget> _pages = [_racePage];
 
-    return BlocBuilder<HomeBloc, HomeState>(
-        builder: (BuildContext context, state) {
-      int? _currentIndex = 0;
+      return BlocBuilder<HomeBloc, HomeState>(
+          builder: (BuildContext context, state) {
+            int? _currentIndex = 0;
 
-      if (state is HomeInitState) {
-        BlocProvider.of<AuthBloc>(context).add(AutoLogInEvent());
-        BlocProvider.of<HomeBloc>(context).add(HomeInitDataEvent());
-      } else if (state is UploadHomeFields) {
-        _currentIndex = state.index;
-      } else if (state is Navigate2UserPageState) {
-        return UserPage(routerDelegate);
-      }
-      return _pages[_currentIndex];
-    });
+            if (state is HomeInitState) {
+              BlocProvider.of<AuthBloc>(context).add(AutoLogInEvent());
+              BlocProvider.of<HomeBloc>(context).add(HomeInitDataEvent());
+            } else if (state is UploadHomeFields) {
+              _currentIndex = state.index;
+            } else if (state is Navigate2UserPageState) {
+              return UserPage(routerDelegate);
+            }
+            return _pages[_currentIndex];
+          });
   }
 }

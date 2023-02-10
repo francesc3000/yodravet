@@ -66,3 +66,8 @@ class PurchaseSongEvent extends RaceEvent{
   @override
   String toString() => 'PurchaseSongEvent Event';
 }
+
+class GetSpotsEvent extends RaceEvent{
+  @override
+  String toString() => 'GetSpots Event';
+}

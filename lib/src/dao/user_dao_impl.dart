@@ -78,31 +78,20 @@ class UserDaoImpl extends UserDaoInterface {
   Future<bool> stravaLogout() async => await _strava.logOut();
 
   @override
-  Future<bool> donateKm(User user, String raceId, Activity activity) async {
-    String activityType;
-    switch (activity.type) {
-      case ActivityType.walk:
-        activityType = 'Walk';
-        break;
-      case ActivityType.ride:
-        activityType = 'Ride';
-        break;
-      default:
-        activityType = 'Run';
-    }
-    return await firestore.donateKm(
-        user.id,
-        user.fullName,
-        raceId,
-        activity.stravaId,
-        user.photo,
-        activity.startDate,
-        activity.distance,
-        activity.isDonate,
-        activity.isPurchase,
-        activity.totalPurchase,
-        activityType);
-  }
+  Future<bool> donateKm(User user, String raceId, Activity activity) async =>
+      await firestore.donateKm(
+          user.id,
+          user.fullName,
+          raceId,
+          user.teamId,
+          activity.stravaId,
+          user.photo,
+          activity.startDate,
+          activity.distance,
+          activity.isDonate,
+          activity.isPurchase,
+          activity.totalPurchase,
+          activity.type!.getString);
 
   @override
   Future<List<Activity>> getStravaActivities(
@@ -124,4 +113,12 @@ class UserDaoImpl extends UserDaoInterface {
   @override
   Future<bool> saveIsStravaLogin(String? userId, bool? isStravaLogin) async =>
       await firestore.saveIsStravaLogin(userId, isStravaLogin);
+
+  @override
+  Future<bool> joinTeam(String userId, String teamId) async =>
+      await firestore.changeUserTeam('J', userId, teamId);
+
+  @override
+  Future<bool> disJoinTeam(String userId, String teamId) async =>
+      await firestore.changeUserTeam('D', userId, teamId);
 }

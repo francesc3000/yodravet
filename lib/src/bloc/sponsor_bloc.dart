@@ -45,7 +45,7 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
       Collaborator sponsor =
           _sponsors!.firstWhere((sponsor) => sponsor.id == event.sponsorId);
       if (sponsor.website.isNotEmpty) {
-        launch(sponsor.website);
+        launchUrl(Uri.parse(sponsor.website));
       }
     } on StateError catch (_) {}
   }
@@ -56,7 +56,7 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
       Collaborator promoter =
           _promoters!.firstWhere((promoter) => promoter.id == event.promoterId);
       if (promoter.website.isNotEmpty) {
-        launch(promoter.website);
+        launchUrl(Uri.parse(promoter.website));
       }
     } on StateError catch (_) {}
   }
@@ -66,7 +66,7 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
     try {
       Collaborator club = _clubs!.firstWhere((club) => club.id == event.clubId);
       if (club.website.isNotEmpty) {
-        launch(club.website);
+        launchUrl(Uri.parse(club.website));
       }
     } on StateError catch (_) {}
   }

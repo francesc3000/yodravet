@@ -25,10 +25,12 @@ abstract class Session extends Bloc<SessionEvent, SessionState> {
   User user = User();
   String password = '';
 
-  Session(SessionState initialState) : super(initialState){
+  Session(SessionState initialState) : super(initialState) {
     on<SignedEvent>(_onSignedEvent);
     on<LogoutEvent>(_onLogoutEvent);
     on<UserChangeEvent>(_onUserChangeEvent);
+    on<StravaLogInSuccessEvent>(
+        (event, emit) => emit(StravaLogInSuccessState()));
   }
 
   void _onSignedEvent(SignedEvent event, Emitter emit) async {

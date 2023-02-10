@@ -71,6 +71,10 @@
   "@rankingDonerKm": {
     "description": "Ranking Km Subidos"
   },
+  "rankingDonerTeamKm": "Ranking Km Subidos por equipos",
+  "@rankingDonerTeamKm": {
+    "description": "Ranking Km Subidos por equipos"
+  },
   "noStravaActivities": "¡Aún no has subido ninguna actividad!",
   "@noStravaActivities": {
     "description": "noStravaActivities"
@@ -211,5 +215,13 @@
   "showRanking": "Ver Clasificación",
   "@showRanking": {
     "description": "Show Ranking"
+  },
+  "joinTeam": "Me Uno",
+  "@joinTeam": {
+    "description": "Join Team"
+  },
+  "disJoinTeam": "Mejor Solo",
+  "@disJoinTeam": {
+    "description": "Disjoint Team"
   }
 }

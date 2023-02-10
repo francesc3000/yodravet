@@ -8,6 +8,12 @@ import 'package:yodravet/src/model/collaborator.dart';
 import 'package:yodravet/src/model/collaborator_dao.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_dao.dart';
+import 'package:yodravet/src/model/race_spot.dart';
+import 'package:yodravet/src/model/race_spot_dato.dart';
+import 'package:yodravet/src/model/ranking.dart';
+import 'package:yodravet/src/model/ranking_dao.dart';
+import 'package:yodravet/src/model/team.dart';
+import 'package:yodravet/src/model/team_dao.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/model/user_dao.dart';
 
@@ -19,6 +25,7 @@ class TransformModel {
           String? name,
           String? lastname,
           bool? isStravaLogin,
+          String? teamId,
           List<ActivityDao>? activitiesDao}) =>
       UserDao(
         id: id,
@@ -27,6 +34,7 @@ class TransformModel {
         name: name,
         lastname: lastname,
         isStravaLogin: isStravaLogin,
+        teamId: teamId,
         activitiesDao: activitiesDao,
       );
 
@@ -37,6 +45,7 @@ class TransformModel {
         lastname: userDao.lastname,
         photo: userDao.photo,
         isStravaLogin: userDao.isStravaLogin,
+        teamId: userDao.teamId,
         activities:
             TransformModel.activitiesDao2Activities(userDao.activitiesDao!),
       );
@@ -45,6 +54,7 @@ class TransformModel {
           {String? id,
           String? stravaId,
           String? raceId,
+          String? teamId,
           DateTime? startDate,
           double? distance,
           bool? isDonate = false,
@@ -240,4 +250,50 @@ class TransformModel {
       type: type,
     );
   }
+
+  static RankingDao raw2RankingDao(
+          {required String id,
+          String? run,
+          String? walk,
+          String? ride,
+          required bool isTeam,
+          required String userFullname,
+          required String userPhoto}) =>
+      RankingDao(id, run, walk, ride, isTeam, userFullname, userPhoto);
+
+  static Ranking rankingDao2Ranking(RankingDao rankingDao) => Ranking(
+      rankingDao.id,
+      rankingDao.run != null ? double.parse(rankingDao.run!) : null,
+      rankingDao.walk != null ? double.parse(rankingDao.walk!) : null,
+      rankingDao.ride != null ? double.parse(rankingDao.ride!) : null,
+      rankingDao.isTeam,
+      rankingDao.userFullname,
+      rankingDao.userPhoto);
+
+  static List<Ranking> rankingsDao2Rankings(List<RankingDao> rankingsDao) =>
+      rankingsDao.map(rankingDao2Ranking).toList();
+
+  static TeamDao raw2TeamDao(
+          {required String id,
+          required String userId,
+          required String fullname,
+          required String photo,
+          required bool delete}) =>
+      TeamDao(id, userId, fullname, photo, delete);
+
+  static List<Team>? teamsDao2Teams(List<TeamDao>? teamsDao) =>
+      teamsDao?.map(teamDao2Team).toList();
+
+  static Team teamDao2Team(TeamDao teamDao) => Team(teamDao.id, teamDao.userId,
+      teamDao.fullname, teamDao.photo, teamDao.delete);
+
+  static List<RaceSpot> raceSpotsDao2RaceSpots(List<RaceSpotDao> raceSpotDao) =>
+      raceSpotDao.map(raceSpotDao2RaceSpot).toList();
+
+  static RaceSpot raceSpotDao2RaceSpot(RaceSpotDao raceSpotDao) =>
+      RaceSpot(raceSpotDao.id, raceSpotDao.vote);
+
+  static RaceSpotDao raw2RaceSpotDao(
+          {required String id, required String? vote}) =>
+      RaceSpotDao(id, vote == null ? 0 : int.parse(vote));
 }

@@ -18,4 +18,6 @@ abstract class UserDaoInterface {
   Future<List<Activity>> getStravaActivities(DateTime before, DateTime after);
   Future<bool> donateKm(User user, String raceId, Activity activity);
   Stream<Map<String, DateTime?>> getRangeDates(String raceId);
+  Future<bool> joinTeam(String userId, String teamId);
+  Future<bool> disJoinTeam(String userId, String teamId);
 }

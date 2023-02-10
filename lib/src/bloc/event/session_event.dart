@@ -28,3 +28,7 @@ class UserChangeEvent extends SessionEvent{
   @override
   String toString() => 'User Change';
 }
+class StravaLogInSuccessEvent extends SessionEvent{
+  @override
+  String toString() => 'StravaLogIn Success';
+}

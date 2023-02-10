@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:yodravet/src/bloc/donor_bloc.dart';
+import 'package:yodravet/src/bloc/ranking_bloc.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/route/app_router_delegate.dart';
 import 'package:yodravet/src/route/app_router_delegate_impl.dart';
@@ -25,7 +26,6 @@ void main() async {
   );
   final PreferencesInterfaceImpl _prefs = PreferencesInterfaceImpl();
   await _prefs.initPreferences();
-  await PCacheImage.init();
   AppRouterDelegate routeService = AppRouterDelegateImpl();
   FactoryDao _factoryDao = FactoryDao(routeService);
   //ignore: close_sinks
@@ -38,6 +38,12 @@ void main() async {
     ),
     BlocProvider<UserBloc>(
       create: (context) => UserBloc(_sessionBloc, _factoryDao),
+    ),
+    BlocProvider<DonorBloc>(
+      create: (context) => DonorBloc(_sessionBloc, _factoryDao),
+    ),
+    BlocProvider<RankingBloc>(
+      create: (context) => RankingBloc(_sessionBloc, _factoryDao),
     ),
     BlocProvider<RaceBloc>(
       create: (context) => RaceBloc(_factoryDao),

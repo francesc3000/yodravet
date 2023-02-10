@@ -71,6 +71,10 @@
   "@rankingDonerKm": {
     "description": "Ranking Km Subidos"
   },
+  "rankingDonerTeamKm": "Ranking Km Pujats per equips",
+  "@rankingDonerTeamKm": {
+    "description": "Ranking Km Subidos por equipos"
+  },
   "noStravaActivities": "Encara no has pujat cap activitat!",
   "@noStravaActivities": {
     "description": "noStravaActivities"
@@ -212,5 +216,13 @@
   "showRanking": "Veure Clasificació",
   "@showRanking": {
     "description": "Show Ranking"
+  },
+  "joinTeam": "M'uneixo",
+  "@joinTeam": {
+    "description": "Join Team"
+  },
+  "disJoinTeam": "Millor Sol",
+  "@disJoinTeam": {
+    "description": "Disjoint Team"
   }
 }

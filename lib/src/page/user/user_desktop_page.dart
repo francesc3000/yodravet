@@ -9,8 +9,6 @@ import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/user_event.dart';
 import 'package:yodravet/src/bloc/state/user_state.dart';
 import 'package:yodravet/src/bloc/user_bloc.dart';
-import 'package:yodravet/src/model/activity.dart';
-import 'package:yodravet/src/model/activity_purchase.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
@@ -29,17 +27,12 @@ class UserDesktopPage extends UserBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    List<Activity>? activities = [];
     List<Widget> slivers = [];
     String fullName = '';
     String? photoUrl = '';
-    DateTime? beforeDate;
-    DateTime? afterDate;
     bool _loading = false;
     bool? isStravaLogin = false;
     bool lockStravaLogin = false;
-    int _filterDonorTab = 2;
-    List<ActivityPurchase> donors = [];
 
     return BlocBuilder<UserBloc, UserState>(
       builder: (BuildContext context, state) {
@@ -49,7 +42,7 @@ class UserDesktopPage extends UserBasicPage {
         } else if (state is UserLogInState) {
           // BlocProvider.of<UserBloc>(context).add(GetStravaActivitiesEvent());
         } else if (state is UserLogOutState) {
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             routerDelegate.pushPageAndRemoveUntil(name: '/');
           });
         } else if (state is UploadUserFieldsState) {
@@ -57,11 +50,6 @@ class UserDesktopPage extends UserBasicPage {
           lockStravaLogin = state.lockStravaLogin;
           fullName = state.fullname;
           photoUrl = state.photo;
-          activities = state.activities;
-          beforeDate = state.beforeDate;
-          afterDate = state.afterDate;
-          _filterDonorTab = state.filterDonorTab;
-          donors = state.donors;
           _loading = false;
         }
 
@@ -73,10 +61,7 @@ class UserDesktopPage extends UserBasicPage {
 
         slivers.clear();
         slivers = _buildSlivers(context, isStravaLogin!, lockStravaLogin,
-            fullName, photoUrl!, beforeDate, afterDate);
-        slivers.addAll(
-            _buildSliverActivities(context, isStravaLogin, activities!));
-        slivers.add(_buildDonorsList(context, _filterDonorTab, donors));
+            fullName, photoUrl!);
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -93,9 +78,7 @@ class UserDesktopPage extends UserBasicPage {
       bool isStravaLogin,
       bool lockStravaLogin,
       String fullName,
-      String photoUrl,
-      DateTime? beforeDate,
-      DateTime? afterDate) {
+      String photoUrl) {
     List<Widget> slivers = [];
     Color primaryColor = Theme.of(context).primaryColor;
 
@@ -163,8 +146,8 @@ class UserDesktopPage extends UserBasicPage {
                     width: 130,
                     child: GestureDetector(
                       child: Image.asset("assets/images/stores/android.png"),
-                      onTap: () => launch(
-                          "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet"),
+                      onTap: () => launchUrl( Uri.parse(
+                          "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet")),
                     ),
                   ),
                   SizedBox(
@@ -172,8 +155,8 @@ class UserDesktopPage extends UserBasicPage {
                     width: 130,
                     child: GestureDetector(
                       child: Image.asset("assets/images/stores/apple.png"),
-                      onTap: () => launch(
-                          "https://apps.apple.com/es/app/yo-dravet/id1564711228"),
+                      onTap: () => launchUrl( Uri.parse(
+                          "https://apps.apple.com/es/app/yo-dravet/id1564711228")),
                     ),
                   ),
                 ],
@@ -215,373 +198,6 @@ class UserDesktopPage extends UserBasicPage {
         ),
       );
     }
-
-    if (isStravaLogin) {
-      // slivers.add(
-      //   SliverPersistentHeader(
-      //     delegate: _SliverAppBarDelegate(
-      //       minHeight: 30,
-      //       maxHeight: 30,
-      //       child: Container(
-      //         padding: EdgeInsets.all(40.0),
-      //         alignment: Alignment.center,
-      //         child: Column(
-      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //           children: [
-      //             Text('Puedes donar tus km a través de tu cuenta Strava'),
-      //             // ElevatedButton(
-      //             //   style: ButtonStyle(
-      //             //     shape: MaterialStateProperty.all(
-      //             //       RoundedRectangleBorder(
-      //             //           borderRadius: BorderRadius.circular(30.0)),
-      //             //     ),
-      //             //     backgroundColor: MaterialStateProperty.all(Colors.orange),
-      //             //   ),
-      //             //   child: ListTile(
-      //             //     leading: Icon(FontAwesomeIcons.strava),
-      //             //     title: Text('Strava'),
-      //             //   ),
-      //             //   onPressed: () {
-      //             //     Navigator.pop(context);
-      //             //     BlocProvider.of<AuthBloc>(context)
-      //             //         .add(StravaLogInEvent());
-      //             //   },
-      //             // ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // );
-
-      //Título actividades
-      slivers.add(SliverPersistentHeader(
-        pinned: true,
-        delegate: SliverAppBarDelegate(
-          minHeight: 50,
-          maxHeight: 50,
-          child: Container(
-              padding: const EdgeInsets.all(8.0),
-              color: const Color.fromRGBO(153, 148, 86, 1),
-              child: _buildActivitiesTitle(context, beforeDate!, afterDate)),
-        ),
-      ));
-    }
     return slivers;
-  }
-
-  Widget _buildActivitiesTitle(
-      BuildContext context, DateTime beforeDate, DateTime? afterDate) {
-    Widget result;
-    DateTime now = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 00, 01, 00);
-
-    if (now.isBefore(beforeDate) && now.isAfter(afterDate!)) {
-      result = Row(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(AppLocalizations.of(context)!.donerTitle),
-              Row(
-                children: [
-                  Text('${afterDate.day}/${afterDate.month}/${afterDate.year}'),
-                  Text(AppLocalizations.of(context)!.donerMiddleTitle),
-                  Text(
-                      '${beforeDate.day}/${beforeDate.month}/${beforeDate.year}'),
-                ],
-              ),
-            ],
-          ),
-          // Spacer(),
-          // IconButton(
-          //     icon: Icon(FontAwesomeIcons.syncAlt),
-          //     onPressed: () {
-          //       BlocProvider.of<UserBloc>(context)
-          //           .add(GetStravaActivitiesEvent());
-          //     }),
-        ],
-      );
-    } else {
-      result = Text(AppLocalizations.of(context)!.rangeOut);
-    }
-
-    return result;
-  }
-
-  List<Widget> _buildSliverActivities(
-      BuildContext context, bool? isStravaLogin, List<Activity> activities) {
-    List<Widget> slivers = [];
-
-    // if (isStravaLogin) {
-    if (activities.isEmpty) {
-      slivers.add(
-        SliverList(
-          delegate: SliverChildListDelegate(<Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                  child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context)!.noStravaActivities),
-              )),
-            ),
-          ]),
-        ),
-      );
-    } else {
-      slivers.add(
-        SliverPersistentHeader(
-          pinned: false,
-          delegate: SliverAppBarDelegate(
-            minHeight: 100,
-            maxHeight: MediaQuery.of(context).size.height * 0.45,
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              color: const Color.fromRGBO(153, 148, 86, 1),
-              child: ListView.builder(
-                  itemCount: activities.length,
-                  itemBuilder: (context, index) =>
-                      _buildActivity(context, activities[index])),
-            ),
-          ),
-        ),
-      );
-    }
-    // }
-
-    return slivers;
-  }
-
-  Widget _buildActivity(BuildContext context, Activity activity) {
-    double distance = activity.distance! / 1000;
-    IconData iconData;
-    switch (activity.type) {
-      case ActivityType.ride:
-        iconData = FontAwesomeIcons.bicycle;
-        break;
-      case ActivityType.walk:
-        iconData = FontAwesomeIcons.walking;
-        break;
-      default:
-        iconData = FontAwesomeIcons.running;
-    }
-    return Card(
-      child: ListTile(
-        leading: Icon(iconData),
-        title: Text('${distance.toStringAsFixed(1)} Km'),
-        subtitle: Text(
-            '${activity.startDate!.day}/${activity.startDate!.month}/${activity.startDate!.year} ${activity.startDate!.hour}:${activity.startDate!.minute}'),
-        trailing: _activityTrailing(context, activity),
-      ),
-    );
-  }
-
-  Widget _activityTrailing(BuildContext context, Activity activity) {
-    Widget result;
-    ActivityStatus status = activity.status;
-
-    switch (status) {
-      case ActivityStatus.waiting:
-        result = const CircularProgressIndicator();
-        break;
-      case ActivityStatus.nodonate:
-        result = ElevatedButton(
-          child: Text(AppLocalizations.of(context)!.doner),
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all(Theme.of(context).primaryColor)),
-          onPressed: () {
-            BlocProvider.of<UserBloc>(context)
-                .add(DonateKmEvent(activity.stravaId));
-          },
-        );
-        break;
-      case ActivityStatus.manual:
-        result = ElevatedButton(
-            child: Text(AppLocalizations.of(context)!.manualKm),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red)),
-            onPressed: null);
-        break;
-      default:
-        // result = ElevatedButton(
-        //     child: Text(AppLocalizations.of(context)!.donerKm),
-        //     style: ButtonStyle(
-        //         backgroundColor: MaterialStateProperty.all(Colors.green)),
-        //     onPressed: null);
-        result = IconButton(
-            icon: const Icon(FontAwesomeIcons.shareAlt),
-            color: Colors.green,
-            onPressed: () {
-              double km = activity.distance! / 1000;
-              String message = AppLocalizations.of(context)!.shareText(km);
-              BlocProvider.of<UserBloc>(context)
-                  .add(ShareActivityEvent(message));
-            });
-    }
-
-    return result;
-  }
-
-  Widget _buildDonorsList(BuildContext context, int filterDonorTab,
-          List<ActivityPurchase> donors) =>
-      SliverList(
-        delegate: SliverChildListDelegate(
-            _buildDonors(context, filterDonorTab, donors)),
-      );
-
-  List<Widget> _buildDonors(
-      BuildContext context, int filterDonorTab, List<ActivityPurchase> donors) {
-    List<Widget> slivers = [];
-    int poleCounter = 1;
-
-    slivers.add(Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      color: const Color.fromRGBO(153, 148, 86, 1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(AppLocalizations.of(context)!.rankingDonerKm),
-          ButtonBar(alignment: MainAxisAlignment.spaceAround, children: [
-            // IconButton(
-            //   color: filterDonorTab == 0 ? Theme.of(context).primaryColor :
-            //   Colors.black,
-            //   icon: Icon(FontAwesomeIcons.star), onPressed: () {
-            //     BlocProvider.of<UserBloc>(context)
-            //     .add(ChangeUserPodiumTabEvent(0));
-            //    },
-            // ),
-            IconButton(
-              color: filterDonorTab == 2 ? Colors.blue : Colors.black,
-              icon: const Icon(FontAwesomeIcons.running),
-              onPressed: () {
-                BlocProvider.of<UserBloc>(context)
-                    .add(ChangeUserPodiumTabEvent(2));
-              },
-            ),
-            IconButton(
-              color: filterDonorTab == 3 ? Colors.blue : Colors.black,
-              icon: const Icon(FontAwesomeIcons.bicycle),
-              onPressed: () {
-                BlocProvider.of<UserBloc>(context)
-                    .add(ChangeUserPodiumTabEvent(3));
-              },
-            ),
-            IconButton(
-              color: filterDonorTab == 1 ? Colors.blue : Colors.black,
-              icon: const Icon(FontAwesomeIcons.walking),
-              onPressed: () {
-                BlocProvider.of<UserBloc>(context)
-                    .add(ChangeUserPodiumTabEvent(1));
-              },
-            ),
-          ]),
-        ],
-      ),
-    ));
-
-    if (donors.isEmpty) {
-      slivers.add(
-        ElevatedButton(
-          onPressed: () =>
-              BlocProvider.of<UserBloc>(context).add(ShowPodiumEvent()),
-          child: Text(AppLocalizations.of(context)!.showRanking),
-          style: ElevatedButton.styleFrom(
-            primary: const Color.fromARGB(255, 140, 71, 153),
-          ),
-        ),
-      );
-    }
-
-    for (ActivityPurchase donor in donors) {
-      double distance = donor.distance! / 1000;
-      Widget userPhoto = donor.userPhoto!.isEmpty
-          ? Image.asset('assets/images/avatar.png')
-          : Image.network(donor.userPhoto!);
-      IconData iconData;
-      switch (donor.type) {
-        case ActivityType.ride:
-          iconData = FontAwesomeIcons.bicycle;
-          break;
-        case ActivityType.walk:
-          iconData = FontAwesomeIcons.walking;
-          break;
-        default:
-          iconData = FontAwesomeIcons.running;
-      }
-
-      if (filterDonorTab == 0) {
-        iconData = FontAwesomeIcons.star;
-      }
-
-      slivers.add(
-        Stack(
-          children: [
-            Positioned(
-              child: Card(
-                child: Stack(
-                  children: [
-                    ListTile(
-                      leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: userPhoto),
-                      title: Text('${donor.userFullname}'),
-                      subtitle: Container(
-                          alignment: Alignment.centerRight,
-                          child: Icon(iconData)),
-                      trailing: Text(
-                        '${distance.toStringAsFixed(1)} Km',
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            _poleImage(poleCounter),
-          ],
-        ),
-      );
-
-      poleCounter++;
-    }
-
-    return slivers;
-  }
-
-  Widget _poleImage(int poleCounter) {
-    if (poleCounter <= 3) {
-      return Positioned(
-          left: 55.0,
-          top: 27.0,
-          width: 35,
-          child: Image.asset('assets/images/medallas/medalla$poleCounter.png'));
-    } else {
-      return Positioned(
-        left: 55.0,
-        top: 37.0,
-        width: 35,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: Container(
-            alignment: Alignment.center,
-            color: Colors.white,
-            // height: 35,
-            // width: 35,
-            child: Text(
-              '$poleCounter',
-              style: const TextStyle(fontSize: 25.0),
-            ),
-          ),
-          // child: Text(
-          //   poleCounter.toString(),
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(backgroundColor: Colors.blue, fontSize: 25.0),
-          // ),
-        ),
-      );
-    }
   }
 }
