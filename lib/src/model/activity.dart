@@ -8,7 +8,22 @@ enum ActivityStatus {
 enum ActivityType {
   run,
   walk,
-  ride,
+  ride;
+
+  String get getString{
+    String activityType;
+  switch (this) {
+    case ActivityType.walk:
+      activityType = 'Walk';
+      break;
+    case ActivityType.ride:
+      activityType = 'Ride';
+      break;
+    default:
+      activityType = 'Run';
+  }
+  return activityType;
+}
 }
 
 class Activity implements Comparable {

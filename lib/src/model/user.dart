@@ -6,6 +6,7 @@ class User {
   String? name;
   String? lastname;
   String? photo;
+  String? teamId;
   List<Activity>? activities;
   bool? isStravaLogin;
 
@@ -19,6 +20,7 @@ class User {
       this.lastname = '',
       this.photo = '',
       this.isStravaLogin = false,
+        this.teamId,
       this.activities}) {
     activities ??= [];
   }

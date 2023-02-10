@@ -10,14 +10,15 @@ import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
-import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/model/race_spot.dart';
+import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
-import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
+import 'package:yodravet/src/page/race/widget/spot_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
 import 'race_basic_page.dart';
-import 'widget/stage_building_page.dart';
+import 'widget/spot_page.dart';
 
 class RaceMobilePage extends RaceBasicPage {
   const RaceMobilePage(String title, AppRouterDelegate appRouterDelegate,
@@ -40,9 +41,10 @@ class RaceMobilePage extends RaceBasicPage {
       String? _stageTitle = '';
       double? _stageDayLeft = 0;
       List<Buyer> _buyers = [];
-      StageBuilding? _currentStageBuilding;
-      List<StageBuilding>? _spainStagesBuilding = [];
-      List<StageBuilding>? _argentinaStagesBuilding = [];
+      Spot? _currentSpot;
+      List<Spot>? _spainStagesBuilding = [];
+      List<Spot>? _argentinaStagesBuilding = [];
+      List<RaceSpot> _raceSpots = [];
       List<Widget> slivers = [];
       bool _isRaceOver = false;
 
@@ -61,21 +63,22 @@ class RaceMobilePage extends RaceBasicPage {
         _buyers = state.buyers;
         _spainStagesBuilding = state.spainStagesBuilding;
         _argentinaStagesBuilding = state.argentinaStagesBuilding;
-        _currentStageBuilding = state.currentStageBuilding;
+        _raceSpots = state.raceSpots;
+        _currentSpot = state.currentSpot;
         _isSpainMapSelected = state.isSpainMapSelected;
         _isRaceOver = state.isRaceOver;
         _loading = false;
-        if (_currentStageBuilding != null) {
+        if (_currentSpot != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
             showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(25.0)),
                 ),
-                builder: (BuildContext context) => StageBuildingPage(
-                    stageBuilding: _currentStageBuilding,
+                builder: (BuildContext context) => SpotPage(
+                    spot: _currentSpot,
                     expandedHeight: MediaQuery.of(context).size.height / 3,
                     leadingWidth: MediaQuery.of(context).size.width,
                     imageFit: BoxFit.cover));
@@ -86,8 +89,10 @@ class RaceMobilePage extends RaceBasicPage {
       }
 
       if (_loading) {
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Container(
+          color: const Color.fromRGBO(153, 148, 86, 1),
+          alignment: Alignment.center,
+          child: const CircularProgressIndicator(),
         );
       }
 
@@ -95,12 +100,18 @@ class RaceMobilePage extends RaceBasicPage {
       slivers.add(_buildTotalCounter(context, _kmCounter));
       slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
           _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-      slivers.add(_buildMap(context, _riveArtboardSpain, _riveArtboardArgentina,
-          _spainStagesBuilding, _argentinaStagesBuilding, _isSpainMapSelected));
+      slivers.add(_buildMap(
+          context,
+          _riveArtboardSpain,
+          _riveArtboardArgentina,
+          _spainStagesBuilding,
+          _argentinaStagesBuilding,
+          _raceSpots,
+          _isSpainMapSelected));
       slivers.add(_buildBuyersList(context, _buyers));
 
       return Container(
-        color: const Color.fromRGBO(153, 148, 86, 60),
+        color: const Color.fromRGBO(153, 148, 86, 1),
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         alignment: Alignment.center,
         child: CustomScrollView(
@@ -244,8 +255,9 @@ class RaceMobilePage extends RaceBasicPage {
       BuildContext context,
       Artboard? riveArtboardSpain,
       Artboard? riveArtboardArgentina,
-      List<StageBuilding>? spainStagesBuilding,
-      List<StageBuilding>? argentinaStagesBuilding,
+      List<Spot>? spainStagesBuilding,
+      List<Spot>? argentinaStagesBuilding,
+      List<RaceSpot> raceSpots,
       bool isSpainMapSelected) {
     Widget child;
     double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
@@ -270,7 +282,8 @@ class RaceMobilePage extends RaceBasicPage {
         _countryLeftButton(context, isSpainMapSelected, mapHeight, mapWidth),
         _countryRightButton(context, isSpainMapSelected, mapHeight, mapWidth),
         isSpainMapSelected
-            ? _spainSpots(context, mapHeight, mapWidth, spainStagesBuilding)
+            ? _spainSpots(
+                context, mapHeight, mapWidth, spainStagesBuilding, raceSpots)
             : _argentinaSpots(
                 context, mapHeight, mapWidth, argentinaStagesBuilding),
       ]);
@@ -298,7 +311,7 @@ class RaceMobilePage extends RaceBasicPage {
           child: Column(
             children: [
               IconButton(
-                icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
+                icon: const Icon(FontAwesomeIcons.circleArrowLeft),
                 color: const Color.fromARGB(255, 140, 71, 153),
                 iconSize: 30,
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
@@ -320,7 +333,7 @@ class RaceMobilePage extends RaceBasicPage {
           child: Column(
             children: [
               IconButton(
-                icon: const Icon(FontAwesomeIcons.arrowCircleRight),
+                icon: const Icon(FontAwesomeIcons.circleArrowRight),
                 color: const Color.fromARGB(255, 140, 71, 153),
                 iconSize: 30,
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
@@ -333,22 +346,26 @@ class RaceMobilePage extends RaceBasicPage {
       );
 
   Stack _spainSpots(BuildContext context, double mapHeight, double mapWidth,
-          List<StageBuilding>? stagesBuilding) =>
+          List<Spot>? stagesBuilding, List<RaceSpot> raceSpots) =>
       Stack(
         children: [
           Positioned(
             top: mapHeight * 0.47,
             left: mapWidth * 0.57,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding![0].id,
               name: stagesBuilding[0].shortName,
               photo: stagesBuilding[0].photo,
+              vote: raceSpots
+                  .firstWhere(
+                      (raceSpot) => raceSpot.id == stagesBuilding[0].id)
+                  .vote,
             ),
           ),
           Positioned(
             top: mapHeight * 0.74,
             left: mapWidth * 0.12,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[1].id,
               name: stagesBuilding[1].shortName,
               photo: stagesBuilding[1].photo,
@@ -357,7 +374,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.41,
             left: mapWidth * 0.37,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[2].id,
               name: stagesBuilding[2].shortName,
               photo: stagesBuilding[2].photo,
@@ -366,7 +383,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.34,
             left: mapWidth * 0.27,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[3].id,
               name: stagesBuilding[3].shortName,
               photo: stagesBuilding[3].photo,
@@ -375,7 +392,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.24,
             left: mapWidth * 0.38,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[4].id,
               name: stagesBuilding[4].shortName,
               photo: stagesBuilding[4].photo,
@@ -384,7 +401,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.06,
             // left: -4,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[5].id,
               name: stagesBuilding[5].shortName,
               photo: stagesBuilding[5].photo,
@@ -393,7 +410,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.03,
             left: mapWidth * 0.24,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[6].id,
               name: stagesBuilding[6].shortName,
               photo: stagesBuilding[6].photo,
@@ -402,7 +419,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.08,
             left: mapWidth * 0.38,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[7].id,
               name: stagesBuilding[7].shortName,
               photo: stagesBuilding[7].photo,
@@ -411,7 +428,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.07,
             left: mapWidth * 0.51,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[8].id,
               name: stagesBuilding[8].shortName,
               photo: stagesBuilding[8].photo,
@@ -420,7 +437,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.29,
             left: mapWidth * 0.74,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[9].id,
               name: stagesBuilding[9].shortName,
               photo: stagesBuilding[9].photo,
@@ -429,7 +446,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.12,
             left: mapWidth * 0.76,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[10].id,
               name: stagesBuilding[10].shortName,
               photo: stagesBuilding[10].photo,
@@ -438,7 +455,7 @@ class RaceMobilePage extends RaceBasicPage {
           Positioned(
             top: mapHeight * 0.25,
             left: mapWidth * 0.6,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[11].id,
               name: stagesBuilding[11].shortName,
               photo: stagesBuilding[11].photo,
@@ -448,13 +465,13 @@ class RaceMobilePage extends RaceBasicPage {
       );
 
   Stack _argentinaSpots(BuildContext context, double mapHeight, double mapWidth,
-          List<StageBuilding>? stagesBuilding) =>
+          List<Spot>? stagesBuilding) =>
       Stack(
         children: [
           Positioned(
             top: mapHeight * 0.26,
             left: mapWidth * 0.32,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding![0].id,
               name: stagesBuilding[0].shortName,
               photo: stagesBuilding[0].photo,
@@ -493,7 +510,7 @@ class RaceMobilePage extends RaceBasicPage {
                     },
                 ),
                 const WidgetSpan(
-                  child: Icon(FontAwesomeIcons.externalLinkAlt, size: 11.0),
+                  child: Icon(FontAwesomeIcons.upRightFromSquare, size: 11.0),
                 ),
               ]),
         ),

@@ -1,6 +1,3 @@
-import 'package:yodravet/src/model/activity.dart';
-import 'package:yodravet/src/model/activity_purchase.dart';
-
 abstract class UserState {}
 
 class UserInitState extends UserState {
@@ -9,27 +6,16 @@ class UserInitState extends UserState {
 }
 
 class UploadUserFieldsState extends UserState {
-  final List<Activity>? activities;
   final bool? isStravaLogin;
   final bool lockStravaLogin;
   final String fullname;
   final String? photo;
-  final DateTime? beforeDate;
-  final DateTime? afterDate;
-  final int filterDonorTab;
-  final List<ActivityPurchase> donors;
   // final String usuarios;
   UploadUserFieldsState(
-      this.activities,
       this.isStravaLogin,
       this.lockStravaLogin,
       this.fullname,
       this.photo,
-      this.beforeDate,
-      this.afterDate,
-      this.filterDonorTab,
-      this.donors
-      // this.usuarios
   );
 
   @override

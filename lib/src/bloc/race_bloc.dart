@@ -4,8 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race.dart';
+import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/researcher.dart';
-import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/shared/edition.dart';
 import 'package:yodravet/src/shared/race_map_factory.dart';
 
@@ -17,25 +18,26 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   double _stageDayLeft = 0;
   final FactoryDao factoryDao;
   final List<Buyer> _buyers = [];
+  final List<RaceSpot> _raceSpots = [];
   final RaceMapFactory _raceMapFactory = RaceMapFactory();
-  StageBuilding? _currentStageBuilding;
-  StageBuilding? _currentMouseStageBuilding;
+  Spot? _currentSpot;
+  Spot? _currentMouseSpot;
   bool _isSpainMapSelected = true;
-  final List<StageBuilding> _spainStagesBuilding = [
-    StageBuilding('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
+  final List<Spot> _spainStagesBuilding = [
+    Spot('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
         'assets/images/race/stages/centrofelipe.png', [
-      Researcher(
-          'Máximo Ibo Galindo',
-          'Medicina de precisión mediante la utilización de modelo Drosophila.',
-          'assets/images/race/stages/researchers/maximoibogalindo.png',
-          'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
-      Researcher(
-          'Isabel del Pino',
-          'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
-          'assets/images/race/stages/researchers/isabelpino.png',
-          'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
-    ]),
-    StageBuilding(
+          Researcher(
+              'Máximo Ibo Galindo',
+              'Medicina de precisión mediante la utilización de modelo Drosophila.',
+              'assets/images/race/stages/researchers/maximoibogalindo.png',
+              'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
+          Researcher(
+              'Isabel del Pino',
+              'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
+              'assets/images/race/stages/researchers/isabelpino.png',
+              'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
+        ]),
+    Spot(
       'Stage2',
       'Centro Andaluz de Biologia Molecular y Medicina Regenerativa',
       'CABIMER',
@@ -48,7 +50,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/proyectos/terapia-celular-mediante-precursores-neuronales-gabaergicos-encefalopatias-epilepticas-infantiles-sdravet-swest-sstxbp1'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage4.1',
       'Facultad Medicina Madrid',
       'Facultad Medicina Madrid',
@@ -61,7 +63,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/proyectos/estudio-sistema-cannabinoide-sindrome-dravet'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage4.2',
       'Hospital Ruber Internacional Madrid',
       'H.Ruber',
@@ -74,7 +76,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/grupos-investigacion/unidad-epilepsia-hospital-ruber-internacional'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage4.3',
       'Universidad Nebrija',
       'U.Nebrija',
@@ -92,7 +94,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/grupos-investigacion/centro-ciencia-cognitiva-c3'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage5',
       'Facultad de Ciencias de la Salud Campus Oza Universidad A Coruña',
       'Uni. A Coruña',
@@ -105,7 +107,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/proyectos/efecto-campos-magneticos-estaticos-intensidad-moderada-modelos-epilepsia-sindrome-dravet'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage6.1',
       'Biocruces Health Research Institute',
       'Biocruces',
@@ -118,7 +120,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/grupos-investigacion/computational-neuroimaging-lab'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage6.2',
       'Achucarro Basque Center for Neuroscience',
       'Achucarro',
@@ -137,7 +139,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         ),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage7',
       'Biobide',
       'Biobide',
@@ -150,7 +152,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/proyectos/caracterizacion-linea-pez-cebra-didys552-mutante-gen-snc1lab-puesta-punto-ensayo-screening-eficacia-drogas-referencia'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage8.1',
       'Universitat de Barcelona',
       'U.B.',
@@ -163,7 +165,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/grupos-investigacion/neurogenetica-funcional'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage8.2',
       "Vall d'Hebron",
       "Vall d'Hebron",
@@ -176,7 +178,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
             'https://www.indrenetwork.com/es/proyectos/nanoparticulas-anti-oxidantes-anti-inflamatorias-proteger-contra-hiper-actividad-mitigar-dano-post-crisis'),
       ],
     ),
-    StageBuilding(
+    Spot(
       'Stage9',
       'Ajuntament de Sant Feliu de Llobregat',
       'Ajuntament Sant Feliu',
@@ -193,8 +195,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ),
   ];
 
-  final List<StageBuilding> _argentinaStagesBuilding = [
-    StageBuilding(
+  final List<Spot> _argentinaStagesBuilding = [
+    Spot(
         'Stage3',
         'Universidad De la Plata. Laboratorio de investigación y desarrollo de bioactivos (LIDeB)',
         'Uni. De la Plata',
@@ -222,9 +224,9 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   }
 
   void _initRaceFieldsEvent(InitRaceFieldsEvent event, Emitter emit) async {
-    String editionId = Edition.currentEdition;
+    String raceId = Edition.currentEdition;
     try {
-      factoryDao.raceDao.streamRaceInfo(editionId).listen((race) async {
+      factoryDao.raceDao.streamRaceInfo(raceId).listen((race) async {
         if (race != null) {
           if (_race == null) {
             _race = Race(
@@ -273,12 +275,12 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         }
       });
 
-      factoryDao.raceDao.streamBuyers(editionId).listen((buyers) {
+      factoryDao.raceDao.streamBuyers(raceId).listen((buyers) {
         //Se consolidan los compradores
         _buyers.clear();
         for (var buyer in buyers) {
           var mainBuyerList = _buyers.where(
-              (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
+                  (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
 
           if (mainBuyerList.isEmpty ||
               mainBuyerList.first.userId.compareTo('anonymous') == 0) {
@@ -292,6 +294,13 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         }
         //Ordenamos por compra total
         _buyers.sort((a, b) => a.compareTo(b));
+
+        add(UpdateRaceFieldsEvent());
+      });
+
+      factoryDao.raceDao.streamRaceSpot(raceId).listen((raceSpot) {
+        _raceSpots.clear();
+        _raceSpots.addAll(raceSpot);
 
         add(UpdateRaceFieldsEvent());
       });
@@ -313,11 +322,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   void _clickOnMapEvent(ClickOnMapEvent event, Emitter emit) async {
     try {
       try {
-        _currentStageBuilding = _spainStagesBuilding.firstWhere(
-            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+        _currentSpot = _spainStagesBuilding.firstWhere(
+                (spot) => spot.id.compareTo(event.id) == 0);
       } on StateError catch (_) {
-        _currentStageBuilding = _argentinaStagesBuilding.firstWhere(
-            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+        _currentSpot = _argentinaStagesBuilding.firstWhere(
+                (spot) => spot.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -329,7 +338,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   }
 
   void _backClickOnMapEvent(BackClickOnMapEvent event, Emitter emit) async {
-    _currentStageBuilding = null;
+    _currentSpot = null;
 
     emit(_updateRaceFields());
   }
@@ -337,11 +346,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   void _mouseOnEnterEvent(MouseOnEnterEvent event, Emitter emit) async {
     try {
       try {
-        _currentMouseStageBuilding = _spainStagesBuilding.firstWhere(
-            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+        _currentMouseSpot = _spainStagesBuilding.firstWhere(
+                (spot) => spot.id.compareTo(event.id) == 0);
       } on StateError catch (_) {
-        _currentMouseStageBuilding = _argentinaStagesBuilding.firstWhere(
-            (stageBuilding) => stageBuilding.id.compareTo(event.id) == 0);
+        _currentMouseSpot = _argentinaStagesBuilding.firstWhere(
+                (spot) => spot.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -353,7 +362,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   }
 
   void _mouseOnExitEvent(MouseOnExitEvent event, Emitter emit) async {
-    _currentMouseStageBuilding = null;
+    _currentMouseSpot = null;
 
     emit(_updateRaceFields());
   }
@@ -383,31 +392,32 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
   void _purchaseButterfliesEvent(PurchaseButterfliesEvent event, Emitter emit) {
     if (_race != null && _race!.purchaseButterfliesSite.isNotEmpty) {
-      launch(_race!.purchaseButterfliesSite);
+      launchUrl(Uri.parse(_race!.purchaseButterfliesSite));
     }
   }
 
   void _purchaseSongEvent(PurchaseSongEvent event, Emitter emit) {
     if (_race != null && _race!.purchaseSongSite.isNotEmpty) {
-      launch(_race!.purchaseSongSite);
+      launchUrl(Uri.parse(_race!.purchaseSongSite));
     }
   }
 
   RaceState _updateRaceFields() => UpdateRaceFieldsState(
-        kmCounter: _race!.kmCounter,
-        stageCounter: _race!.stageCounter,
-        extraCounter: _race!.extraCounter,
-        stageLimit: _race!.stageLimit,
-        stageTitle: _race!.stageTitle,
-        stageDayLeft: _stageDayLeft,
-        riveArtboardSpain: _raceMapFactory.riveArtboardSpain,
-        riveArtboardArgentina: _raceMapFactory.riveArtboardArgentina,
-        buyers: _buyers,
-        currentStageBuilding: _currentStageBuilding,
-        currentMouseStageBuilding: _currentMouseStageBuilding,
-        spainStagesBuilding: _spainStagesBuilding,
-        argentinaStagesBuilding: _argentinaStagesBuilding,
-        isSpainMapSelected: _isSpainMapSelected,
-        isRaceOver: _race!.isOver,
-      );
+    kmCounter: _race!.kmCounter,
+    stageCounter: _race!.stageCounter,
+    extraCounter: _race!.extraCounter,
+    stageLimit: _race!.stageLimit,
+    stageTitle: _race!.stageTitle,
+    stageDayLeft: _stageDayLeft,
+    riveArtboardSpain: _raceMapFactory.riveArtboardSpain,
+    riveArtboardArgentina: _raceMapFactory.riveArtboardArgentina,
+    buyers: _buyers,
+    currentSpot: _currentSpot,
+    currentMouseSpot: _currentMouseSpot,
+    spainStagesBuilding: _spainStagesBuilding,
+    argentinaStagesBuilding: _argentinaStagesBuilding,
+    raceSpots: _raceSpots,
+    isSpainMapSelected: _isSpainMapSelected,
+    isRaceOver: _race!.isOver,
+  );
 }

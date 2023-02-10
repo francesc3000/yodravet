@@ -35,6 +35,11 @@ class UserChangeState extends SessionState {
   String toString() => 'UserChangeState';
 }
 
+class StravaLogInSuccessState extends SessionState {
+  @override
+  String toString() => 'StravaLogInSuccess State';
+}
+
 class SessionStateError extends SessionState {
   final String message;
 

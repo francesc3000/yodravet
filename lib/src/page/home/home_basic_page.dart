@@ -15,4 +15,8 @@ abstract class HomeBasicPage extends BasicPage {
 
   @override
   Widget? floatingActionButton(BuildContext context) => null;
+
+  @override
+  FloatingActionButtonLocation? floatingActionButtonLocation(
+      BuildContext context) => null;
 }

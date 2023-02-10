@@ -16,6 +16,8 @@ abstract class BasicPage extends StatelessWidget {
       {String? title, bool isMusicOn = false, bool isFirstTime = false});
   Widget body(BuildContext context);
   Widget? floatingActionButton(BuildContext context);
+  FloatingActionButtonLocation? floatingActionButtonLocation(
+      BuildContext context);
   Widget? bottomNavigationBar(BuildContext context, {bool isFirstTime = false});
 
   @override
@@ -25,6 +27,7 @@ abstract class BasicPage extends StatelessWidget {
               title: title, isMusicOn: isMusicOn, isFirstTime: isFirstTime),
           body: body(context),
           floatingActionButton: floatingActionButton(context),
+          floatingActionButtonLocation: floatingActionButtonLocation(context),
           bottomNavigationBar:
               bottomNavigationBar(context, isFirstTime: isFirstTime),
         ),

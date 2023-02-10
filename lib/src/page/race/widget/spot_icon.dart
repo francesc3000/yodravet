@@ -1,20 +1,23 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 
-class StageBuildingIcon extends StatelessWidget {
+class SpotIcon extends StatelessWidget {
   final String id;
   final String name;
   final String photo;
+  final int vote;
   final double height;
   final double width;
 
-  const StageBuildingIcon(this.id,
+  const SpotIcon(this.id,
       {Key? key,
       this.name = '',
       this.photo = '',
+      this.vote = 0,
       this.height = 60,
       this.width = 60})
       : super(key: key);
@@ -27,8 +30,8 @@ class StageBuildingIcon extends StatelessWidget {
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
       if (state is UpdateRaceFieldsState) {
-        _currentId = state.currentStageBuilding?.id ?? '';
-        _currentMouseId = state.currentMouseStageBuilding?.id ?? '';
+        _currentId = state.currentSpot?.id ?? '';
+        _currentMouseId = state.currentMouseSpot?.id ?? '';
       }
 
       return MouseRegion(
@@ -77,6 +80,14 @@ class StageBuildingIcon extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                ),
+              ),
+              Positioned(
+                // top: 10,
+                left: 40,
+                child: badges.Badge(
+                  badgeContent: Text(vote.toString()),
+                  // child: Icon(Icons.settings),
                 ),
               ),
             ],

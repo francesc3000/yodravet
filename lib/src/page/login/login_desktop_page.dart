@@ -52,9 +52,9 @@ class LoginDesktopPage extends LoginBasicPage {
             message:
                 'Se ha enviado un correo electrónico a tu cuenta '
                     'con instrucciones',
-            iconData: FontAwesomeIcons.exclamationCircle);
+            iconData: FontAwesomeIcons.circleExclamation);
       } else if (state is Go2SignupState) {
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           // Navigator.pop(context);
           routerDelegate.pushPage(name: '/signupPage');
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
@@ -67,11 +67,11 @@ class LoginDesktopPage extends LoginBasicPage {
         CustomSnackBar().show(
             context: context,
             message: state.message,
-            iconData: FontAwesomeIcons.exclamationCircle);
+            iconData: FontAwesomeIcons.circleExclamation);
       }
 
       return Container(
-        color: const Color.fromRGBO(153, 148, 86, 60),
+        color: const Color.fromRGBO(153, 148, 86, 1),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 360),
           child: Center(
@@ -82,9 +82,9 @@ class LoginDesktopPage extends LoginBasicPage {
                   child: _isLoadingGoogle
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      : Row(
+                      : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(FontAwesomeIcons.google, color: Colors.white),
                             SizedBox(
                               width: 5.0,
@@ -110,9 +110,9 @@ class LoginDesktopPage extends LoginBasicPage {
                       child: _isLoadingApple
                           ? const CircularProgressIndicator(
                               backgroundColor: Colors.white)
-                          : Row(
+                          : const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Icon(FontAwesomeIcons.apple,
                                     color: Colors.white),
                                 SizedBox(

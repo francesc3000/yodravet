@@ -55,12 +55,13 @@ class PrivacyPolicyDesktopPage extends PrivacyPolicyBasicPage {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
-                                var url =
-                                    "https://www.google.com/policies/privacy/";
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                var uri = Uri.parse(
+                                    "https://www.google.com/policies/privacy/");
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
                                 } else {
-                                  throw 'Could not launch $url';
+                                  var text = uri.path;
+                                  throw 'Could not launch $text';
                                 }
                               }),
                       ]),

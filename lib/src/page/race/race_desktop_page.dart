@@ -10,15 +10,15 @@ import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
-import 'package:yodravet/src/model/stage_building.dart';
+import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
-import 'package:yodravet/src/page/race/widget/stage_building_icon.dart';
+import 'package:yodravet/src/page/race/widget/spot_icon.dart';
 import 'package:yodravet/src/page/sponsor/sponsor_page.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
 import 'race_basic_page.dart';
-import 'widget/stage_building_page.dart';
+import 'widget/spot_page.dart';
 
 class RaceDesktopPage extends RaceBasicPage {
   const RaceDesktopPage(String title, AppRouterDelegate appRouterDelegate,
@@ -35,121 +35,121 @@ class RaceDesktopPage extends RaceBasicPage {
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
-      double _kmCounter = 0;
-      double _stageCounter = 0;
-      double _extraCounter = 0;
-      double _stageLimit = 0;
-      String? _stageTitle = '';
-      double? _stageDayLeft = 0;
-      List<Buyer> _buyers = [];
-      StageBuilding? _currentStageBuilding;
-      List<StageBuilding>? _spainStagesBuilding = [];
-      List<StageBuilding>? _argentinaStagesBuilding = [];
-      List<Widget> slivers = [];
-      bool _isRaceOver = false;
+          double _kmCounter = 0;
+          double _stageCounter = 0;
+          double _extraCounter = 0;
+          double _stageLimit = 0;
+          String? _stageTitle = '';
+          double? _stageDayLeft = 0;
+          List<Buyer> _buyers = [];
+          Spot? _currentSpot;
+          List<Spot>? _spainStagesBuilding = [];
+          List<Spot>? _argentinaStagesBuilding = [];
+          List<Widget> slivers = [];
+          bool _isRaceOver = false;
 
-      if (state is RaceInitState) {
-        BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
-        _loading = true;
-      } else if (state is UpdateRaceFieldsState) {
-        _kmCounter = state.kmCounter / 1000;
-        _stageCounter = state.stageCounter / 1000;
-        _extraCounter = state.extraCounter / 1000;
-        _stageLimit = state.stageLimit / 1000;
-        _stageTitle = state.stageTitle;
-        _riveArtboardSpain = state.riveArtboardSpain;
-        _riveArtboardArgentina = state.riveArtboardArgentina;
-        _buyers = state.buyers;
-        _spainStagesBuilding = state.spainStagesBuilding;
-        _argentinaStagesBuilding = state.argentinaStagesBuilding;
-        _currentStageBuilding = state.currentStageBuilding;
-        _loading = false;
-        _stageDayLeft = state.stageDayLeft;
-        _isRaceOver = state.isRaceOver;
-        _isSpainMapSelected = state.isSpainMapSelected;
-        if (_currentStageBuilding != null && !_isShowModalOn) {
-          _isShowModalOn = true;
-          SchedulerBinding.instance?.addPostFrameCallback((_) {
-            Future future = showModalBottomSheet(
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius:
+          if (state is RaceInitState) {
+            BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
+            _loading = true;
+          } else if (state is UpdateRaceFieldsState) {
+            _kmCounter = state.kmCounter / 1000;
+            _stageCounter = state.stageCounter / 1000;
+            _extraCounter = state.extraCounter / 1000;
+            _stageLimit = state.stageLimit / 1000;
+            _stageTitle = state.stageTitle;
+            _riveArtboardSpain = state.riveArtboardSpain;
+            _riveArtboardArgentina = state.riveArtboardArgentina;
+            _buyers = state.buyers;
+            _spainStagesBuilding = state.spainStagesBuilding;
+            _argentinaStagesBuilding = state.argentinaStagesBuilding;
+            _currentSpot = state.currentSpot;
+            _loading = false;
+            _stageDayLeft = state.stageDayLeft;
+            _isRaceOver = state.isRaceOver;
+            _isSpainMapSelected = state.isSpainMapSelected;
+            if (_currentSpot != null && !_isShowModalOn) {
+              _isShowModalOn = true;
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Future future = showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
                       BorderRadius.vertical(top: Radius.circular(25.0)),
-                ),
-                builder: (BuildContext context) => StageBuildingPage(
-                      stageBuilding: _currentStageBuilding,
+                    ),
+                    builder: (BuildContext context) => SpotPage(
+                      spot: _currentSpot,
                       expandedHeight: MediaQuery.of(context).size.height - 300,
                       leadingWidth: MediaQuery.of(context).size.width,
                     ));
-            future.then((_) =>
-                BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent()));
-          });
-        } else {
-          _isShowModalOn = false;
-        }
-      } else if (state is RaceStateError) {
-        _loading = false;
-      }
+                future.then((_) =>
+                    BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent()));
+              });
+            } else {
+              _isShowModalOn = false;
+            }
+          } else if (state is RaceStateError) {
+            _loading = false;
+          }
 
-      if (_loading) {
-        return Container(
-          color: const Color.fromRGBO(153, 148, 86, 60),
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
+          if (_loading) {
+            return Container(
+              color: const Color.fromRGBO(153, 148, 86, 1),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
 
-      slivers.clear();
-      slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
-          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-      slivers.add(_buildMap(
-          context,
-          _riveArtboardSpain,
-          _riveArtboardArgentina,
-          _buyers,
-          _spainStagesBuilding,
-          _argentinaStagesBuilding,
-          _isSpainMapSelected));
-      slivers.add(
-        SliverPersistentHeader(
-          pinned: false,
-          delegate: SliverAppBarDelegate(
-            minHeight: 412,
-            maxHeight: 550,
-            child: SponsorPage(routerDelegate),
-          ),
-        ),
-      );
+          slivers.clear();
+          slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
+              _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
+          slivers.add(_buildMap(
+              context,
+              _riveArtboardSpain,
+              _riveArtboardArgentina,
+              _buyers,
+              _spainStagesBuilding,
+              _argentinaStagesBuilding,
+              _isSpainMapSelected));
+          slivers.add(
+            SliverPersistentHeader(
+              pinned: false,
+              delegate: SliverAppBarDelegate(
+                minHeight: 412,
+                maxHeight: 550,
+                child: SponsorPage(routerDelegate),
+              ),
+            ),
+          );
 
-      return Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
-            // fit: BoxFit.fitHeight,
-            scale: 1.0,
-          ),
-          // color: Color.fromRGBO(177, 237, 100, 93),
-          color: Color.fromRGBO(153, 148, 86, 60),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        alignment: Alignment.center,
-        child: CustomScrollView(
-          slivers: slivers,
-        ),
-      );
-    });
+          return Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
+                // fit: BoxFit.fitHeight,
+                scale: 1.0,
+              ),
+              // color: Color.fromRGBO(177, 237, 100, 93),
+              color: Color.fromRGBO(153, 148, 86, 1),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            alignment: Alignment.center,
+            child: CustomScrollView(
+              slivers: slivers,
+            ),
+          );
+        });
   }
 
   Widget _buildCounters(
-          BuildContext context,
-          double kmCounter,
-          String stageTitle,
-          double stageLimit,
-          double stageCounter,
-          double extraCounter,
-          double stageDayLeft,
-          bool isRaceOver) =>
+      BuildContext context,
+      double kmCounter,
+      String stageTitle,
+      double stageLimit,
+      double stageCounter,
+      double extraCounter,
+      double stageDayLeft,
+      bool isRaceOver) =>
       SliverPersistentHeader(
         pinned: false,
         delegate: SliverAppBarDelegate(
@@ -291,8 +291,8 @@ class RaceDesktopPage extends RaceBasicPage {
       Artboard? riveArtboardSpain,
       Artboard? riveArtboardArgentina,
       List<Buyer> buyers,
-      List<StageBuilding>? spainStagesBuilding,
-      List<StageBuilding>? argentinaStagesBuilding,
+      List<Spot>? spainStagesBuilding,
+      List<Spot>? argentinaStagesBuilding,
       bool isSpainMapSelected) {
     Widget child;
 
@@ -349,7 +349,7 @@ class RaceDesktopPage extends RaceBasicPage {
                                 },
                             ),
                             const WidgetSpan(
-                              child: Icon(FontAwesomeIcons.externalLinkAlt,
+                              child: Icon(FontAwesomeIcons.upRightFromSquare,
                                   size: 11.0),
                             ),
                           ]),
@@ -393,7 +393,7 @@ class RaceDesktopPage extends RaceBasicPage {
           child: Column(
             children: [
               IconButton(
-                icon: const Icon(FontAwesomeIcons.arrowCircleLeft),
+                icon: const Icon(FontAwesomeIcons.circleArrowLeft),
                 color: const Color.fromARGB(255, 140, 71, 153),
                 iconSize: 30,
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
@@ -414,7 +414,7 @@ class RaceDesktopPage extends RaceBasicPage {
           child: Column(
             children: [
               IconButton(
-                icon: const Icon(FontAwesomeIcons.arrowCircleRight),
+                icon: const Icon(FontAwesomeIcons.circleArrowRight),
                 color: const Color.fromARGB(255, 140, 71, 153),
                 iconSize: 30,
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
@@ -427,13 +427,13 @@ class RaceDesktopPage extends RaceBasicPage {
       );
 
   Stack _spainSpots(
-          BuildContext context, List<StageBuilding>? stagesBuilding) =>
+      BuildContext context, List<Spot>? stagesBuilding) =>
       Stack(
         children: [
           Positioned(
             top: 190,
             left: 340,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding![0].id,
               name: stagesBuilding[0].shortName,
               photo: stagesBuilding[0].photo,
@@ -442,7 +442,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 310,
             left: 100,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[1].id,
               name: stagesBuilding[1].shortName,
               photo: stagesBuilding[1].photo,
@@ -451,7 +451,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 160,
             left: 230,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[2].id,
               name: stagesBuilding[2].shortName,
               photo: stagesBuilding[2].photo,
@@ -460,7 +460,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 130,
             left: 190,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[3].id,
               name: stagesBuilding[3].shortName,
               photo: stagesBuilding[3].photo,
@@ -469,7 +469,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 110,
             left: 235,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[4].id,
               name: stagesBuilding[4].shortName,
               photo: stagesBuilding[4].photo,
@@ -478,7 +478,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 17,
             // left: -4,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[5].id,
               name: stagesBuilding[5].shortName,
               photo: stagesBuilding[5].photo,
@@ -487,7 +487,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 10,
             left: 180,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[6].id,
               name: stagesBuilding[6].shortName,
               photo: stagesBuilding[6].photo,
@@ -496,7 +496,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 23,
             left: 228,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[7].id,
               name: stagesBuilding[7].shortName,
               photo: stagesBuilding[7].photo,
@@ -505,7 +505,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 19,
             left: 278,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[8].id,
               name: stagesBuilding[8].shortName,
               photo: stagesBuilding[8].photo,
@@ -514,7 +514,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 100,
             left: 440,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[9].id,
               name: stagesBuilding[9].shortName,
               photo: stagesBuilding[9].photo,
@@ -523,7 +523,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 50,
             left: 440,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[10].id,
               name: stagesBuilding[10].shortName,
               photo: stagesBuilding[10].photo,
@@ -532,7 +532,7 @@ class RaceDesktopPage extends RaceBasicPage {
           Positioned(
             top: 90,
             left: 379,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding[11].id,
               name: stagesBuilding[11].shortName,
               photo: stagesBuilding[11].photo,
@@ -542,13 +542,13 @@ class RaceDesktopPage extends RaceBasicPage {
       );
 
   Stack _argentinaSpots(
-          BuildContext context, List<StageBuilding>? stagesBuilding) =>
+      BuildContext context, List<Spot>? stagesBuilding) =>
       Stack(
         children: [
           Positioned(
             top: 100,
             left: 220,
-            child: StageBuildingIcon(
+            child: SpotIcon(
               stagesBuilding![0].id,
               name: stagesBuilding[0].shortName,
               photo: stagesBuilding[0].photo,

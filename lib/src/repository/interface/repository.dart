@@ -2,6 +2,9 @@ import 'package:yodravet/src/model/activity_purchase_dao.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/collaborator_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
+import 'package:yodravet/src/model/race_spot_dato.dart';
+import 'package:yodravet/src/model/ranking_dao.dart';
+import 'package:yodravet/src/model/team_dao.dart';
 import 'package:yodravet/src/model/user_dao.dart';
 
 import 'endpoints.dart';
@@ -19,6 +22,7 @@ abstract class Repository implements Endpoints {
       String userId,
       String userFullname,
       String raceId,
+      String? teamId,
       String userStravaId,
       String userPhoto,
       DateTime userRaceDate,
@@ -29,6 +33,10 @@ abstract class Repository implements Endpoints {
       String activityType);
   Stream<RaceDao?> streamRaceInfo(String raceId);
   Stream<List<BuyerDao>> streamBuyers(String raceId);
-  Stream<List<ActivityPurchaseDao>>? streamDonors(String raceId);
+  Stream<List<ActivityPurchaseDao>> streamDonors(String raceId, String userId);
+  Stream<List<RankingDao>> streamRanking(String raceId);
   Future<List<CollaboratorDao>> getCollaborators();
+  Stream<List<TeamDao>?> streamTeams();
+  Future<bool> changeUserTeam(String mode, String userId, String teamId);
+  Stream<List<RaceSpotDao>> streamRaceSpot(String raceId);
 }

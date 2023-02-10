@@ -6,6 +6,7 @@ class UserDao {
   String? name;
   String? lastname;
   String? photo;
+  String? teamId;
   List<ActivityDao>? activitiesDao;
   bool? isStravaLogin;
 
@@ -16,6 +17,7 @@ class UserDao {
       this.lastname = '',
       this.photo = '',
       this.isStravaLogin = false,
+        this.teamId,
       this.activitiesDao}) {
         activitiesDao ??= [];
       }
