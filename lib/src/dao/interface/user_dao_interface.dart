@@ -20,4 +20,7 @@ abstract class UserDaoInterface {
   Stream<Map<String, DateTime?>> getRangeDates(String raceId);
   Future<bool> joinTeam(String userId, String teamId);
   Future<bool> disJoinTeam(String userId, String teamId);
+  Stream<List<String>> streamSpotVotes(String userId, String raceId);
+  Future<bool> spotThumbUp(String userId, String raceId, String spotId);
+  Future<bool> spotThumbDown(String userId, String raceId, String spotId);
 }

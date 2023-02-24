@@ -9,6 +9,7 @@ import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/user_event.dart';
 import 'package:yodravet/src/bloc/state/user_state.dart';
 import 'package:yodravet/src/bloc/user_bloc.dart';
+import 'package:yodravet/src/page/user/widget/strava_switch.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
@@ -172,28 +173,7 @@ class UserDesktopPage extends UserBasicPage {
           delegate: SliverAppBarDelegate(
             minHeight: 40,
             maxHeight: 50,
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              color: const Color.fromRGBO(153, 148, 86, 1),
-              child: Row(
-                children: [
-                  Text(AppLocalizations.of(context)!.stravaConnect),
-                  const Icon(FontAwesomeIcons.strava, color: Colors.orange),
-                  const Spacer(),
-                  Switch(
-                      activeColor: Colors.green,
-                      inactiveThumbColor:
-                          lockStravaLogin ? Colors.grey : Colors.red,
-                      value: isStravaLogin,
-                      onChanged: lockStravaLogin
-                          ? null
-                          : (_) {
-                              BlocProvider.of<UserBloc>(context)
-                                  .add(ConnectWithStravaEvent());
-                            }),
-                ],
-              ),
-            ),
+            child: const StravaSwitch(),
           ),
         ),
       );

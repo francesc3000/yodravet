@@ -75,19 +75,22 @@ class LoginMobilePage extends LoginBasicPage {
                     // ? null
                     ? const CircularProgressIndicator(
                         backgroundColor: Colors.white)
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(FontAwesomeIcons.google, color: Colors.white),
-                          SizedBox(
-                            width: 5.0,
+                    : _isLoading || _isLoadingApple
+                        ? null
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(FontAwesomeIcons.google,
+                                  color: Colors.white),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Text(
+                                'Iniciar sesión con Google',
+                                style: TextStyle(color: Colors.white),
+                              )
+                            ],
                           ),
-                          Text(
-                            'Iniciar sesión con Google',
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
                 color: Colors.red,
                 onPressed: () {
                   // routerDelegate.popRoute();
@@ -104,19 +107,22 @@ class LoginMobilePage extends LoginBasicPage {
                   child: _isLoadingApple
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      : const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(FontAwesomeIcons.apple, color: Colors.white),
-                            SizedBox(
-                              width: 5.0,
+                      : _isLoading || _isLoadingGoogle
+                          ? null
+                          : const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(FontAwesomeIcons.apple,
+                                    color: Colors.white),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  'Iniciar sesión con Apple',
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              ],
                             ),
-                            Text(
-                              'Iniciar sesión con Apple',
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
                   color: Colors.black,
                   onPressed: () {
                     // routerDelegate.popRoute();
@@ -157,8 +163,10 @@ class LoginMobilePage extends LoginBasicPage {
               child: _isLoading
                   ? const CircularProgressIndicator(
                       backgroundColor: Colors.white)
-                  : Text(AppLocalizations.of(context)!.logIn,
-                      style: const TextStyle(color: Colors.white)),
+                  : _isLoadingGoogle || _isLoadingApple
+                      ? null
+                      : Text(AppLocalizations.of(context)!.logIn,
+                          style: const TextStyle(color: Colors.white)),
               onPressed: () {
                 // routerDelegate.popRoute();
                 BlocProvider.of<AuthBloc>(context).add(LogInEvent(

@@ -10,6 +10,7 @@ import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
+import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
 import 'package:yodravet/src/page/race/widget/spot_icon.dart';
@@ -30,126 +31,134 @@ class RaceDesktopPage extends RaceBasicPage {
     Artboard? _riveArtboardSpain;
     Artboard? _riveArtboardArgentina;
     bool _loading = false;
-    bool _isShowModalOn = false;
     bool _isSpainMapSelected = true;
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
-          double _kmCounter = 0;
-          double _stageCounter = 0;
-          double _extraCounter = 0;
-          double _stageLimit = 0;
-          String? _stageTitle = '';
-          double? _stageDayLeft = 0;
-          List<Buyer> _buyers = [];
-          Spot? _currentSpot;
-          List<Spot>? _spainStagesBuilding = [];
-          List<Spot>? _argentinaStagesBuilding = [];
-          List<Widget> slivers = [];
-          bool _isRaceOver = false;
+      double _kmCounter = 0;
+      double _stageCounter = 0;
+      double _extraCounter = 0;
+      double _stageLimit = 0;
+      String? _stageTitle = '';
+      double? _stageDayLeft = 0;
+      List<Buyer> _buyers = [];
+      Spot? _currentSpot;
+      List<Spot>? _spainStagesBuilding = [];
+      List<Spot>? _argentinaStagesBuilding = [];
+      List<RaceSpot> _raceSpots = [];
+      List<String>? _spotVotes;
+      List<Widget> slivers = [];
+      bool _isRaceOver = false;
+      bool _canVote = false;
+      bool _hasVote = false;
 
-          if (state is RaceInitState) {
-            BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
-            _loading = true;
-          } else if (state is UpdateRaceFieldsState) {
-            _kmCounter = state.kmCounter / 1000;
-            _stageCounter = state.stageCounter / 1000;
-            _extraCounter = state.extraCounter / 1000;
-            _stageLimit = state.stageLimit / 1000;
-            _stageTitle = state.stageTitle;
-            _riveArtboardSpain = state.riveArtboardSpain;
-            _riveArtboardArgentina = state.riveArtboardArgentina;
-            _buyers = state.buyers;
-            _spainStagesBuilding = state.spainStagesBuilding;
-            _argentinaStagesBuilding = state.argentinaStagesBuilding;
-            _currentSpot = state.currentSpot;
-            _loading = false;
-            _stageDayLeft = state.stageDayLeft;
-            _isRaceOver = state.isRaceOver;
-            _isSpainMapSelected = state.isSpainMapSelected;
-            if (_currentSpot != null && !_isShowModalOn) {
-              _isShowModalOn = true;
-              SchedulerBinding.instance.addPostFrameCallback((_) {
-                Future future = showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(25.0)),
-                    ),
-                    builder: (BuildContext context) => SpotPage(
-                      spot: _currentSpot,
-                      expandedHeight: MediaQuery.of(context).size.height - 300,
-                      leadingWidth: MediaQuery.of(context).size.width,
-                    ));
-                future.then((_) =>
-                    BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent()));
-              });
-            } else {
-              _isShowModalOn = false;
-            }
-          } else if (state is RaceStateError) {
-            _loading = false;
-          }
+      if (state is RaceInitState) {
+        BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
+        _loading = true;
+      } else if (state is UpdateRaceFieldsState) {
+        _kmCounter = state.kmCounter / 1000;
+        _stageCounter = state.stageCounter / 1000;
+        _extraCounter = state.extraCounter / 1000;
+        _stageLimit = state.stageLimit / 1000;
+        _stageTitle = state.stageTitle;
+        _riveArtboardSpain = state.riveArtboardSpain;
+        _riveArtboardArgentina = state.riveArtboardArgentina;
+        _buyers = state.buyers;
+        _spainStagesBuilding = state.spainStagesBuilding;
+        _argentinaStagesBuilding = state.argentinaStagesBuilding;
+        _raceSpots = state.raceSpots;
+        _spotVotes = state.spotVotes;
+        _currentSpot = state.currentSpot;
+        _loading = false;
+        _stageDayLeft = state.stageDayLeft;
+        _isRaceOver = state.isRaceOver;
+        _isSpainMapSelected = state.isSpainMapSelected;
+        _canVote = state.canVote;
+        _hasVote = state.hasVote;
+        if (_currentSpot != null) {
+          BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            showModalBottomSheet(
+                context: context,
+                // shape: const RoundedRectangleBorder(
+                //   borderRadius:
+                //   BorderRadius.vertical(top: Radius.circular(25.0)),
+                // ),
+                builder: (BuildContext context) => SpotPage(
+                    spot: _currentSpot,
+                    isVoted: _spotVotes?.contains(_currentSpot?.id) ?? false,
+                    canVote: _canVote,
+                    hasVote: _hasVote,
+                    expandedHeight: MediaQuery.of(context).size.height - 300,
+                    leadingWidth: MediaQuery.of(context).size.width,
+                    imageFit: BoxFit.cover));
+          });
+        }
+      } else if (state is RaceStateError) {
+        _loading = false;
+      }
 
-          if (_loading) {
-            return Container(
-              color: const Color.fromRGBO(153, 148, 86, 1),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+      if (_loading) {
+        return Container(
+          alignment: Alignment.center,
+          color: const Color.fromRGBO(153, 148, 86, 1),
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
 
-          slivers.clear();
-          slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
-              _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
-          slivers.add(_buildMap(
-              context,
-              _riveArtboardSpain,
-              _riveArtboardArgentina,
-              _buyers,
-              _spainStagesBuilding,
-              _argentinaStagesBuilding,
-              _isSpainMapSelected));
-          slivers.add(
-            SliverPersistentHeader(
-              pinned: false,
-              delegate: SliverAppBarDelegate(
-                minHeight: 412,
-                maxHeight: 550,
-                child: SponsorPage(routerDelegate),
-              ),
-            ),
-          );
+      slivers.clear();
+      slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
+          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
+      slivers.add(_buildMap(
+          context,
+          _riveArtboardSpain,
+          _riveArtboardArgentina,
+          _buyers,
+          _spainStagesBuilding,
+          _argentinaStagesBuilding,
+          _raceSpots,
+          _isSpainMapSelected));
+      // slivers.add(
+      //   SliverPersistentHeader(
+      //     pinned: false,
+      //     delegate: SliverAppBarDelegate(
+      //       minHeight: 412,
+      //       maxHeight: 550,
+      //       child: SponsorPage(routerDelegate),
+      //     ),
+      //   ),
+      // );
 
-          return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
-                // fit: BoxFit.fitHeight,
-                scale: 1.0,
-              ),
-              // color: Color.fromRGBO(177, 237, 100, 93),
-              color: Color.fromRGBO(153, 148, 86, 1),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            alignment: Alignment.center,
-            child: CustomScrollView(
-              slivers: slivers,
-            ),
-          );
-        });
+      return Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
+            // fit: BoxFit.fitHeight,
+            scale: 1.0,
+          ),
+          // color: Color.fromRGBO(177, 237, 100, 93),
+          color: Color.fromRGBO(153, 148, 86, 1),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        alignment: Alignment.center,
+        child: CustomScrollView(
+          slivers: slivers,
+        ),
+      );
+    });
   }
 
   Widget _buildCounters(
-      BuildContext context,
-      double kmCounter,
-      String stageTitle,
-      double stageLimit,
-      double stageCounter,
-      double extraCounter,
-      double stageDayLeft,
-      bool isRaceOver) =>
+          BuildContext context,
+          double kmCounter,
+          String stageTitle,
+          double stageLimit,
+          double stageCounter,
+          double extraCounter,
+          double stageDayLeft,
+          bool isRaceOver) =>
       SliverPersistentHeader(
         pinned: false,
         delegate: SliverAppBarDelegate(
@@ -293,6 +302,7 @@ class RaceDesktopPage extends RaceBasicPage {
       List<Buyer> buyers,
       List<Spot>? spainStagesBuilding,
       List<Spot>? argentinaStagesBuilding,
+      List<RaceSpot> raceSpots,
       bool isSpainMapSelected) {
     Widget child;
 
@@ -319,8 +329,9 @@ class RaceDesktopPage extends RaceBasicPage {
               _countryLeftButton(context, isSpainMapSelected),
               _countryRightButton(context, isSpainMapSelected),
               isSpainMapSelected
-                  ? _spainSpots(context, spainStagesBuilding)
-                  : _argentinaSpots(context, argentinaStagesBuilding),
+                  ? _spainSpots(context, spainStagesBuilding, raceSpots)
+                  : _argentinaSpots(
+                      context, argentinaStagesBuilding, raceSpots),
             ]),
           ),
           Expanded(
@@ -427,135 +438,52 @@ class RaceDesktopPage extends RaceBasicPage {
       );
 
   Stack _spainSpots(
-      BuildContext context, List<Spot>? stagesBuilding) =>
-      Stack(
-        children: [
-          Positioned(
-            top: 190,
-            left: 340,
-            child: SpotIcon(
-              stagesBuilding![0].id,
-              name: stagesBuilding[0].shortName,
-              photo: stagesBuilding[0].photo,
-            ),
-          ),
-          Positioned(
-            top: 310,
-            left: 100,
-            child: SpotIcon(
-              stagesBuilding[1].id,
-              name: stagesBuilding[1].shortName,
-              photo: stagesBuilding[1].photo,
-            ),
-          ),
-          Positioned(
-            top: 160,
-            left: 230,
-            child: SpotIcon(
-              stagesBuilding[2].id,
-              name: stagesBuilding[2].shortName,
-              photo: stagesBuilding[2].photo,
-            ),
-          ),
-          Positioned(
-            top: 130,
-            left: 190,
-            child: SpotIcon(
-              stagesBuilding[3].id,
-              name: stagesBuilding[3].shortName,
-              photo: stagesBuilding[3].photo,
-            ),
-          ),
-          Positioned(
-            top: 110,
-            left: 235,
-            child: SpotIcon(
-              stagesBuilding[4].id,
-              name: stagesBuilding[4].shortName,
-              photo: stagesBuilding[4].photo,
-            ),
-          ),
-          Positioned(
-            top: 17,
-            // left: -4,
-            child: SpotIcon(
-              stagesBuilding[5].id,
-              name: stagesBuilding[5].shortName,
-              photo: stagesBuilding[5].photo,
-            ),
-          ),
-          Positioned(
-            top: 10,
-            left: 180,
-            child: SpotIcon(
-              stagesBuilding[6].id,
-              name: stagesBuilding[6].shortName,
-              photo: stagesBuilding[6].photo,
-            ),
-          ),
-          Positioned(
-            top: 23,
-            left: 228,
-            child: SpotIcon(
-              stagesBuilding[7].id,
-              name: stagesBuilding[7].shortName,
-              photo: stagesBuilding[7].photo,
-            ),
-          ),
-          Positioned(
-            top: 19,
-            left: 278,
-            child: SpotIcon(
-              stagesBuilding[8].id,
-              name: stagesBuilding[8].shortName,
-              photo: stagesBuilding[8].photo,
-            ),
-          ),
-          Positioned(
-            top: 100,
-            left: 440,
-            child: SpotIcon(
-              stagesBuilding[9].id,
-              name: stagesBuilding[9].shortName,
-              photo: stagesBuilding[9].photo,
-            ),
-          ),
-          Positioned(
-            top: 50,
-            left: 440,
-            child: SpotIcon(
-              stagesBuilding[10].id,
-              name: stagesBuilding[10].shortName,
-              photo: stagesBuilding[10].photo,
-            ),
-          ),
-          Positioned(
-            top: 90,
-            left: 379,
-            child: SpotIcon(
-              stagesBuilding[11].id,
-              name: stagesBuilding[11].shortName,
-              photo: stagesBuilding[11].photo,
-            ),
-          ),
-        ],
-      );
+      BuildContext context, List<Spot>? spots, List<RaceSpot> raceSpots) {
+    int index = 0;
+    List<Positioned> positionedList = spots?.map((element) {
+          Spot spot = spots[index];
+          index = index + 1;
+          double top =
+              MediaQuery.of(context).size.width >= 720 ? spot.top720 : spot.top;
+          double left = MediaQuery.of(context).size.width >= 720
+              ? spot.left720
+              : spot.left;
+          int vote = 0;
+          try {
+            vote =
+                raceSpots.firstWhere((raceSpot) => raceSpot.id == spot.id).vote;
+          } on StateError catch (_) {}
+          return _buildSpot(top: top, left: left, spot: spot, vote: vote);
+        }).toList() ??
+        [];
+    return Stack(
+      children: positionedList,
+    );
+  }
 
-  Stack _argentinaSpots(
-      BuildContext context, List<Spot>? stagesBuilding) =>
-      Stack(
-        children: [
-          Positioned(
-            top: 100,
-            left: 220,
-            child: SpotIcon(
-              stagesBuilding![0].id,
-              name: stagesBuilding[0].shortName,
-              photo: stagesBuilding[0].photo,
-            ),
-          ),
-        ],
-      );
+  Stack _argentinaSpots(BuildContext context, List<Spot>? spots,
+          List<RaceSpot> raceSpots) {
+    int index = 0;
+    List<Positioned> positionedList = spots?.map((element) {
+      Spot spot = spots[index];
+      index = index + 1;
+      double top =
+      MediaQuery.of(context).size.width >= 720 ? spot.top720 : spot.top;
+      double left = MediaQuery.of(context).size.width >= 720
+          ? spot.left720
+          : spot.left;
+      int vote = 0;
+      try {
+        vote =
+            raceSpots.firstWhere((raceSpot) => raceSpot.id == spot.id).vote;
+      } on StateError catch (_) {}
+      return _buildSpot(top: top, left: left, spot: spot, vote: vote);
+    }).toList() ??
+        [];
+    return Stack(
+      children: positionedList,
+    );
+  }
 
   Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
     int poleCounter = index + 1;
@@ -563,3 +491,19 @@ class RaceDesktopPage extends RaceBasicPage {
     return ButterflyCard(buyer, poleCounter);
   }
 }
+
+Positioned _buildSpot(
+        {required double top,
+        required double left,
+        required Spot spot,
+        required int vote}) =>
+    Positioned(
+      top: top,
+      left: left,
+      child: SpotIcon(
+        spot.id,
+        name: spot.shortName,
+        photo: spot.photo,
+        vote: vote,
+      ),
+    );

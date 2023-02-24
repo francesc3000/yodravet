@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/model/activity_purchase.dart';
@@ -6,6 +7,8 @@ import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/collaborator.dart';
 import 'package:yodravet/src/model/collaborator_dao.dart';
+import 'package:yodravet/src/model/feed.dart';
+import 'package:yodravet/src/model/feed_dao.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/race_spot.dart';
@@ -296,4 +299,19 @@ class TransformModel {
   static RaceSpotDao raw2RaceSpotDao(
           {required String id, required String? vote}) =>
       RaceSpotDao(id, vote == null ? 0 : int.parse(vote));
+
+  static List<Feed> feedsDao2Feeds(List<FeedDao> feedsDao) =>
+      feedsDao.map(feedDao2Feed).toList();
+
+  static Feed feedDao2Feed(FeedDao feedDao) =>
+      Feed(feedDao.id, feedDao.dateTime, feedDao.message);
+
+  static FeedDao raw2FeedDao(
+          {required String id,
+          required Timestamp dateTime,
+          required message}) =>
+      FeedDao(id, dateTime.toDate(), message);
+
+  static FeedDao? feed2FeedDao(Feed feed) =>
+      FeedDao(feed.id, feed.dateTime, feed.message);
 }

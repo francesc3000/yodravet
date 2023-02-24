@@ -6,6 +6,7 @@ import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/collaborator_dao.dart';
+import 'package:yodravet/src/model/feed_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/race_spot_dato.dart';
 import 'package:yodravet/src/model/ranking_dao.dart';
@@ -487,4 +488,172 @@ class FirestoreRepositoryImpl implements Repository {
           sink.add(raceSpots);
         }),
       );
+
+  @override
+  Stream<List<String>> streamSpotVotes(String userId, String raceId) =>
+      userCollectionEndpoint
+          .doc(userId)
+          .collection("spotVotes")
+          .doc(raceId)
+          .snapshots()
+          .transform<List<String>>(
+        StreamTransformer<DocumentSnapshot<Map<String, dynamic>>,
+            List<String>>.fromHandlers(handleData: (snapshot, sink) {
+          List<String> spotVotes = [];
+
+          if (snapshot.exists) {
+            Map? data = snapshot.data();
+            List? votes = data?['votes'];
+            if (votes != null) {
+              spotVotes = votes.map((vote) => vote.toString()).toList();
+            }
+          }
+          sink.add(spotVotes);
+        }),
+      );
+
+  @override
+  Future<bool> spotThumbUp(String userId, String raceId, String spotId) async =>
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot raceSpotSnapshot = await transaction.get(
+            raceCollectionEndpoint.doc(raceId).collection("spots").doc(spotId));
+
+        DocumentSnapshot spotVotesSnapshot = await transaction.get(
+            userCollectionEndpoint
+                .doc(userId)
+                .collection("spotVotes")
+                .doc(raceId));
+
+        if (raceSpotSnapshot.exists) {
+          Map? data = raceSpotSnapshot.data() as Map;
+
+          int vote = data['vote'] ?? 0;
+
+          vote = vote + 1;
+
+          transaction.update(
+              raceCollectionEndpoint
+                  .doc(raceId)
+                  .collection("spots")
+                  .doc(spotId),
+              {'vote': vote});
+        } else {
+          transaction.set(
+              raceCollectionEndpoint
+                  .doc(raceId)
+                  .collection("spots")
+                  .doc(spotId),
+              {'vote': 1});
+        }
+
+        if (spotVotesSnapshot.exists) {
+          Map? data = spotVotesSnapshot.data() as Map;
+
+          List votesDB = data['votes'] ?? [];
+          List<String> votes = votesDB.map((vote) => vote.toString()).toList();
+          votes.add(spotId);
+
+          transaction.update(
+              userCollectionEndpoint
+                  .doc(userId)
+                  .collection("spotVotes")
+                  .doc(raceId),
+              {'votes': votes});
+        } else {
+          List<String> votes = [];
+          votes.add(spotId);
+          transaction.set(
+              userCollectionEndpoint
+                  .doc(userId)
+                  .collection("spotVotes")
+                  .doc(raceId),
+              {'votes': votes});
+        }
+        return true;
+      });
+
+  @override
+  Future<bool> spotThumbDown(
+          String userId, String raceId, String spotId) async =>
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot raceSpotSnapshot = await transaction.get(
+            raceCollectionEndpoint.doc(raceId).collection("spots").doc(spotId));
+
+        DocumentSnapshot spotVotesSnapshot = await transaction.get(
+            userCollectionEndpoint
+                .doc(userId)
+                .collection("spotVotes")
+                .doc(raceId));
+
+        if (raceSpotSnapshot.exists) {
+          Map? data = raceSpotSnapshot.data() as Map;
+
+          int vote = data['vote'] ?? 0;
+
+          vote = vote - 1;
+
+          transaction.update(
+              raceCollectionEndpoint
+                  .doc(raceId)
+                  .collection("spots")
+                  .doc(spotId),
+              {'vote': vote});
+        }
+
+        if (spotVotesSnapshot.exists) {
+          Map? data = spotVotesSnapshot.data() as Map;
+
+          List votesDB = data['votes'] ?? [];
+          List<String> votes = votesDB.map((vote) => vote.toString()).toList();
+          votes.remove(spotId);
+
+          transaction.update(
+              userCollectionEndpoint
+                  .doc(userId)
+                  .collection("spotVotes")
+                  .doc(raceId),
+              {'votes': votes});
+        }
+        return true;
+      });
+
+  @override
+  Stream<List<FeedDao>> streamFeed(
+      String raceId, FeedDao? afterDocument, int limit) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> snapshots;
+    if (afterDocument == null) {
+      snapshots = raceCollectionEndpoint
+          .doc(raceId)
+          .collection("feed")
+          .orderBy('dateTime', descending: true)
+          // .limit(limit)
+          .snapshots();
+    } else {
+      snapshots = raceCollectionEndpoint
+          .doc(raceId)
+          .collection("feed")
+          .orderBy('dateTime', descending: true)
+      .startAfter([afterDocument])
+          .limit(limit)
+          .snapshots();
+    }
+    return snapshots
+        .transform<List<FeedDao>>(
+      StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
+          List<FeedDao>>.fromHandlers(handleData: (query, sink) {
+        List<FeedDao> feeds = [];
+
+        if (query.docs.isNotEmpty) {
+          feeds = query.docs.map<FeedDao>((snapshot) {
+            Map? data = snapshot.data();
+            return TransformModel.raw2FeedDao(
+                id: snapshot.id,
+                dateTime: data['dateTime'],
+                message: data['message']);
+          }).toList();
+        }
+        sink.add(feeds);
+      }),
+    );
+  }
 }

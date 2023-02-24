@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yodravet/src/bloc/event/session_event.dart';
@@ -16,13 +18,16 @@ import 'state/session_state.dart';
 class DonorBloc extends Bloc<DonorEvent, DonorState> {
   final FactoryDao factoryDao;
   final SessionBloc session;
+  StreamSubscription? _sessionSubscription;
+  StreamSubscription? _userSubscription;
+  StreamSubscription? _teamSubscription;
   User? _user;
   DateTime? _beforeDate;
   DateTime? _afterDate;
   List<Team>? _teams;
 
   DonorBloc(this.session, this.factoryDao) : super(DonorInitState()) {
-    session.stream.listen((state) {
+    _sessionSubscription = session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
           _user = session.user;
@@ -50,7 +55,7 @@ class DonorBloc extends Bloc<DonorEvent, DonorState> {
   void _loadInitialDataEvent(LoadInitialDataEvent event, Emitter emit) async {
     String currentEdition = Edition.currentEdition;
     try {
-      factoryDao.userDao
+      _userSubscription = factoryDao.userDao
           .getRangeDates(currentEdition)
           .listen((rangeDates) async {
         if (rangeDates.isNotEmpty) {
@@ -69,7 +74,7 @@ class DonorBloc extends Bloc<DonorEvent, DonorState> {
         }
       });
 
-      factoryDao.teamDao.getTeams().listen((teams) async {
+      _teamSubscription = factoryDao.teamDao.getTeams().listen((teams) async {
         _teams = teams;
 
         add(UploadDonorFieldsEvent());
@@ -87,13 +92,12 @@ class DonorBloc extends Bloc<DonorEvent, DonorState> {
     try {
       DateTime now = DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, 00, 01, 00);
-//TODO: Volver a descomentar!!!!
-//       if (now.isBefore(_beforeDate!) && now.isAfter(_afterDate!)) {
+      if (now.isBefore(_beforeDate!) && now.isAfter(_afterDate!)) {
       List<Activity> stravaActivities = await factoryDao.userDao
           .getStravaActivities(_beforeDate!, _afterDate!);
       _user!.activities =
           _consolidateActivities(_user!.activities!, stravaActivities);
-      // }
+      }
       emit(_uploadDonorFields());
     } catch (error) {
       emit(error is DonorStateError
@@ -172,5 +176,13 @@ class DonorBloc extends Bloc<DonorEvent, DonorState> {
     donorActivities.sort((a, b) => b.startDate!.compareTo(a.startDate!));
 
     return donorActivities;
+  }
+
+  @override
+  Future<void> close() {
+    _sessionSubscription?.cancel();
+    _userSubscription?.cancel();
+    _teamSubscription?.cancel();
+    return super.close();
   }
 }

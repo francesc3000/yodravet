@@ -1,6 +1,7 @@
 import 'package:yodravet/src/model/activity_purchase_dao.dart';
 import 'package:yodravet/src/model/buyer_dao.dart';
 import 'package:yodravet/src/model/collaborator_dao.dart';
+import 'package:yodravet/src/model/feed_dao.dart';
 import 'package:yodravet/src/model/race_dao.dart';
 import 'package:yodravet/src/model/race_spot_dato.dart';
 import 'package:yodravet/src/model/ranking_dao.dart';
@@ -39,4 +40,9 @@ abstract class Repository implements Endpoints {
   Stream<List<TeamDao>?> streamTeams();
   Future<bool> changeUserTeam(String mode, String userId, String teamId);
   Stream<List<RaceSpotDao>> streamRaceSpot(String raceId);
+  Stream<List<String>> streamSpotVotes(String userId, String raceId);
+  Future<bool> spotThumbUp(String userId, String raceId, String spotId);
+  Future<bool> spotThumbDown(String userId, String raceId, String spotId);
+  Stream<List<FeedDao>> streamFeed(
+      String raceId, FeedDao? afterDocument, int limit);
 }

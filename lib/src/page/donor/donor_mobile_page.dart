@@ -7,6 +7,7 @@ import 'package:yodravet/src/bloc/event/donor_event.dart';
 import 'package:yodravet/src/bloc/state/donor_state.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/team.dart';
+import 'package:yodravet/src/page/user/widget/strava_switch.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
@@ -46,6 +47,7 @@ class DonorMobilePage extends DonorBasicPage {
 
         if (_loading) {
           return Container(
+              alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
         }
@@ -71,53 +73,23 @@ class DonorMobilePage extends DonorBasicPage {
     List<Widget> slivers = [];
 
     if (isStravaLogin) {
-      // slivers.add(
-      //   SliverPersistentHeader(
-      //     delegate: _SliverAppBarDelegate(
-      //       minHeight: 30,
-      //       maxHeight: 30,
-      //       child: Container(
-      //         padding: EdgeInsets.all(40.0),
-      //         alignment: Alignment.center,
-      //         child: Column(
-      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //           children: [
-      //             Text('Puedes donar tus km a través de tu cuenta Strava'),
-      //             // ElevatedButton(
-      //             //   style: ButtonStyle(
-      //             //     shape: MaterialStateProperty.all(
-      //             //       RoundedRectangleBorder(
-      //             //           borderRadius: BorderRadius.circular(30.0)),
-      //             //     ),
-      //             //     backgroundColor: MaterialStateProperty.all(Colors.orange),
-      //             //   ),
-      //             //   child: ListTile(
-      //             //     leading: Icon(FontAwesomeIcons.strava),
-      //             //     title: Text('Strava'),
-      //             //   ),
-      //             //   onPressed: () {
-      //             //     Navigator.pop(context);
-      //             //     BlocProvider.of<AuthBloc>(context)
-      //             //         .add(StravaLogInEvent());
-      //             //   },
-      //             // ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // );
-
       //Título actividades
       slivers.add(SliverPersistentHeader(
         pinned: true,
         delegate: SliverAppBarDelegate(
           minHeight: 50,
-          maxHeight: 50,
+          maxHeight: 100,
           child: Container(
               padding: const EdgeInsets.all(8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),
-              child: _buildActivitiesTitle(context, beforeDate!, afterDate)),
+              child: Column(
+                children: [
+                  _buildActivitiesTitle(context, beforeDate!, afterDate),
+                  const StravaSwitch(
+                    calcVisibility: true,
+                  ),
+                ],
+              )),
         ),
       ));
     }
@@ -129,6 +101,19 @@ class DonorMobilePage extends DonorBasicPage {
     List<Widget> slivers = [];
 
     if (teams != null) {
+      //Título de sección de equipos
+      slivers.add(SliverPersistentHeader(
+        pinned: false,
+        delegate: SliverAppBarDelegate(
+          minHeight: 50,
+          maxHeight: 50,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            color: const Color.fromRGBO(153, 148, 86, 1),
+            child: Text(AppLocalizations.of(context)!.teamLabel),
+          ),
+        ),
+      ));
       //Gestión de equipos
       slivers.add(SliverGrid(
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -173,10 +158,9 @@ class DonorMobilePage extends DonorBasicPage {
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).primaryColor)),
-                      onPressed:
-                      currentTeamId == team.id
+                      onPressed: currentTeamId == team.id
                           ? () => BlocProvider.of<DonorBloc>(context)
-                          .add(DisJoinTeamEvent(team.id))
+                              .add(DisJoinTeamEvent(team.id))
                           : null,
                       child: Text(AppLocalizations.of(context)!.disJoinTeam),
                     ),
@@ -298,47 +282,47 @@ class DonorMobilePage extends DonorBasicPage {
 
   Widget _activityTrailing(BuildContext context, Activity activity) {
     Widget result;
-    // ActivityStatus status = activity.status;
+    ActivityStatus status = activity.status;
 
-    // switch (status) {
-    //   case ActivityStatus.waiting:
-    //     result = const CircularProgressIndicator();
-    //     break;
-    //   case ActivityStatus.nodonate:
-    result = ElevatedButton(
-      child: Text(AppLocalizations.of(context)!.doner),
-      style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all(Theme.of(context).primaryColor)),
-      onPressed: () {
-        BlocProvider.of<DonorBloc>(context)
-            .add(DonateKmEvent(activity.stravaId));
-      },
-    );
-    //     break;
-    //   case ActivityStatus.manual:
-    //     result = ElevatedButton(
-    //         child: Text(AppLocalizations.of(context)!.manualKm),
-    //         style: ButtonStyle(
-    //             backgroundColor: MaterialStateProperty.all(Colors.red)),
-    //         onPressed: null);
-    //     break;
-    //   default:
-    //     // result = ElevatedButton(
-    //     //     child: Text(AppLocalizations.of(context)!.donerKm),
-    //     //     style: ButtonStyle(
-    //     //         backgroundColor: MaterialStateProperty.all(Colors.green)),
-    //     //     onPressed: null);
-    //     result = IconButton(
-    //         icon: const Icon(FontAwesomeIcons.shareNodes),
-    //         color: Colors.green,
-    //         onPressed: () {
-    //           double km = activity.distance! / 1000;
-    //           String message = AppLocalizations.of(context)!.shareText(km);
-    //           BlocProvider.of<DonorBloc>(context)
-    //               .add(ShareActivityEvent(message));
-    //         });
-    // }
+    switch (status) {
+      case ActivityStatus.waiting:
+        result = const CircularProgressIndicator();
+        break;
+      case ActivityStatus.nodonate:
+        result = ElevatedButton(
+          child: Text(AppLocalizations.of(context)!.doner),
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(Theme.of(context).primaryColor)),
+          onPressed: () {
+            BlocProvider.of<DonorBloc>(context)
+                .add(DonateKmEvent(activity.stravaId));
+          },
+        );
+        break;
+      case ActivityStatus.manual:
+        result = ElevatedButton(
+            child: Text(AppLocalizations.of(context)!.manualKm),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.red)),
+            onPressed: null);
+        break;
+      default:
+        // result = ElevatedButton(
+        //     child: Text(AppLocalizations.of(context)!.donerKm),
+        //     style: ButtonStyle(
+        //         backgroundColor: MaterialStateProperty.all(Colors.green)),
+        //     onPressed: null);
+        result = IconButton(
+            icon: const Icon(FontAwesomeIcons.shareNodes),
+            color: Colors.green,
+            onPressed: () {
+              double km = activity.distance! / 1000;
+              String message = AppLocalizations.of(context)!.shareText(km);
+              BlocProvider.of<DonorBloc>(context)
+                  .add(ShareActivityEvent(message));
+            });
+    }
 
     return result;
   }

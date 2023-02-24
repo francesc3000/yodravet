@@ -15,9 +15,9 @@ class SpotIcon extends StatelessWidget {
 
   const SpotIcon(this.id,
       {Key? key,
-      this.name = '',
-      this.photo = '',
-      this.vote = 0,
+      required this.name,
+      required this.photo,
+      required this.vote,
       this.height = 60,
       this.width = 60})
       : super(key: key);

@@ -45,8 +45,11 @@ class RaceMobilePage extends RaceBasicPage {
       List<Spot>? _spainStagesBuilding = [];
       List<Spot>? _argentinaStagesBuilding = [];
       List<RaceSpot> _raceSpots = [];
+      List<String>? _spotVotes = [];
       List<Widget> slivers = [];
       bool _isRaceOver = false;
+      bool _canVote = false;
+      bool _hasVote = false;
 
       if (state is RaceInitState) {
         BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
@@ -64,9 +67,12 @@ class RaceMobilePage extends RaceBasicPage {
         _spainStagesBuilding = state.spainStagesBuilding;
         _argentinaStagesBuilding = state.argentinaStagesBuilding;
         _raceSpots = state.raceSpots;
+        _spotVotes = state.spotVotes;
         _currentSpot = state.currentSpot;
         _isSpainMapSelected = state.isSpainMapSelected;
         _isRaceOver = state.isRaceOver;
+        _canVote = state.canVote;
+        _hasVote = state.hasVote;
         _loading = false;
         if (_currentSpot != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
@@ -79,6 +85,9 @@ class RaceMobilePage extends RaceBasicPage {
                 ),
                 builder: (BuildContext context) => SpotPage(
                     spot: _currentSpot,
+                    isVoted: _spotVotes?.contains(_currentSpot?.id) ?? false,
+                    canVote: _canVote,
+                    hasVote: _hasVote,
                     expandedHeight: MediaQuery.of(context).size.height / 3,
                     leadingWidth: MediaQuery.of(context).size.width,
                     imageFit: BoxFit.cover));
@@ -260,7 +269,8 @@ class RaceMobilePage extends RaceBasicPage {
       List<RaceSpot> raceSpots,
       bool isSpainMapSelected) {
     Widget child;
-    double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
+    // double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
+    double mapWidth = isPortrait ? MediaQuery.of(context).size.width -10 : 380;
     double mapHeight = 380;
 
     if (riveArtboardSpain != null && riveArtboardArgentina != null) {
@@ -284,8 +294,8 @@ class RaceMobilePage extends RaceBasicPage {
         isSpainMapSelected
             ? _spainSpots(
                 context, mapHeight, mapWidth, spainStagesBuilding, raceSpots)
-            : _argentinaSpots(
-                context, mapHeight, mapWidth, argentinaStagesBuilding),
+            : _argentinaSpots(context, mapHeight, mapWidth,
+                argentinaStagesBuilding, raceSpots),
       ]);
     } else {
       child = Container();
@@ -346,182 +356,117 @@ class RaceMobilePage extends RaceBasicPage {
       );
 
   Stack _spainSpots(BuildContext context, double mapHeight, double mapWidth,
-          List<Spot>? stagesBuilding, List<RaceSpot> raceSpots) =>
-      Stack(
-        children: [
-          Positioned(
-            top: mapHeight * 0.47,
-            left: mapWidth * 0.57,
-            child: SpotIcon(
-              stagesBuilding![0].id,
-              name: stagesBuilding[0].shortName,
-              photo: stagesBuilding[0].photo,
-              vote: raceSpots
-                  .firstWhere(
-                      (raceSpot) => raceSpot.id == stagesBuilding[0].id)
-                  .vote,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.74,
-            left: mapWidth * 0.12,
-            child: SpotIcon(
-              stagesBuilding[1].id,
-              name: stagesBuilding[1].shortName,
-              photo: stagesBuilding[1].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.41,
-            left: mapWidth * 0.37,
-            child: SpotIcon(
-              stagesBuilding[2].id,
-              name: stagesBuilding[2].shortName,
-              photo: stagesBuilding[2].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.34,
-            left: mapWidth * 0.27,
-            child: SpotIcon(
-              stagesBuilding[3].id,
-              name: stagesBuilding[3].shortName,
-              photo: stagesBuilding[3].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.24,
-            left: mapWidth * 0.38,
-            child: SpotIcon(
-              stagesBuilding[4].id,
-              name: stagesBuilding[4].shortName,
-              photo: stagesBuilding[4].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.06,
-            // left: -4,
-            child: SpotIcon(
-              stagesBuilding[5].id,
-              name: stagesBuilding[5].shortName,
-              photo: stagesBuilding[5].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.03,
-            left: mapWidth * 0.24,
-            child: SpotIcon(
-              stagesBuilding[6].id,
-              name: stagesBuilding[6].shortName,
-              photo: stagesBuilding[6].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.08,
-            left: mapWidth * 0.38,
-            child: SpotIcon(
-              stagesBuilding[7].id,
-              name: stagesBuilding[7].shortName,
-              photo: stagesBuilding[7].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.07,
-            left: mapWidth * 0.51,
-            child: SpotIcon(
-              stagesBuilding[8].id,
-              name: stagesBuilding[8].shortName,
-              photo: stagesBuilding[8].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.29,
-            left: mapWidth * 0.74,
-            child: SpotIcon(
-              stagesBuilding[9].id,
-              name: stagesBuilding[9].shortName,
-              photo: stagesBuilding[9].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.12,
-            left: mapWidth * 0.76,
-            child: SpotIcon(
-              stagesBuilding[10].id,
-              name: stagesBuilding[10].shortName,
-              photo: stagesBuilding[10].photo,
-            ),
-          ),
-          Positioned(
-            top: mapHeight * 0.25,
-            left: mapWidth * 0.6,
-            child: SpotIcon(
-              stagesBuilding[11].id,
-              name: stagesBuilding[11].shortName,
-              photo: stagesBuilding[11].photo,
-            ),
-          ),
-        ],
-      );
-
-  Stack _argentinaSpots(BuildContext context, double mapHeight, double mapWidth,
-          List<Spot>? stagesBuilding) =>
-      Stack(
-        children: [
-          Positioned(
-            top: mapHeight * 0.26,
-            left: mapWidth * 0.32,
-            child: SpotIcon(
-              stagesBuilding![0].id,
-              name: stagesBuilding[0].shortName,
-              photo: stagesBuilding[0].photo,
-            ),
-          ),
-        ],
-      );
-
-  Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) =>
-      SliverList(
-        delegate: SliverChildListDelegate(_buildBuyers(context, buyers)),
-      );
-
-  List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
-    List<Widget> slivers = [];
-    int poleCounter = 1;
-
-    slivers.add(
-      Center(
-        child: RichText(
-          text: TextSpan(
-              text: 'Compra tus mariposas solidarias en ',
-              style: const TextStyle(fontFamily: 'AkayaTelivigala'),
-              children: [
-                TextSpan(
-                  text: 'Apoyo Dravet ',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      BlocProvider.of<RaceBloc>(context)
-                          .add(PurchaseButterfliesEvent());
-                    },
-                ),
-                const WidgetSpan(
-                  child: Icon(FontAwesomeIcons.upRightFromSquare, size: 11.0),
-                ),
-              ]),
-        ),
-      ),
+      List<Spot>? spots, List<RaceSpot> raceSpots) {
+    int index = 0;
+    List<Positioned> positionedList = spots?.map((element) {
+          Spot spot = spots[index];
+          index = index + 1;
+          double top =
+              MediaQuery.of(context).size.width >= 720 ? spot.top720 : spot.top;
+          double left = MediaQuery.of(context).size.width >= 720
+              ? spot.left720 / 100
+              : spot.left / 100;
+          int vote = 0;
+          try {
+            vote =
+                raceSpots.firstWhere((raceSpot) => raceSpot.id == spot.id).vote;
+          } on StateError catch (_) {}
+          return _buildSpot(
+              top: mapHeight * top,
+              left: mapWidth * left,
+              spot: spot,
+              vote: vote);
+        }).toList() ??
+        [];
+    return Stack(
+      children: positionedList,
     );
-
-    for (Buyer buyer in buyers) {
-      slivers.add(ButterflyCard(buyer, poleCounter));
-      poleCounter++;
-    }
-
-    return slivers;
   }
 }
+
+Stack _argentinaSpots(BuildContext context, double mapHeight, double mapWidth,
+    List<Spot>? spots, List<RaceSpot> raceSpots) {
+  int index = 0;
+  List<Positioned> positionedList = spots?.map((element) {
+        Spot spot = spots[index];
+        index = index + 1;
+        double top =
+            MediaQuery.of(context).size.width >= 720 ? spot.top720 : spot.top;
+        double left =
+            MediaQuery.of(context).size.width >= 720 ? spot.left720 : spot.left;
+        int vote = 0;
+        try {
+          vote =
+              raceSpots.firstWhere((raceSpot) => raceSpot.id == spot.id).vote;
+        } on StateError catch (_) {}
+        return _buildSpot(
+            top: mapHeight * top,
+            left: mapWidth * left,
+            spot: spot,
+            vote: vote);
+      }).toList() ??
+      [];
+  return Stack(
+    children: positionedList,
+  );
+}
+
+Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) => SliverList(
+      delegate: SliverChildListDelegate(_buildBuyers(context, buyers)),
+    );
+
+List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
+  List<Widget> slivers = [];
+  int poleCounter = 1;
+
+  slivers.add(
+    Center(
+      child: RichText(
+        text: TextSpan(
+            text: 'Compra tus mariposas solidarias en ',
+            style: const TextStyle(fontFamily: 'AkayaTelivigala'),
+            children: [
+              TextSpan(
+                text: 'Apoyo Dravet ',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    BlocProvider.of<RaceBloc>(context)
+                        .add(PurchaseButterfliesEvent());
+                  },
+              ),
+              const WidgetSpan(
+                child: Icon(FontAwesomeIcons.upRightFromSquare, size: 11.0),
+              ),
+            ]),
+      ),
+    ),
+  );
+
+  for (Buyer buyer in buyers) {
+    slivers.add(ButterflyCard(buyer, poleCounter));
+    poleCounter++;
+  }
+
+  return slivers;
+}
+
+Positioned _buildSpot(
+        {required double top,
+        required double left,
+        required Spot spot,
+        required int vote}) =>
+    Positioned(
+      top: top,
+      left: left,
+      child: SpotIcon(
+        spot.id,
+        name: spot.shortName,
+        photo: spot.photo,
+        vote: vote,
+      ),
+    );

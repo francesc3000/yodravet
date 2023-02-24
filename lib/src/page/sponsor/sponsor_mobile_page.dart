@@ -35,8 +35,10 @@ class SponsorMobilePage extends SponsorBasicPage {
           }
 
           if (_loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Container(
+              alignment: Alignment.center,
+              color: const Color.fromRGBO(153, 148, 86, 1),
+              child: const CircularProgressIndicator(),
             );
           }
 
@@ -60,6 +62,7 @@ class SponsorMobilePage extends SponsorBasicPage {
           return Container(
             height: double.infinity,
             width: double.infinity,
+            padding: const EdgeInsets.only(bottom: 30.0),
             color: const Color.fromRGBO(153, 148, 86, 1),
             alignment: Alignment.center,
             child: CustomScrollView(

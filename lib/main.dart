@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yodravet/src/bloc/donor_bloc.dart';
+import 'package:yodravet/src/bloc/feed_bloc.dart';
 import 'package:yodravet/src/bloc/ranking_bloc.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
 import 'package:yodravet/src/route/app_router_delegate.dart';
@@ -46,13 +47,16 @@ void main() async {
       create: (context) => RankingBloc(_sessionBloc, _factoryDao),
     ),
     BlocProvider<RaceBloc>(
-      create: (context) => RaceBloc(_factoryDao),
+      create: (context) => RaceBloc(_sessionBloc, _factoryDao),
     ),
     BlocProvider<SignupBloc>(
       create: (context) => SignupBloc(_sessionBloc),
     ),
     BlocProvider<SponsorBloc>(
       create: (context) => SponsorBloc(_factoryDao),
+    ),
+    BlocProvider<FeedBloc>(
+      create: (context) => FeedBloc(_factoryDao),
     ),
   ], child: App(_factoryDao.routeService)));
 }

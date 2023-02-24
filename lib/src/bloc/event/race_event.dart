@@ -71,3 +71,24 @@ class GetSpotsEvent extends RaceEvent{
   @override
   String toString() => 'GetSpots Event';
 }
+
+class StreamRaceVotesEvent extends RaceEvent{
+  @override
+  String toString() => 'StreamRaceVotes Event';
+}
+
+class SpotVoteThumbUpEvent extends RaceEvent{
+  final String spotId;
+
+  SpotVoteThumbUpEvent(this.spotId);
+  @override
+  String toString() => 'SpotVoteThumbUp Event';
+}
+
+class SpotVoteThumbDownEvent extends RaceEvent{
+  final String spotId;
+
+  SpotVoteThumbDownEvent(this.spotId);
+  @override
+  String toString() => 'SpotVoteThumbDown Event';
+}

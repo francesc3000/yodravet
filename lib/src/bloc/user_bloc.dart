@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
@@ -14,9 +16,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   SessionBloc session;
   late User _user;
   bool _lockStravaLogin = false;
+  StreamSubscription? _sessionSubscription;
 
   UserBloc(this.session, this.factoryDao) : super(UserInitState()) {
-    session.stream.listen((state) {
+    _sessionSubscription = session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
           add(UserLogInEvent());
@@ -128,4 +131,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _user.fullName,
         _user.photo,
       );
+
+  @override
+  Future<void> close() {
+    _sessionSubscription?.cancel();
+    return super.close();
+  }
 }

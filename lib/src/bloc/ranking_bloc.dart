@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/activity.dart';
@@ -14,6 +16,8 @@ import 'state/session_state.dart';
 class RankingBloc extends Bloc<RankingEvent, RankingState> {
   final FactoryDao factoryDao;
   final SessionBloc session;
+  StreamSubscription? _sessionSubscription;
+  StreamSubscription? _rankingSubscription;
   User? _user;
   List<Ranking> _rankings = [];
   List<Ranking> _filterRankings = [];
@@ -21,7 +25,7 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
   int _filterRankingTab = 2;
 
   RankingBloc(this.session, this.factoryDao) : super(RankingInitState()) {
-    session.stream.listen((state) {
+    _sessionSubscription = session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
           _user = session.user;
@@ -43,7 +47,8 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
   void _loadInitialDataEvent(LoadInitialDataEvent event, Emitter emit) async {
     String currentEdition = Edition.currentEdition;
     try {
-      factoryDao.raceDao.streamRanking(currentEdition).listen((rankings) {
+      _rankingSubscription =
+          factoryDao.raceDao.streamRanking(currentEdition).listen((rankings) {
         _rankings = rankings;
 
         add(ChangeRankingPodiumTabEvent(_filterRankingTab));
@@ -52,12 +57,12 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
       emit(error is RankingStateError
           ? RankingStateError(error.message)
           : RankingStateError(
-          'Algo fue mal al cargar los datos iniciales del usuario!'));
+              'Algo fue mal al cargar los datos iniciales del usuario!'));
     }
   }
 
-  void _changeRankingPodiumTabEvent(ChangeRankingPodiumTabEvent event,
-      Emitter emit) async {
+  void _changeRankingPodiumTabEvent(
+      ChangeRankingPodiumTabEvent event, Emitter emit) async {
     try {
       _filterRankings = [];
       _filterRankingsTeam = [];
@@ -68,19 +73,19 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
         switch (_filterRankingTab) {
           case 1:
             ranking.setMainActivity(ActivityType.walk);
-            if(ranking.walk!=null) {
+            if (ranking.walk != null) {
               _insert = true;
             }
             break;
           case 2:
             ranking.setMainActivity(ActivityType.run);
-            if(ranking.run!=null) {
+            if (ranking.run != null) {
               _insert = true;
             }
             break;
           case 3:
             ranking.setMainActivity(ActivityType.ride);
-            if(ranking.ride!=null) {
+            if (ranking.ride != null) {
               _insert = true;
             }
             break;
@@ -130,14 +135,13 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
     }
   }
 
-  void _uploadRankingFieldsEvent(UploadRankingFieldsEvent event,
-      Emitter emit) async {
+  void _uploadRankingFieldsEvent(
+      UploadRankingFieldsEvent event, Emitter emit) async {
     emit(_uploadRankingFields());
   }
 
-  RankingState _uploadRankingFields() =>
-      UploadRankingFieldsState(
-          _filterRankingTab, _filterRankings, _filterRankingsTeam);
+  RankingState _uploadRankingFields() => UploadRankingFieldsState(
+      _filterRankingTab, _filterRankings, _filterRankingsTeam);
 
   List<ActivityPurchase> _consolidateAndSortRankings(
       List<ActivityPurchase> rankings) {
@@ -147,7 +151,7 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
     //Se consolidan los donantes de km
     for (var ranking in rankings) {
       var mainRankingList = rankingsAux.where(
-              (mainBuyer) => mainBuyer.userId!.compareTo(ranking.userId!) == 0);
+          (mainBuyer) => mainBuyer.userId!.compareTo(ranking.userId!) == 0);
 
       if (mainRankingList.isEmpty) {
         rankingsAux.add(ranking);
@@ -168,5 +172,12 @@ class RankingBloc extends Bloc<RankingEvent, RankingState> {
     }
 
     return rankingsReturn;
+  }
+
+  @override
+  Future<void> close() {
+    _sessionSubscription?.cancel();
+    _rankingSubscription?.cancel();
+    return super.close();
   }
 }

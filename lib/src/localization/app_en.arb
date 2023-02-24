@@ -223,5 +223,33 @@
   "disJoinTeam": "Alone",
   "@disJoinTeam": {
     "description": "Disjoint Team"
+  },
+  "teamLabel": "Join your favorite team and unite in support of Dravet research",
+  "@teamLabel": {
+    "description": "Team Label"
+  },
+  "introLabel1": "Upload Kilometers",
+  "@introLabel1": {
+    "description": "intro 1 Label"
+  },
+  "introDescription1": "You can upload your km in favor of research by Dravet",
+  "@introDescription1": {
+    "description": "intro 1 Description"
+  },
+  "introLabel2": "Buy Solidarity Canteens",
+  "@introLabel2": {
+    "description": "intro 2 Label"
+  },
+  "introDescription2": "You can also contribute by buying solidarity canteens",
+  "@introDescription2": {
+    "description": "intro 2 Description"
+  },
+  "introLabel3": "Sponsors",
+  "@introLabel3": {
+    "description": "intro 3 Label"
+  },
+  "introDescription3": "Visit our sponsors in their section. /n You can turn the music on and off at the top right",
+  "@introDescription3": {
+    "description": "intro 3 Description"
   }
 }

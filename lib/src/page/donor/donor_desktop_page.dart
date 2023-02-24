@@ -6,6 +6,7 @@ import 'package:yodravet/src/bloc/donor_bloc.dart';
 import 'package:yodravet/src/bloc/event/donor_event.dart';
 import 'package:yodravet/src/bloc/state/donor_state.dart';
 import 'package:yodravet/src/model/activity.dart';
+import 'package:yodravet/src/model/team.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
@@ -25,6 +26,8 @@ class DonorDesktopPage extends DonorBasicPage {
   @override
   Widget body(BuildContext context) {
     List<Activity>? activities = [];
+    List<Team>? teams;
+    String? _currentTeamId;
     List<Widget> slivers = [];
     DateTime? beforeDate;
     DateTime? afterDate;
@@ -41,10 +44,13 @@ class DonorDesktopPage extends DonorBasicPage {
           beforeDate = state.beforeDate;
           afterDate = state.afterDate;
           _loading = false;
+          teams = state.teams;
+          _currentTeamId = state.currentTeamId;
         }
 
         if (_loading) {
           return Container(
+              alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
         }
@@ -53,6 +59,7 @@ class DonorDesktopPage extends DonorBasicPage {
         slivers = _buildSlivers(context, isStravaLogin, beforeDate, afterDate);
         slivers.addAll(
             _buildSliverActivities(context, isStravaLogin, activities!));
+        slivers.addAll(_buildTeams(context, _currentTeamId, teams));
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -69,43 +76,6 @@ class DonorDesktopPage extends DonorBasicPage {
     List<Widget> slivers = [];
 
     if (isStravaLogin) {
-      // slivers.add(
-      //   SliverPersistentHeader(
-      //     delegate: _SliverAppBarDelegate(
-      //       minHeight: 30,
-      //       maxHeight: 30,
-      //       child: Container(
-      //         padding: EdgeInsets.all(40.0),
-      //         alignment: Alignment.center,
-      //         child: Column(
-      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //           children: [
-      //             Text('Puedes donar tus km a través de tu cuenta Strava'),
-      //             // ElevatedButton(
-      //             //   style: ButtonStyle(
-      //             //     shape: MaterialStateProperty.all(
-      //             //       RoundedRectangleBorder(
-      //             //           borderRadius: BorderRadius.circular(30.0)),
-      //             //     ),
-      //             //     backgroundColor: MaterialStateProperty.all(Colors.orange),
-      //             //   ),
-      //             //   child: ListTile(
-      //             //     leading: Icon(FontAwesomeIcons.strava),
-      //             //     title: Text('Strava'),
-      //             //   ),
-      //             //   onPressed: () {
-      //             //     Navigator.pop(context);
-      //             //     BlocProvider.of<AuthBloc>(context)
-      //             //         .add(StravaLogInEvent());
-      //             //   },
-      //             // ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // );
-
       //Título actividades
       slivers.add(SliverPersistentHeader(
         pinned: true,
@@ -116,6 +86,86 @@ class DonorDesktopPage extends DonorBasicPage {
               padding: const EdgeInsets.all(8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: _buildActivitiesTitle(context, beforeDate!, afterDate)),
+        ),
+      ));
+    }
+    return slivers;
+  }
+
+  List<Widget> _buildTeams(
+      BuildContext context, String? currentTeamId, List<Team>? teams) {
+    List<Widget> slivers = [];
+
+    if (teams != null) {
+      //Título de sección de equipos
+      slivers.add(SliverPersistentHeader(
+        pinned: false,
+        delegate: SliverAppBarDelegate(
+          minHeight: 50,
+          maxHeight: 50,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            color: const Color.fromRGBO(153, 148, 86, 1),
+            child: Text(AppLocalizations.of(context)!.teamLabel),
+          ),
+        ),
+      ));
+      //Gestión de equipos
+      slivers.add(SliverGrid(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          mainAxisSpacing: 20.0,
+          crossAxisSpacing: 20.0,
+          // childAspectRatio: 2.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+            Team team = teams[index];
+            return Container(
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  opacity: 0.5,
+                  image: NetworkImage(team.photo),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(team.fullname),
+                  Visibility(
+                    visible: currentTeamId == null || currentTeamId != team.id,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor)),
+                      onPressed:
+                      currentTeamId == null || currentTeamId != team.id
+                          ? () => BlocProvider.of<DonorBloc>(context)
+                          .add(JoinTeamEvent(team.id))
+                          : null,
+                      child: Text(AppLocalizations.of(context)!.joinTeam),
+                    ),
+                  ),
+                  Visibility(
+                    visible: currentTeamId == team.id,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor)),
+                      onPressed: currentTeamId == team.id
+                          ? () => BlocProvider.of<DonorBloc>(context)
+                          .add(DisJoinTeamEvent(team.id))
+                          : null,
+                      child: Text(AppLocalizations.of(context)!.disJoinTeam),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          childCount: teams.length,
         ),
       ));
     }

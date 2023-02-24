@@ -93,6 +93,8 @@ dependencies:
   badges: ^3.0.2
 # https://pub.dev/packages/any_link_preview
   any_link_preview: ^3.0.0
+# https://pub.dev/packages/bubble
+  bubble: ^1.2.1
 
   flutter_localizations:
     sdk: flutter

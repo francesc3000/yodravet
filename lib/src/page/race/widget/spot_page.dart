@@ -1,40 +1,82 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yodravet/src/bloc/event/race_event.dart';
+import 'package:yodravet/src/bloc/race_bloc.dart';
+import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/researcher.dart';
 import 'package:yodravet/src/model/spot.dart';
 
-class SpotPage extends StatelessWidget {
+class SpotPage extends StatefulWidget {
   final Spot? spot;
+  final bool isVoted;
+  final bool canVote;
+  final bool hasVote;
+  final RaceSpot? raceSpot;
   final double expandedHeight;
   final double leadingWidth;
   final BoxFit imageFit;
 
   const SpotPage(
       {Key? key,
-      this.spot,
+      required this.spot,
+      required this.isVoted,
+      required this.canVote,
+      required this.hasVote,
+      this.raceSpot,
       this.expandedHeight = 300,
       this.leadingWidth = 300,
       this.imageFit = BoxFit.fitHeight})
       : super(key: key);
+
+  @override
+  State<SpotPage> createState() => _SpotPageState();
+}
+
+class _SpotPageState extends State<SpotPage> {
+  bool? isVoted;
+
+  _SpotPageState();
+
   @override
   Widget build(BuildContext context) {
     List<Widget> slivers = [];
 
+    isVoted ??= widget.isVoted;
+
     slivers.clear();
-    slivers.add(_buildHeader(context, spot!.name, spot!.photo,
-        expandedHeight, leadingWidth, imageFit));
-    slivers.add(_buildBody(context, spot!.researchers));
+    slivers.add(_buildHeader(
+        context,
+        widget.spot!.name,
+        widget.spot!.photo,
+        widget.expandedHeight,
+        widget.leadingWidth,
+        widget.imageFit,
+        widget.spot!.id,
+        widget.canVote,
+        widget.hasVote));
+    slivers.add(_buildBody(context, widget.spot!.researchers));
 
     return CustomScrollView(
       slivers: slivers,
     );
   }
 
-  Widget _buildHeader(BuildContext context, String name, String image,
-          double expandedHeight, double leadingWidth, BoxFit imageFit) =>
+  Widget _buildHeader(
+          BuildContext context,
+          String name,
+          String image,
+          double expandedHeight,
+          double leadingWidth,
+          BoxFit imageFit,
+          String spotId,
+          bool canVote,
+          bool hasVote) =>
       SliverAppBar(
+        automaticallyImplyLeading: false, //Quita backbutton
         expandedHeight: expandedHeight,
         leadingWidth: leadingWidth,
         backgroundColor: const Color.fromRGBO(153, 148, 86, 1),
@@ -80,6 +122,7 @@ class SpotPage extends StatelessWidget {
             ],
           ),
         ),
+        actions: [_thumbUp(context, spotId, canVote, hasVote)],
       );
 
   Widget _buildBody(BuildContext context, List<Researcher> researchers) =>
@@ -87,13 +130,14 @@ class SpotPage extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) =>
               MediaQuery.of(context).size.width >= 720
-                  ? _buildResearcherRow(researchers[index])
-                  : _buildResearcherColumn(researchers[index]),
+                  ? _buildResearcherRow(context, researchers[index])
+                  : _buildResearcherColumn(context, researchers[index]),
           childCount: researchers.length,
         ),
       );
 
-  Widget _buildResearcherRow(Researcher researcher) => Container(
+  Widget _buildResearcherRow(BuildContext context, Researcher researcher) =>
+      Container(
         color: const Color.fromRGBO(153, 148, 86, 60),
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -104,10 +148,15 @@ class SpotPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    researcher.name,
-                    style: const TextStyle(
-                        fontSize: 30.0, decoration: TextDecoration.underline),
+                  Row(
+                    children: [
+                      Text(
+                        researcher.name,
+                        style: const TextStyle(
+                            fontSize: 30.0,
+                            decoration: TextDecoration.underline),
+                      ),
+                    ],
                   ),
                   Text(
                     researcher.description,
@@ -143,7 +192,8 @@ class SpotPage extends StatelessWidget {
         ),
       );
 
-  Widget _buildResearcherColumn(Researcher researcher) => Container(
+  Widget _buildResearcherColumn(BuildContext context, Researcher researcher) =>
+      Container(
         color: const Color.fromRGBO(153, 148, 86, 60),
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -176,6 +226,37 @@ class SpotPage extends StatelessWidget {
                 visible: researcher.photo.isNotEmpty,
                 child: Image.asset(researcher.photo)),
           ],
+        ),
+      );
+
+  Widget _thumbUp(
+          BuildContext context, String spotId, bool canVote, bool hasVote) =>
+      Visibility(
+        visible: canVote,
+        child: Container(
+          alignment: Alignment.topRight,
+          child: isVoted!
+              ? IconButton(
+                  icon: const Icon(FontAwesomeIcons.solidThumbsUp),
+                  onPressed: () async {
+                    setState(() {
+                      isVoted = !isVoted!;
+                      BlocProvider.of<RaceBloc>(context)
+                          .add(SpotVoteThumbDownEvent(spotId));
+                    });
+                  })
+              : Visibility(
+                  visible: hasVote,
+                  child: IconButton(
+                      icon: const Icon(FontAwesomeIcons.thumbsUp),
+                      onPressed: () async {
+                        setState(() {
+                          isVoted = !isVoted!;
+                          BlocProvider.of<RaceBloc>(context)
+                              .add(SpotVoteThumbUpEvent(spotId));
+                        });
+                      }),
+                ),
         ),
       );
 }

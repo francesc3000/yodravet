@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:yodravet/src/bloc/event/home_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
+
 import '../../route/app_router_delegate.dart';
 import 'intro_basic_page.dart';
 
@@ -15,30 +17,27 @@ class IntroMobilePage extends IntroBasicPage {
     List<ContentConfig> listContentConfig = [];
 
     listContentConfig.add(
-      const ContentConfig(
-        title: "Dona Kilometros",
-        description: "Puedes donar tus km",
+      ContentConfig(
+        title: AppLocalizations.of(context)!.introLabel1,
+        description: AppLocalizations.of(context)!.introDescription1,
         pathImage: "assets/images/avatar.png",
-        backgroundColor: Color(0xfff5a623),
+        backgroundColor: const Color(0xfff5a623),
       ),
     );
     listContentConfig.add(
-      const ContentConfig(
-        title: "Compra Mariposas",
-        description: "También puedes comprar mariposas y contribuir",
+      ContentConfig(
+        title: AppLocalizations.of(context)!.introLabel2,
+        description: AppLocalizations.of(context)!.introDescription2,
         pathImage: "assets/images/butterflies.png",
-        backgroundColor: Color(0xff203152),
+        backgroundColor: const Color(0xff203152),
       ),
     );
     listContentConfig.add(
-      const ContentConfig(
-        title: "Patrocinadores",
-        description:
-            "Visita a nuestros patrocinadores en su sección. "
-                "Puedes encender y apagar la musica arriba a la derecha",
+      ContentConfig(
+        title: AppLocalizations.of(context)!.introLabel3,
+        description: AppLocalizations.of(context)!.introDescription3,
         pathImage: "assets/images/sponsor.png",
-        // backgroundNetworkImage: "https://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/sponsors%2Fapoyo_dravet.jpeg?alt=media&token=cf6af36a-465b-4cec-9a62-21c69d6af0c4",
-        backgroundColor: Color(0xff9932CC),
+        backgroundColor: const Color(0xff9932CC),
       ),
     );
 

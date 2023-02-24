@@ -25,6 +25,9 @@ class UpdateRaceFieldsState extends RaceState {
   final List<Spot> spainStagesBuilding;
   final List<Spot> argentinaStagesBuilding;
   final List<RaceSpot> raceSpots;
+  final List<String> spotVotes;
+  final bool canVote;
+  final bool hasVote;
   final bool isSpainMapSelected;
   final bool isRaceOver;
 
@@ -43,6 +46,9 @@ class UpdateRaceFieldsState extends RaceState {
         required this.spainStagesBuilding,
         required this.argentinaStagesBuilding,
         required this.raceSpots,
+        required this.spotVotes,
+        required this.canVote,
+        required this.hasVote,
         required this.isSpainMapSelected,
         required this.isRaceOver});
 

@@ -8,6 +8,7 @@ import 'package:yodravet/src/bloc/event/home_event.dart';
 import 'package:yodravet/src/bloc/home_bloc.dart';
 import 'package:yodravet/src/bloc/state/home_state.dart';
 import 'package:yodravet/src/page/donor/donor_page.dart';
+import 'package:yodravet/src/page/feed/feed_page.dart';
 import 'package:yodravet/src/page/home/widget/music_icon_button.dart';
 import 'package:yodravet/src/page/intro/intro_mobile_page.dart';
 import 'package:yodravet/src/page/race/race_page.dart';
@@ -68,11 +69,13 @@ class HomeMobilePage extends HomeBasicPage {
     _rankingPage ??= RankingPage(routerDelegate);
     Widget? _userPage;
     _userPage ??= UserPage(routerDelegate);
+    Widget? _feedPage;
+    _feedPage ??= FeedPage(routerDelegate);
     List<Widget?> _pages = [
       _racePage,
       _sponsorPage,
       _rankingPage,
-      _userPage,
+      _feedPage,
       _donorPage,
       _userPage
     ];

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
@@ -16,9 +18,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   User _user = User();
   Preferences preferences;
   Session session;
+  StreamSubscription? _sessionSubscription;
 
   AuthBloc(this.preferences, this.session) : super(AuthInitState()) {
-    session.stream.listen((state) {
+    _sessionSubscription = session.stream.listen((state) {
       if (state is LogInState) {
         if (state.isSignedIn) {
           _user = session.user;
@@ -188,5 +191,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
 
     return false;
+  }
+
+  @override
+  Future<void> close() {
+    _sessionSubscription?.cancel();
+    return super.close();
   }
 }

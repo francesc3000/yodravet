@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yodravet/src/bloc/interface/session_interface.dart';
+import 'package:yodravet/src/bloc/state/session_state.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/researcher.dart';
 import 'package:yodravet/src/model/spot.dart';
+import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/shared/edition.dart';
 import 'package:yodravet/src/shared/race_map_factory.dart';
 
@@ -17,31 +22,45 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   Race? _race;
   double _stageDayLeft = 0;
   final FactoryDao factoryDao;
+  final Session session;
+  StreamSubscription? _sessionSubscription;
+  StreamSubscription? _raceInfoSubscription;
+  StreamSubscription? _buyersSubscription;
+  StreamSubscription? _raceSpotSubscription;
+  StreamSubscription? _spotVotesSubscription;
   final List<Buyer> _buyers = [];
   final List<RaceSpot> _raceSpots = [];
+  late List<String> _spotVotes;
   final RaceMapFactory _raceMapFactory = RaceMapFactory();
+  User? _user;
   Spot? _currentSpot;
   Spot? _currentMouseSpot;
+  bool _canVote = false;
+  bool _hasVote = false;
   bool _isSpainMapSelected = true;
   final List<Spot> _spainStagesBuilding = [
     Spot('Stage1', 'C.I. Príncipe Felipe', 'C.I. Príncipe Felipe',
-        'assets/images/race/stages/centrofelipe.png', [
-          Researcher(
-              'Máximo Ibo Galindo',
-              'Medicina de precisión mediante la utilización de modelo Drosophila.',
-              'assets/images/race/stages/researchers/maximoibogalindo.png',
-              'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
-          Researcher(
-              'Isabel del Pino',
-              'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
-              'assets/images/race/stages/researchers/isabelpino.png',
-              'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
-        ]),
+        'assets/images/race/stages/centrofelipe.png', 0.47, 0.57, 190, 340, [
+      Researcher(
+          'Máximo Ibo Galindo',
+          'Medicina de precisión mediante la utilización de modelo Drosophila.',
+          'assets/images/race/stages/researchers/maximoibogalindo.png',
+          'https://www.indrenetwork.com/es/proyectos/medicina-precision-sindrome-dravet'),
+      Researcher(
+          'Isabel del Pino',
+          'Mecanismos de excitabilidad neuronal intrínseca y actividad espontánea subyacentes a las alteraciones de la corteza cerebral.',
+          'assets/images/race/stages/researchers/isabelpino.png',
+          'https://www.indrenetwork.com/es/proyectos/mecanismos-excitabilidad-neuronal-intrinseca-actividad-espontanea-subyacentes-alteraciones-corteza-cerebral-deficiencia-nr2f1-coup-tf1'),
+    ]),
     Spot(
       'Stage2',
       'Centro Andaluz de Biologia Molecular y Medicina Regenerativa',
       'CABIMER',
       'assets/images/race/stages/cabimer.png',
+      0.74,
+      0.12,
+      310,
+      100,
       [
         Researcher(
             'Manuel Álvarez Dolado',
@@ -55,6 +74,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Facultad Medicina Madrid',
       'Facultad Medicina Madrid',
       'assets/images/race/stages/fmedicinamadrid.png',
+      0.41,
+      0.37,
+      160,
+      230,
       [
         Researcher(
             'Onintza Sagredo',
@@ -68,6 +91,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Hospital Ruber Internacional Madrid',
       'H.Ruber',
       'assets/images/race/stages/rubermadrid.png',
+      0.34,
+      0.27,
+      130,
+      190,
       [
         Researcher(
             'Antonio Gil-Nagel Rein',
@@ -81,6 +108,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Universidad Nebrija',
       'U.Nebrija',
       'assets/images/race/stages/universidadnebrija.png',
+      0.24,
+      0.38,
+      110,
+      235,
       [
         Researcher(
             'Jon Andoni Duñabeitia',
@@ -99,6 +130,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Facultad de Ciencias de la Salud Campus Oza Universidad A Coruña',
       'Uni. A Coruña',
       'assets/images/race/stages/universidadacoruna.png',
+      0.06,
+      0.00,
+      17,
+      0.00,
       [
         Researcher(
             'Juan Casto Rivadulla',
@@ -112,6 +147,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Biocruces Health Research Institute',
       'Biocruces',
       'assets/images/race/stages/biocruces.png',
+      0.03,
+      0.24,
+      10,
+      180,
       [
         Researcher(
             'Paolo Bonifazi',
@@ -125,6 +164,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Achucarro Basque Center for Neuroscience',
       'Achucarro',
       'assets/images/race/stages/achucarro.png',
+      0.08,
+      0.38,
+      23,
+      228,
       [
         Researcher(
             'Juan Manuel Encinas',
@@ -144,6 +187,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Biobide',
       'Biobide',
       'assets/images/race/stages/biobide.png',
+      0.07,
+      0.51,
+      19,
+      278,
       [
         Researcher(
             'Ainhoa Alzualde',
@@ -157,6 +204,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Universitat de Barcelona',
       'U.B.',
       'assets/images/race/stages/ub.png',
+      0.29,
+      0.74,
+      100,
+      440,
       [
         Researcher(
             'Sandra Acosta',
@@ -170,6 +221,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       "Vall d'Hebron",
       "Vall d'Hebron",
       'assets/images/race/stages/vallhebron.png',
+      0.12,
+      0.76,
+      50,
+      440,
       [
         Researcher(
             'Victor Puntes',
@@ -183,6 +238,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       'Ajuntament de Sant Feliu de Llobregat',
       'Ajuntament Sant Feliu',
       'assets/images/race/stages/ajsantfeliu.png',
+      0.25,
+      0.6,
+      90,
+      379,
       [
         Researcher(
           'Asociació Esportiva Yo Corro por el Dravet',
@@ -200,7 +259,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         'Stage3',
         'Universidad De la Plata. Laboratorio de investigación y desarrollo de bioactivos (LIDeB)',
         'Uni. De la Plata',
-        'assets/images/race/stages/uni_plata.png', [
+        'assets/images/race/stages/uni_plata.png',
+        0.26,
+        0.32,
+        100,
+        220, [
       Researcher(
           'Alan Talevi',
           'Diseño de bloqueantes altamente selectivos de canales NaV1.2 y NaV1.6 (sin efecto sobre canales NaV1.1). La idea es diseñar nuevos fármacos específicamente concebidos para tratar Dravet, que no interactúen con el canal de sodio cuya mutación usualmente está asociada a la enfermedad. Servicio de monitoreo de fármacos anticonvulsivantes usualmente utilizados en la terapéutica del síndrome de Dravet, el cual será accesible a la comunidad Dravet Argentina con la posibilidad de envío de muestras por correo postal.',
@@ -209,7 +272,27 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ]),
   ];
 
-  RaceBloc(this.factoryDao) : super(RaceInitState()) {
+  RaceBloc(this.session, this.factoryDao) : super(RaceInitState()) {
+    _sessionSubscription = session.stream.listen((state) {
+      if (state is LogInState) {
+        if (state.isSignedIn) {
+          _user = session.user;
+          _canVote = true;
+
+          add(StreamRaceVotesEvent());
+        }
+      } else if (state is LogOutState) {
+        _user = null;
+        _canVote = false;
+      } else if (state is UserChangeState) {
+        _user = session.user;
+      } else if (state is StravaLogInSuccessState) {}
+    });
+
+    _user = session.user;
+    _spotVotes = [];
+    _canVote = true;
+
     on<InitRaceFieldsEvent>(_initRaceFieldsEvent);
     on<UpdateRaceFieldsEvent>(_updateRaceFieldsEvent);
     on<ClickOnMapEvent>(_clickOnMapEvent);
@@ -221,12 +304,16 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     on<AutoMapChange4SpainEvent>(_autoMapChange4SpainEvent);
     on<PurchaseButterfliesEvent>(_purchaseButterfliesEvent);
     on<PurchaseSongEvent>(_purchaseSongEvent);
+    on<StreamRaceVotesEvent>(_streamRaceVotesEvent);
+    on<SpotVoteThumbUpEvent>(_spotVoteThumbUpEvent);
+    on<SpotVoteThumbDownEvent>(_spotVoteThumbDownEvent);
   }
 
   void _initRaceFieldsEvent(InitRaceFieldsEvent event, Emitter emit) async {
     String raceId = Edition.currentEdition;
     try {
-      factoryDao.raceDao.streamRaceInfo(raceId).listen((race) async {
+      _raceInfoSubscription =
+          factoryDao.raceDao.streamRaceInfo(raceId).listen((race) async {
         if (race != null) {
           if (_race == null) {
             _race = Race(
@@ -275,12 +362,13 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         }
       });
 
-      factoryDao.raceDao.streamBuyers(raceId).listen((buyers) {
+      _buyersSubscription =
+          factoryDao.raceDao.streamBuyers(raceId).listen((buyers) {
         //Se consolidan los compradores
         _buyers.clear();
         for (var buyer in buyers) {
           var mainBuyerList = _buyers.where(
-                  (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
+              (mainBuyer) => mainBuyer.userId.compareTo(buyer.userId) == 0);
 
           if (mainBuyerList.isEmpty ||
               mainBuyerList.first.userId.compareTo('anonymous') == 0) {
@@ -298,10 +386,10 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         add(UpdateRaceFieldsEvent());
       });
 
-      factoryDao.raceDao.streamRaceSpot(raceId).listen((raceSpot) {
+      _raceSpotSubscription =
+          factoryDao.raceDao.streamRaceSpot(raceId).listen((raceSpot) {
         _raceSpots.clear();
         _raceSpots.addAll(raceSpot);
-
         add(UpdateRaceFieldsEvent());
       });
 
@@ -315,6 +403,24 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     }
   }
 
+  void _streamRaceVotesEvent(StreamRaceVotesEvent event, Emitter emit) {
+    String raceId = Edition.currentEdition;
+    _spotVotesSubscription = factoryDao.userDao
+        .streamSpotVotes(_user!.id!, raceId)
+        .listen((spotVotes) {
+      _spotVotes.clear();
+      _spotVotes.addAll(spotVotes);
+
+      if (spotVotes.length < 1) {
+        _hasVote = true;
+      } else {
+        _hasVote = false;
+      }
+
+      add(UpdateRaceFieldsEvent());
+    });
+  }
+
   void _updateRaceFieldsEvent(UpdateRaceFieldsEvent event, Emitter emit) async {
     emit(_updateRaceFields());
   }
@@ -322,11 +428,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   void _clickOnMapEvent(ClickOnMapEvent event, Emitter emit) async {
     try {
       try {
-        _currentSpot = _spainStagesBuilding.firstWhere(
-                (spot) => spot.id.compareTo(event.id) == 0);
+        _currentSpot = _spainStagesBuilding
+            .firstWhere((spot) => spot.id.compareTo(event.id) == 0);
       } on StateError catch (_) {
-        _currentSpot = _argentinaStagesBuilding.firstWhere(
-                (spot) => spot.id.compareTo(event.id) == 0);
+        _currentSpot = _argentinaStagesBuilding
+            .firstWhere((spot) => spot.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -346,11 +452,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
   void _mouseOnEnterEvent(MouseOnEnterEvent event, Emitter emit) async {
     try {
       try {
-        _currentMouseSpot = _spainStagesBuilding.firstWhere(
-                (spot) => spot.id.compareTo(event.id) == 0);
+        _currentMouseSpot = _spainStagesBuilding
+            .firstWhere((spot) => spot.id.compareTo(event.id) == 0);
       } on StateError catch (_) {
-        _currentMouseSpot = _argentinaStagesBuilding.firstWhere(
-                (spot) => spot.id.compareTo(event.id) == 0);
+        _currentMouseSpot = _argentinaStagesBuilding
+            .firstWhere((spot) => spot.id.compareTo(event.id) == 0);
       }
 
       emit(_updateRaceFields());
@@ -402,22 +508,57 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     }
   }
 
+  void _spotVoteThumbUpEvent(SpotVoteThumbUpEvent event, Emitter emit) async {
+    String raceId = Edition.currentEdition;
+    if (_user != null) {
+      _spotVotes.add(event.spotId);
+      await factoryDao.userDao.spotThumbUp(_user!.id!, raceId, event.spotId);
+
+      emit(_updateRaceFields());
+    } else {
+      emit(RaceStateError("Debes loguearte para poder dar a Me gusta!"));
+    }
+  }
+
+  void _spotVoteThumbDownEvent(
+      SpotVoteThumbDownEvent event, Emitter emit) async {
+    String raceId = Edition.currentEdition;
+    if (_user != null) {
+      _spotVotes.remove(event.spotId);
+      await factoryDao.userDao.spotThumbDown(_user!.id!, raceId, event.spotId);
+
+      emit(_updateRaceFields());
+    }
+  }
+
   RaceState _updateRaceFields() => UpdateRaceFieldsState(
-    kmCounter: _race!.kmCounter,
-    stageCounter: _race!.stageCounter,
-    extraCounter: _race!.extraCounter,
-    stageLimit: _race!.stageLimit,
-    stageTitle: _race!.stageTitle,
-    stageDayLeft: _stageDayLeft,
-    riveArtboardSpain: _raceMapFactory.riveArtboardSpain,
-    riveArtboardArgentina: _raceMapFactory.riveArtboardArgentina,
-    buyers: _buyers,
-    currentSpot: _currentSpot,
-    currentMouseSpot: _currentMouseSpot,
-    spainStagesBuilding: _spainStagesBuilding,
-    argentinaStagesBuilding: _argentinaStagesBuilding,
-    raceSpots: _raceSpots,
-    isSpainMapSelected: _isSpainMapSelected,
-    isRaceOver: _race!.isOver,
-  );
+        kmCounter: _race!.kmCounter,
+        stageCounter: _race!.stageCounter,
+        extraCounter: _race!.extraCounter,
+        stageLimit: _race!.stageLimit,
+        stageTitle: _race!.stageTitle,
+        stageDayLeft: _stageDayLeft,
+        riveArtboardSpain: _raceMapFactory.riveArtboardSpain,
+        riveArtboardArgentina: _raceMapFactory.riveArtboardArgentina,
+        buyers: _buyers,
+        currentSpot: _currentSpot,
+        currentMouseSpot: _currentMouseSpot,
+        spainStagesBuilding: _spainStagesBuilding,
+        argentinaStagesBuilding: _argentinaStagesBuilding,
+        raceSpots: _raceSpots,
+        spotVotes: _spotVotes,
+        canVote: _canVote,
+        hasVote: _hasVote,
+        isSpainMapSelected: _isSpainMapSelected,
+        isRaceOver: _race!.isOver,
+      );
+  @override
+  Future<void> close() {
+    _sessionSubscription?.cancel();
+    _raceInfoSubscription?.cancel();
+    _buyersSubscription?.cancel();
+    _raceSpotSubscription?.cancel();
+    _spotVotesSubscription?.cancel();
+    return super.close();
+  }
 }
