@@ -45,10 +45,6 @@ class RankingMobilePage extends RankingBasicPage {
               child: const Center(child: CircularProgressIndicator()));
         }
 
-        return Container(
-          color: const Color.fromRGBO(153, 148, 86, 1),
-        );
-
         slivers.clear();
         slivers.add(_buildRankingsList(context, _filterRankingTab,
             AppLocalizations.of(context)!.rankingDonerKm, rankings));

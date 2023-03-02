@@ -364,8 +364,8 @@ class RaceMobilePage extends RaceBasicPage {
           double top =
               MediaQuery.of(context).size.width >= 720 ? spot.top720 : spot.top;
           double left = MediaQuery.of(context).size.width >= 720
-              ? spot.left720 / 100
-              : spot.left / 100;
+              ? spot.left720
+              : spot.left;
           int vote = 0;
           try {
             vote =
