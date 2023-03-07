@@ -27,7 +27,7 @@ class PromoterWidget extends StatelessWidget {
             //     width: 110,
             // child: CachedNetworkImageBuilder(
             //   url: promoter.logoPath,
-            //   builder: (image) => Image.asset("assets/images/avatar.png"),
+            //   builder: (image) => Image.asset("assets/images/avatar.webp"),
             // ),
             // ),
             child: ClipRRect(

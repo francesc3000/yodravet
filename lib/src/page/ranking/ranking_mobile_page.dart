@@ -124,7 +124,7 @@ class RankingMobilePage extends RankingBasicPage {
           break;
       }
       Widget rankingPhoto = ranking.userPhoto.isEmpty
-          ? Image.asset('assets/images/avatar.png')
+          ? Image.asset('assets/images/avatar.webp')
           : Image.network(ranking.userPhoto);
       IconData iconData;
       switch (ranking.mainActivity) {

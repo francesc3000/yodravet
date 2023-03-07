@@ -20,7 +20,7 @@ class IntroMobilePage extends IntroBasicPage {
       ContentConfig(
         title: AppLocalizations.of(context)!.introLabel1,
         description: AppLocalizations.of(context)!.introDescription1,
-        pathImage: "assets/images/avatar.png",
+        pathImage: "assets/images/avatar.webp",
         backgroundColor: const Color(0xfff5a623),
       ),
     );
@@ -28,7 +28,7 @@ class IntroMobilePage extends IntroBasicPage {
       ContentConfig(
         title: AppLocalizations.of(context)!.introLabel2,
         description: AppLocalizations.of(context)!.introDescription2,
-        pathImage: "assets/images/butterflies.png",
+        pathImage: "assets/images/butterflies.webp",
         backgroundColor: const Color(0xff203152),
       ),
     );
@@ -36,7 +36,7 @@ class IntroMobilePage extends IntroBasicPage {
       ContentConfig(
         title: AppLocalizations.of(context)!.introLabel3,
         description: AppLocalizations.of(context)!.introDescription3,
-        pathImage: "assets/images/sponsor.png",
+        pathImage: "assets/images/sponsor.webp",
         backgroundColor: const Color(0xff9932CC),
       ),
     );

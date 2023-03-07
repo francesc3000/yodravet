@@ -51,10 +51,6 @@ class FeedDesktopPage extends FeedBasicPage {
               child: const Center(child: CircularProgressIndicator()));
         }
 
-        return Container(
-          color: const Color.fromRGBO(153, 148, 86, 1),
-        );
-
         slivers.clear();
         slivers.add(_buildFeed(_feeds));
         slivers.add(_buildHeaderFeed());
@@ -108,7 +104,7 @@ class FeedDesktopPage extends FeedBasicPage {
               color: Colors.grey[300],
               child: const Text('Ups!'),
             ),
-            errorImage: "https://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2FlogoYoCorroSinFondo.png?alt=media&token=c814d3a8-d6de-40ca-b936-0bd2740ff75e",
+            errorImage: "https://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2FlogoYoCorroSinFondo.webp?alt=media&token=c814d3a8-d6de-40ca-b936-0bd2740ff75e",
             cache: const Duration(days: 25),
             backgroundColor: Colors.grey[300],
             borderRadius: 12,

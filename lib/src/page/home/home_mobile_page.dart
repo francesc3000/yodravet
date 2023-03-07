@@ -38,7 +38,7 @@ class HomeMobilePage extends HomeBasicPage {
               child: Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/race/logoYoCorro.png'),
+                    image: AssetImage('assets/images/race/logoYoCorro.webp'),
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),

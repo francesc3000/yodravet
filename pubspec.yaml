@@ -4,7 +4,7 @@ description: Una app de A.E Yo corro por el Dravet.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 3.0.1+34
+version: 3.0.2+35
 
 environment:
 #  sdk: ">=2.16.0-80.1.beta <3.0.0"

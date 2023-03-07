@@ -11,13 +11,13 @@ class ButterflyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget userPhoto = buyer.userPhoto.isEmpty
         ? Image.asset(
-            'assets/images/avatar.png',
+            'assets/images/avatar.webp',
             height: 75,
           )
         : Image.network(
             buyer.userPhoto,
             loadingBuilder: (context, child, imageEvent) => Image.asset(
-              'assets/images/avatar.png',
+              'assets/images/avatar.webp',
               height: 75,
             ),
           );
@@ -35,7 +35,7 @@ class ButterflyCard extends StatelessWidget {
     //       children: [
     //         Positioned(
     //           child: Image.asset(
-    //             "assets/images/butterflies.png",
+    //             "assets/images/butterflies.webp",
     //           ),
     //         ),
     //         Positioned(
@@ -75,7 +75,7 @@ class ButterflyCard extends StatelessWidget {
             children: [
               Positioned(
                 child: Image.asset(
-                  "assets/images/butterflies.png",
+                  "assets/images/butterflies.webp",
                   height: 100,
                 ),
               ),

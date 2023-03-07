@@ -89,7 +89,7 @@ class UserMobilePage extends UserBasicPage {
                     ? Container(
                         color: Colors.white,
                         child: Image.asset(
-                          'assets/images/avatar.png',
+                          'assets/images/avatar.webp',
                           height: 50,
                           width: 50,
                         ),
@@ -132,7 +132,7 @@ class UserMobilePage extends UserBasicPage {
                         width: 130,
                         child: GestureDetector(
                           child:
-                              Image.asset("assets/images/stores/android.png"),
+                              Image.asset("assets/images/stores/android.webp"),
                           onTap: () => launchUrl( Uri.parse(
                               "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet")),
                         ),
@@ -141,7 +141,7 @@ class UserMobilePage extends UserBasicPage {
                         height: 80,
                         width: 130,
                         child: GestureDetector(
-                          child: Image.asset("assets/images/stores/apple.png"),
+                          child: Image.asset("assets/images/stores/apple.webp"),
                           onTap: () => launchUrl(Uri.parse(
                               "https://apps.apple.com/es/app/yo-dravet/id1564711228")),
                         ),

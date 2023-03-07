@@ -134,7 +134,7 @@ class RaceDesktopPage extends RaceBasicPage {
       return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
+            image: AssetImage("assets/images/race/logoYoCorroSinFondo.webp"),
             // fit: BoxFit.fitHeight,
             scale: 1.0,
           ),

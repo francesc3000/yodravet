@@ -98,7 +98,7 @@ class UserDesktopPage extends UserBasicPage {
                 color: Colors.white,
                 child: photoUrl.isEmpty
                     ? Image.asset(
-                        'assets/images/avatar.png',
+                        'assets/images/avatar.webp',
                         height: 50,
                         width: 50,
                       )
@@ -106,7 +106,7 @@ class UserDesktopPage extends UserBasicPage {
                         photoUrl,
                         loadingBuilder: (context, child, imageEvent) =>
                             Image.asset(
-                          'assets/images/avatar.png',
+                          'assets/images/avatar.webp',
                           height: 75,
                         ),
                       ),
@@ -146,7 +146,7 @@ class UserDesktopPage extends UserBasicPage {
                     height: 80,
                     width: 130,
                     child: GestureDetector(
-                      child: Image.asset("assets/images/stores/android.png"),
+                      child: Image.asset("assets/images/stores/android.webp"),
                       onTap: () => launchUrl( Uri.parse(
                           "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet")),
                     ),
@@ -155,7 +155,7 @@ class UserDesktopPage extends UserBasicPage {
                     height: 80,
                     width: 130,
                     child: GestureDetector(
-                      child: Image.asset("assets/images/stores/apple.png"),
+                      child: Image.asset("assets/images/stores/apple.webp"),
                       onTap: () => launchUrl( Uri.parse(
                           "https://apps.apple.com/es/app/yo-dravet/id1564711228")),
                     ),
