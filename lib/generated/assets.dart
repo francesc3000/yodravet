@@ -12,7 +12,7 @@ class Assets {
   static const String musicGiselaHidalgo = 'assets/music/gisela_hidalgo.mp3';
   static const String raceArgentina = 'assets/images/race/argentina.riv';
   static const String raceLogoYoCorro = 'assets/images/race/logoYoCorro.webp';
-  static const String raceLogoYoCorroSinFondo = 'assets/images/race/logoYoCorroSinFondo.webp';
+  static const String raceLogoYoCorroSinFondo = 'assets/images/race/logoYoCorroSinFondo.png';
   static const String raceSpain = 'assets/images/race/spain.riv';
   static const String researchersAinhoaalzualde = 'assets/images/race/stages/researchers/ainhoaalzualde.webp';
   static const String researchersAlantalevi = 'assets/images/race/stages/researchers/alantalevi.webp';

@@ -272,17 +272,17 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ]),
     Spot(
         'Stage4',
-        'Chile',
-        'Chile',
+        'Universidad De Playa Ancha',
+        'Uni. De Playa Ancha',
         'assets/images/race/stages/universidadchile.webp',
         0.17,
         0.17,
-        100,
-        220, [
+        85,
+        140, [
       Researcher(
-          'Chile',
-          'Chile',
-          'assets/images/race/stages/researchers/alantalevi.webp',
+          'Alejandro Martin',
+          'La síntesis de análogos de Estiripentol y Cannabidiol para mejorar sus propiedades y reducir efectos adversos. Se utilizan sustratos naturales y reacciones de química orgánica asistida por ultrasonido o microondas. Los análogos se evaluan por separado en condiciones in vitro y los más potentes se utilizan en modelos in vivo.',
+          'assets/images/race/stages/researchers/alejandromartin.webp',
           ''),
     ]),
   ];

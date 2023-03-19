@@ -155,6 +155,7 @@ class DonorBloc extends Bloc<DonorEvent, DonorState> {
         _user!.teamId,
         _beforeDate,
         _afterDate,
+       _user!.isStravaLogin ?? false,
       );
 
   List<Activity> _consolidateActivities(

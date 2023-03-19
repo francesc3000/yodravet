@@ -251,5 +251,9 @@
   "introDescription3": "Visit our sponsors in their section. /n You can turn the music on and off at the top right",
   "@introDescription3": {
     "description": "intro 3 Description"
+  },
+  "buyLink": "Buy your solidarity canteens at ",
+  "@buyLink": {
+    "description": "buyLink Description"
   }
 }

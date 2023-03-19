@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
@@ -134,14 +135,14 @@ class RaceDesktopPage extends RaceBasicPage {
       return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/race/logoYoCorroSinFondo.webp"),
+            image: AssetImage("assets/images/race/logoYoCorroSinFondo.png"),
             // fit: BoxFit.fitHeight,
             scale: 1.0,
           ),
           // color: Color.fromRGBO(177, 237, 100, 93),
           color: Color.fromRGBO(153, 148, 86, 1),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.only(left: 30.0, right: 8.0),
         alignment: Alignment.center,
         child: CustomScrollView(
           slivers: slivers,
@@ -343,7 +344,7 @@ class RaceDesktopPage extends RaceBasicPage {
                   child: Center(
                     child: RichText(
                       text: TextSpan(
-                          text: 'Compra tus mariposas solidarias en ',
+                          text: AppLocalizations.of(context)!.buyLink,
                           style: const TextStyle(fontFamily: 'AkayaTelivigala'),
                           children: [
                             TextSpan(
@@ -410,7 +411,12 @@ class RaceDesktopPage extends RaceBasicPage {
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
                     .add(ChangeMapSelectedEvent()),
               ),
-              const Text("Argentina")
+              Column(
+                children: const [
+                  Text("Argentina"),
+                  Text("Chile"),
+                ],
+              ),
             ],
           ),
         ),

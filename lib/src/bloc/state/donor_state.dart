@@ -14,6 +14,7 @@ class UploadDonorFieldsState extends DonorState {
   final String? currentTeamId;
   final DateTime? beforeDate;
   final DateTime? afterDate;
+  final bool isStravaLogin;
   // final String usuarios;
   UploadDonorFieldsState(
       this.activities,
@@ -21,6 +22,7 @@ class UploadDonorFieldsState extends DonorState {
       this.currentTeamId,
       this.beforeDate,
       this.afterDate,
+      this.isStravaLogin,
   );
 
   @override

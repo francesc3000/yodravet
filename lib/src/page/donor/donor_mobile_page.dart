@@ -26,6 +26,7 @@ class DonorMobilePage extends DonorBasicPage {
     List<Widget> slivers = [];
     DateTime? beforeDate;
     DateTime? afterDate;
+    bool _isStravaLogin = false;
     bool _loading = false;
 
     return BlocBuilder<DonorBloc, DonorState>(
@@ -39,6 +40,7 @@ class DonorMobilePage extends DonorBasicPage {
           _currentTeamId = state.currentTeamId;
           beforeDate = state.beforeDate;
           afterDate = state.afterDate;
+          _isStravaLogin = state.isStravaLogin;
           _loading = false;
         } else if (state is DonorStateError) {
           //TODO: Mostrar errores en Pages
@@ -53,8 +55,8 @@ class DonorMobilePage extends DonorBasicPage {
         }
 
         slivers.clear();
-        slivers =
-            _buildSlivers(context, activities != null, beforeDate, afterDate);
+        slivers = _buildSlivers(context, _isStravaLogin,
+            activities?.isNotEmpty ?? false, beforeDate, afterDate);
         slivers.addAll(_buildSliverActivities(context, activities));
         slivers.addAll(_buildTeams(context, _currentTeamId, teams));
 
@@ -69,16 +71,16 @@ class DonorMobilePage extends DonorBasicPage {
   }
 
   List<Widget> _buildSlivers(BuildContext context, bool isStravaLogin,
-      DateTime? beforeDate, DateTime? afterDate) {
+      bool hasActivities, DateTime? beforeDate, DateTime? afterDate) {
     List<Widget> slivers = [];
 
-    if (isStravaLogin) {
+    if (hasActivities) {
       //Título actividades
       slivers.add(SliverPersistentHeader(
         pinned: true,
         delegate: SliverAppBarDelegate(
           minHeight: 50,
-          maxHeight: 100,
+          maxHeight: isStravaLogin ? 50 : 115,
           child: Container(
               padding: const EdgeInsets.all(8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),

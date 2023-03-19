@@ -252,5 +252,9 @@
   "introDescription3": "Visita als nostres patrocinadors en la seva secció. /n Pots encendre i apagar la musica a dalt a la dreta",
   "@introDescription3": {
     "description": "intro 3 Description"
+  },
+  "buyLink": "Compra les teves cantimplores solidàries a ",
+  "@buyLink": {
+    "description": "buyLink Description"
   }
 }

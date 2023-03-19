@@ -44,6 +44,7 @@ class RankingDesktopPage extends RankingBasicPage {
 
         if (_loading) {
           return Container(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
         }
@@ -56,7 +57,7 @@ class RankingDesktopPage extends RankingBasicPage {
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
-          padding: const EdgeInsets.only(bottom: 30.0),
+          padding: const EdgeInsets.only(left: 50.0, right: 8.0, bottom: 30.0),
           child: CustomScrollView(
             slivers: slivers,
           ),

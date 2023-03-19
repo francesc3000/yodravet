@@ -31,6 +31,8 @@ class StravaSwitch extends StatelessWidget {
       if (calcVisibility) {
         if (isStravaLogin) {
           visible = false;
+        } else {
+          visible = true;
         }
       } else {
         visible = true;

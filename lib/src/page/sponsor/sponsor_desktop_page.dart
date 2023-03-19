@@ -61,9 +61,10 @@ class SponsorDesktopPage extends SponsorBasicPage {
           );
 
           return Container(
+            padding: const EdgeInsets.only(left: 140.0, right: 8.0),
             height: double.infinity,
             width: double.infinity,
-            color: const Color.fromRGBO(153, 148, 86, 60),
+            color: const Color.fromRGBO(153, 148, 86, 1),
             alignment: Alignment.center,
             child: CustomScrollView(
               slivers: _slivers,

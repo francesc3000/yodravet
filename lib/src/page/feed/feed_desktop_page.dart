@@ -57,7 +57,7 @@ class FeedDesktopPage extends FeedBasicPage {
 
         return Container(
           padding: const EdgeInsets.only(
-              left: 8.0, top: 8.0, right: 8.0, bottom: 35.0),
+              left: 60.0, top: 8.0, right: 8.0, bottom: 35.0),
           color: const Color.fromRGBO(153, 148, 86, 1),
           child: CustomScrollView(
             // controller: _scrollController,
@@ -104,7 +104,7 @@ class FeedDesktopPage extends FeedBasicPage {
               color: Colors.grey[300],
               child: const Text('Ups!'),
             ),
-            errorImage: "https://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2FlogoYoCorroSinFondo.webp?alt=media&token=c814d3a8-d6de-40ca-b936-0bd2740ff75e",
+            errorImage: "https://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2FlogoYoCorroSinFondo.png?alt=media&token=c814d3a8-d6de-40ca-b936-0bd2740ff75e",
             cache: const Duration(days: 25),
             backgroundColor: Colors.grey[300],
             borderRadius: 12,

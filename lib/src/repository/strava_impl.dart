@@ -46,9 +46,6 @@ class StravaImpl extends StravaInterface {
       DateTime before, DateTime after) async {
     try {
       //TODO: Gestionar paginas de actividades en listLoggedInAthleteActivities
-      //TODO: QUITAR!!!
-      before = DateTime(2022, 8, 1);
-      after = DateTime(2022, 5, 1);
       List<SummaryActivity> stravaActivities = await _strava.activities
           .listLoggedInAthleteActivities(before, after, 1, 1);
 
@@ -58,7 +55,8 @@ class StravaImpl extends StravaInterface {
               distance: activity.distance,
               startDate: DateTime.parse(activity.startDate!),
               type: activity.type,
-              isManual: activity.manual!))
+              isManual: activity.manual!
+      ))
           .toList();
     } catch (e) {
       return [];

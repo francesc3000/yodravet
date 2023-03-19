@@ -327,7 +327,12 @@ class RaceMobilePage extends RaceBasicPage {
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
                     .add(ChangeMapSelectedEvent()),
               ),
-              const Text("Argentina")
+              Column(
+                children: const [
+                  Text("Argentina"),
+                  Text("Chile"),
+                ],
+              ),
             ],
           ),
         ),
@@ -423,7 +428,7 @@ List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
     Center(
       child: RichText(
         text: TextSpan(
-            text: 'Compra tus mariposas solidarias en ',
+            text: AppLocalizations.of(context)!.buyLink,
             style: const TextStyle(fontFamily: 'AkayaTelivigala'),
             children: [
               TextSpan(

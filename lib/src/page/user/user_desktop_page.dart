@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
@@ -65,6 +64,7 @@ class UserDesktopPage extends UserBasicPage {
             fullName, photoUrl!);
 
         return Container(
+          padding: const EdgeInsets.only(left: 50.0, right: 8.0),
           color: const Color.fromRGBO(153, 148, 86, 1),
           child: CustomScrollView(
             slivers: slivers,
@@ -146,7 +146,7 @@ class UserDesktopPage extends UserBasicPage {
                     height: 80,
                     width: 130,
                     child: GestureDetector(
-                      child: Image.asset("assets/images/stores/android.webp"),
+                      child: Image.asset("assets/images/stores/android.png"),
                       onTap: () => launchUrl( Uri.parse(
                           "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet")),
                     ),
@@ -155,7 +155,7 @@ class UserDesktopPage extends UserBasicPage {
                     height: 80,
                     width: 130,
                     child: GestureDetector(
-                      child: Image.asset("assets/images/stores/apple.webp"),
+                      child: Image.asset("assets/images/stores/apple.png"),
                       onTap: () => launchUrl( Uri.parse(
                           "https://apps.apple.com/es/app/yo-dravet/id1564711228")),
                     ),

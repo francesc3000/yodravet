@@ -74,14 +74,19 @@ class ButterflyCard extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                child: Image.asset(
-                  "assets/images/butterflies.webp",
-                  height: 100,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+                  child: Image.asset(
+                    "assets/images/cantimplora.png",
+                    scale: 3,
+                    //height: 145,
+                  ),
                 ),
               ),
               Positioned(
-                top: 16,
-                left: 28,
+                top: 90,
+                left: 35,
                 child: Text(
                   '${buyer.butterfly.toInt()}',
                   style: const TextStyle(fontSize: 19),
