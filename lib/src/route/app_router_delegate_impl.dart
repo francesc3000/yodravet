@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yodravet/src/page/collaborate/collaborate_page.dart';
+import 'package:yodravet/src/page/terms/terms_page.dart';
 
 import '../page/home/home_page.dart';
 import '../page/login/login_page.dart';
@@ -32,6 +34,15 @@ class AppRouterDelegateImpl extends AppRouterDelegate {
         case '/loginPage':
         child = LoginPage(this);
         break;
+
+        case '/termsPage':
+        child = TermsPage(this);
+        break;
+
+        case '/collaboratePage':
+        child = CollaboratePage(this);
+        break;
+
       default:
         child = UnknownPage(this);
     }

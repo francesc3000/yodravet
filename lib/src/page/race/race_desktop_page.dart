@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rive/rive.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
@@ -14,8 +13,8 @@ import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
+import 'package:yodravet/src/page/race/widget/cartela.dart';
 import 'package:yodravet/src/page/race/widget/spot_icon.dart';
-import 'package:yodravet/src/page/sponsor/sponsor_page.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
@@ -121,16 +120,6 @@ class RaceDesktopPage extends RaceBasicPage {
           _argentinaStagesBuilding,
           _raceSpots,
           _isSpainMapSelected));
-      // slivers.add(
-      //   SliverPersistentHeader(
-      //     pinned: false,
-      //     delegate: SliverAppBarDelegate(
-      //       minHeight: 412,
-      //       maxHeight: 550,
-      //       child: SponsorPage(routerDelegate),
-      //     ),
-      //   ),
-      // );
 
       return Container(
         decoration: const BoxDecoration(
@@ -335,51 +324,54 @@ class RaceDesktopPage extends RaceBasicPage {
                       context, argentinaStagesBuilding, raceSpots),
             ]),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: RichText(
-                      text: TextSpan(
-                          text: AppLocalizations.of(context)!.buyLink,
-                          style: const TextStyle(fontFamily: 'AkayaTelivigala'),
-                          children: [
-                            TextSpan(
-                              text: 'Apoyo Dravet ',
-                              style: const TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  BlocProvider.of<RaceBloc>(context)
-                                      .add(PurchaseButterfliesEvent());
-                                },
-                            ),
-                            const WidgetSpan(
-                              child: Icon(FontAwesomeIcons.upRightFromSquare,
-                                  size: 11.0),
-                            ),
-                          ]),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: Scrollbar(
-                    child: ListView.builder(
-                        itemCount: buyers.length,
-                        itemBuilder: (context, index) =>
-                            _buildBuyer(context, index, buyers[index])),
-                  ),
-                ),
-              ],
-            ),
-          )
+          const Expanded(
+              child: Cartela(),
+          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: Column(
+          //     children: [
+          //       Expanded(
+          //         flex: 1,
+          //         child: Center(
+          //           child: RichText(
+          //             text: TextSpan(
+          //                 text: AppLocalizations.of(context)!.buyLink,
+          //                 style: const TextStyle(fontFamily: 'AkayaTelivigala'),
+          //                 children: [
+          //                   TextSpan(
+          //                     text: 'Apoyo Dravet ',
+          //                     style: const TextStyle(
+          //                       fontSize: 16.0,
+          //                       color: Colors.blue,
+          //                       decoration: TextDecoration.underline,
+          //                     ),
+          //                     recognizer: TapGestureRecognizer()
+          //                       ..onTap = () {
+          //                         BlocProvider.of<RaceBloc>(context)
+          //                             .add(PurchaseButterfliesEvent());
+          //                       },
+          //                   ),
+          //                   const WidgetSpan(
+          //                     child: Icon(FontAwesomeIcons.upRightFromSquare,
+          //                         size: 11.0),
+          //                   ),
+          //                 ]),
+          //           ),
+          //         ),
+          //       ),
+          //       Expanded(
+          //         flex: 10,
+          //         child: Scrollbar(
+          //           child: ListView.builder(
+          //               itemCount: buyers.length,
+          //               itemBuilder: (context, index) =>
+          //                   _buildBuyer(context, index, buyers[index])),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       );
     } else {

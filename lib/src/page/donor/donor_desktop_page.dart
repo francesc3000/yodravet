@@ -7,6 +7,7 @@ import 'package:yodravet/src/bloc/event/donor_event.dart';
 import 'package:yodravet/src/bloc/state/donor_state.dart';
 import 'package:yodravet/src/model/activity.dart';
 import 'package:yodravet/src/model/team.dart';
+import 'package:yodravet/src/page/user/widget/strava_switch.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
 import '../../route/app_router_delegate.dart';
@@ -31,8 +32,8 @@ class DonorDesktopPage extends DonorBasicPage {
     List<Widget> slivers = [];
     DateTime? beforeDate;
     DateTime? afterDate;
+    bool _isStravaLogin = false;
     bool _loading = false;
-    bool? isStravaLogin = false;
 
     return BlocBuilder<DonorBloc, DonorState>(
       builder: (BuildContext context, state) {
@@ -41,11 +42,15 @@ class DonorDesktopPage extends DonorBasicPage {
           _loading = true;
         } else if (state is UploadDonorFieldsState) {
           activities = state.activities;
-          beforeDate = state.beforeDate;
-          afterDate = state.afterDate;
-          _loading = false;
           teams = state.teams;
           _currentTeamId = state.currentTeamId;
+          beforeDate = state.beforeDate;
+          afterDate = state.afterDate;
+          _isStravaLogin = state.isStravaLogin;
+          _loading = false;
+        } else if (state is DonorStateError) {
+          //TODO: Mostrar errores en Pages
+          // CustomSnackBar
         }
 
         if (_loading) {
@@ -56,9 +61,9 @@ class DonorDesktopPage extends DonorBasicPage {
         }
 
         slivers.clear();
-        slivers = _buildSlivers(context, isStravaLogin, beforeDate, afterDate);
-        slivers.addAll(
-            _buildSliverActivities(context, isStravaLogin, activities!));
+        slivers = _buildSlivers(context, _isStravaLogin,
+            activities?.isNotEmpty ?? false, beforeDate, afterDate);
+        slivers.addAll(_buildSliverActivities(context, activities));
         slivers.addAll(_buildTeams(context, _currentTeamId, teams));
 
         return Container(
@@ -72,20 +77,27 @@ class DonorDesktopPage extends DonorBasicPage {
   }
 
   List<Widget> _buildSlivers(BuildContext context, bool isStravaLogin,
-      DateTime? beforeDate, DateTime? afterDate) {
+      bool hasActivities, DateTime? beforeDate, DateTime? afterDate) {
     List<Widget> slivers = [];
 
-    if (isStravaLogin) {
+    if (hasActivities) {
       //Título actividades
       slivers.add(SliverPersistentHeader(
         pinned: true,
         delegate: SliverAppBarDelegate(
           minHeight: 50,
-          maxHeight: 50,
+          maxHeight: isStravaLogin ? 50 : 115,
           child: Container(
               padding: const EdgeInsets.all(8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),
-              child: _buildActivitiesTitle(context, beforeDate!, afterDate)),
+              child: Column(
+                children: [
+                  _buildActivitiesTitle(context, beforeDate!, afterDate),
+                  const StravaSwitch(
+                    calcVisibility: true,
+                  ),
+                ],
+              )),
         ),
       ));
     }
@@ -213,11 +225,10 @@ class DonorDesktopPage extends DonorBasicPage {
   }
 
   List<Widget> _buildSliverActivities(
-      BuildContext context, bool? isStravaLogin, List<Activity> activities) {
+      BuildContext context, List<Activity>? activities) {
     List<Widget> slivers = [];
 
-    // if (isStravaLogin) {
-    if (activities.isEmpty) {
+    if (activities!.isEmpty) {
       slivers.add(
         SliverList(
           delegate: SliverChildListDelegate(<Widget>[
@@ -225,9 +236,9 @@ class DonorDesktopPage extends DonorBasicPage {
               padding: const EdgeInsets.all(8.0),
               child: Card(
                   child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(AppLocalizations.of(context)!.noStravaActivities),
-              )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(AppLocalizations.of(context)!.noStravaActivities),
+                  )),
             ),
           ]),
         ),
@@ -251,7 +262,6 @@ class DonorDesktopPage extends DonorBasicPage {
         ),
       );
     }
-    // }
 
     return slivers;
   }

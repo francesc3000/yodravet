@@ -29,15 +29,15 @@ class UserPage extends StatelessWidget {
             return LoginPage(appRouterDelegate);
           }
 
-          return ScreenTypeLayout(
-            mobile: OrientationLayoutBuilder(
+          return ScreenTypeLayout.builder(
+            mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => UserMobilePage('', appRouterDelegate),
             ),
-            tablet: OrientationLayoutBuilder(
+            tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => UserMobilePage('', appRouterDelegate),
               landscape: (context) => UserDesktopPage('', appRouterDelegate),
             ),
-            desktop: OrientationLayoutBuilder(
+            desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => UserMobilePage('', appRouterDelegate),
               landscape: (context) => UserDesktopPage('', appRouterDelegate),
             ),

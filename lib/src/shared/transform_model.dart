@@ -29,6 +29,7 @@ class TransformModel {
           String? lastname,
           bool? isStravaLogin,
           String? teamId,
+            bool? isTermsOn,
           List<ActivityDao>? activitiesDao}) =>
       UserDao(
         id: id,
@@ -38,6 +39,7 @@ class TransformModel {
         lastname: lastname,
         isStravaLogin: isStravaLogin,
         teamId: teamId,
+        isTermsOn: isTermsOn,
         activitiesDao: activitiesDao,
       );
 
@@ -49,6 +51,7 @@ class TransformModel {
         photo: userDao.photo,
         isStravaLogin: userDao.isStravaLogin,
         teamId: userDao.teamId,
+        isTermsOn: userDao.isTermsOn ?? false,
         activities:
             TransformModel.activitiesDao2Activities(userDao.activitiesDao!),
       );
@@ -278,16 +281,15 @@ class TransformModel {
 
   static TeamDao raw2TeamDao(
           {required String id,
-          required String userId,
           required String fullname,
           required String photo,
           required bool delete}) =>
-      TeamDao(id, userId, fullname, photo, delete);
+      TeamDao(id, fullname, photo, delete);
 
   static List<Team>? teamsDao2Teams(List<TeamDao>? teamsDao) =>
       teamsDao?.map(teamDao2Team).toList();
 
-  static Team teamDao2Team(TeamDao teamDao) => Team(teamDao.id, teamDao.userId,
+  static Team teamDao2Team(TeamDao teamDao) => Team(teamDao.id,
       teamDao.fullname, teamDao.photo, teamDao.delete);
 
   static List<RaceSpot> raceSpotsDao2RaceSpots(List<RaceSpotDao> raceSpotDao) =>

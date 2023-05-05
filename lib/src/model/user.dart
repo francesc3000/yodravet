@@ -9,6 +9,7 @@ class User {
   String? teamId;
   List<Activity>? activities;
   bool? isStravaLogin;
+  bool isTermsOn;
 
   String get fullName => '$name $lastname';
   bool get isLogin => id!.isNotEmpty;
@@ -21,7 +22,8 @@ class User {
       this.photo = '',
       this.isStravaLogin = false,
         this.teamId,
-      this.activities}) {
+      this.activities,
+      this.isTermsOn = false}) {
     activities ??= [];
   }
 
@@ -33,6 +35,7 @@ class User {
     photo = '';
     activities = [];
     isStravaLogin = false;
+    isTermsOn = false;
   }
 
   Activity getActivitiesByStravaId(String? stravaId) =>
@@ -50,4 +53,6 @@ class User {
 
     return true;
   }
+
+  bool hasTerms() => isTermsOn;
 }

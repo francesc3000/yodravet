@@ -29,15 +29,15 @@ class RankingPage extends StatelessWidget {
             return LoginPage(appRouterDelegate);
           }
 
-          return ScreenTypeLayout(
-            mobile: OrientationLayoutBuilder(
+          return ScreenTypeLayout.builder(
+            mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => RankingMobilePage('', appRouterDelegate),
             ),
-            tablet: OrientationLayoutBuilder(
+            tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => RankingMobilePage('', appRouterDelegate),
               landscape: (context) => RankingDesktopPage('', appRouterDelegate),
             ),
-            desktop: OrientationLayoutBuilder(
+            desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => RankingMobilePage('', appRouterDelegate),
               landscape: (context) => RankingDesktopPage('', appRouterDelegate),
             ),

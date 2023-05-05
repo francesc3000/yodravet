@@ -127,12 +127,15 @@ class UserDaoImpl extends UserDaoInterface {
       firestore.streamSpotVotes(userId, raceId);
 
   @override
-  Future<bool> spotThumbUp(
-          String userId, String raceId, String spotId) async =>
+  Future<bool> spotThumbUp(String userId, String raceId, String spotId) async =>
       await firestore.spotThumbUp(userId, raceId, spotId);
 
   @override
   Future<bool> spotThumbDown(
           String userId, String raceId, String spotId) async =>
       await firestore.spotThumbDown(userId, raceId, spotId);
+
+  @override
+  Future<bool> acceptUserTerms(String userId) async =>
+      await firestore.acceptUserTerms(userId);
 }

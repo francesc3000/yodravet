@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
@@ -17,6 +18,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   late User _user;
   bool _lockStravaLogin = false;
   StreamSubscription? _sessionSubscription;
+  final _checker = AppVersionChecker();
+  late String _appVersion;
 
   UserBloc(this.session, this.factoryDao) : super(UserInitState()) {
     _sessionSubscription = session.stream.listen((state) {
@@ -51,6 +54,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           }
         }
       }
+
+      AppCheckerResult result = await _checker.checkUpdate();
+      _appVersion = result.currentVersion;
+
+      // void checkVersion() async {
+      //   _checker.checkUpdate().then((value) {
+      //     print(value.canUpdate); //return true if update is available
+      //     print(value.currentVersion); //return current app version
+      //     print(value.newVersion); //return the new app version
+      //     print(value.appURL); //return the app url
+      //     print(value.errorMessage); //return error message if found else it will return null
+      //   });
+      // }
 
       emit(_uploadUserFields());
     } catch (error) {
@@ -130,6 +146,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _lockStravaLogin,
         _user.fullName,
         _user.photo,
+        _appVersion,
       );
 
   @override

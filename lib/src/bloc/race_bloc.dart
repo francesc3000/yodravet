@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/interface/session_interface.dart';
 import 'package:yodravet/src/bloc/state/session_state.dart';
@@ -184,19 +185,19 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     ),
     Spot(
       'Stage7',
-      'Biobide',
-      'Biobide',
-      'assets/images/race/stages/biobide.webp',
+      'Sede ApoyoDravet',
+      'Sede ApoyoDravet',
+      'assets/images/race/stages/apoyodravet.webp',
       0.07,
       0.51,
       19,
       278,
       [
         Researcher(
-            'Ainhoa Alzualde',
-            'Caracterización de la línea de pez cebra didys552 (mutante del gen snc1lab) y puesta a punto del ensayo de screening de eficacia con drogas de referencia.',
-            'assets/images/race/stages/researchers/ainhoaalzualde.webp',
-            'https://www.indrenetwork.com/es/proyectos/caracterizacion-linea-pez-cebra-didys552-mutante-gen-snc1lab-puesta-punto-ensayo-screening-eficacia-drogas-referencia'),
+            'Antonio Villalón',
+            'Nuevo director general de ApoyoDravet. Padre de afectada de síndrome de Dravet. Actual vicepresidente de la Federación Española de Epilepsia. Delegado de ApoyoDravet en Andalucía. Sin duda, su perfil profesional orientado a la administración en el mundo empresarial y su implicación en el tercer sector constituyen una garantía de éxito para el liderazgo de ApoyoDravet.',
+            'assets/images/race/stages/researchers/antoniovillalon.webp',
+            'https://www.apoyodravet.eu/'),
       ],
     ),
     Spot(
@@ -282,7 +283,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       Researcher(
           'Alejandro Martin',
           'La síntesis de análogos de Estiripentol y Cannabidiol para mejorar sus propiedades y reducir efectos adversos. Se utilizan sustratos naturales y reacciones de química orgánica asistida por ultrasonido o microondas. Los análogos se evaluan por separado en condiciones in vitro y los más potentes se utilizan en modelos in vivo.',
-          'assets/images/race/stages/researchers/alejandromartin.webp',
+          'assets/images/race/stages/researchers/alejandromadrid.webp',
           ''),
     ]),
   ];
@@ -322,6 +323,8 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     on<StreamRaceVotesEvent>(_streamRaceVotesEvent);
     on<SpotVoteThumbUpEvent>(_spotVoteThumbUpEvent);
     on<SpotVoteThumbDownEvent>(_spotVoteThumbDownEvent);
+    on<RaceDateLoadedEvent>(_raceDateLoadedEvent);
+    on<ShareCartelaEvent>(_shareCartelaEvent);
   }
 
   void _initRaceFieldsEvent(InitRaceFieldsEvent event, Emitter emit) async {
@@ -344,6 +347,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
               purchaseButterfliesSite: race.purchaseButterfliesSite,
               purchaseSongSite: race.purchaseSongSite,
             );
+            add(RaceDateLoadedEvent());
           } else {
             _race!.kmCounter = race.kmCounter;
             _race!.stageCounter = race.stageCounter;
@@ -410,7 +414,9 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
       _isSpainMapSelected = true;
 
-      emit(_updateRaceFields());
+      if(_race!=null) {
+        emit(_updateRaceFields());
+      }
     } catch (error) {
       emit(error is RaceStateError
           ? RaceStateError(error.message)
@@ -426,7 +432,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       _spotVotes.clear();
       _spotVotes.addAll(spotVotes);
 
-      if (spotVotes.length < 1) {
+      if (spotVotes.isEmpty) {
         _hasVote = true;
       } else {
         _hasVote = false;
@@ -546,12 +552,21 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
     }
   }
 
+  void _raceDateLoadedEvent( RaceDateLoadedEvent event, Emitter emit) async {
+      emit(RaceDateLoadedState(_race!));
+  }
+
+  void _shareCartelaEvent(ShareCartelaEvent event, Emitter emit) async {
+    // Share.shareXFiles([XFile("/assets/images/logo.webp")], text: "Hola");
+    Share.share("Abierto a todos. Cualquier actividad física.\nRegistro gratuito.\n#YoParticipo  #YoDono\n\nAndroid:\nhttps://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet\nApple:\nhttps://apps.apple.com/es/app/yo-dravet/id1564711228\nWeb\nhttps://www.yocorroporeldravet.es");
+  }
+
   RaceState _updateRaceFields() => UpdateRaceFieldsState(
-        kmCounter: _race!.kmCounter,
-        stageCounter: _race!.stageCounter,
-        extraCounter: _race!.extraCounter,
-        stageLimit: _race!.stageLimit,
-        stageTitle: _race!.stageTitle,
+        kmCounter: _race?.kmCounter ?? 0,
+        stageCounter: _race?.stageCounter ?? 0,
+        extraCounter: _race?.extraCounter ?? 0,
+        stageLimit: _race?.stageLimit ?? 0,
+        stageTitle: _race?.stageTitle ?? "",
         stageDayLeft: _stageDayLeft,
         riveArtboardSpain: _raceMapFactory.riveArtboardSpain,
         riveArtboardArgentina: _raceMapFactory.riveArtboardArgentina,
@@ -565,8 +580,11 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
         canVote: _canVote,
         hasVote: _hasVote,
         isSpainMapSelected: _isSpainMapSelected,
-        isRaceOver: _race!.isOver,
+        isRaceOver: _race?.isOver ?? false,
       );
+
+  Race? getRace() => _race;
+
   @override
   Future<void> close() {
     _sessionSubscription?.cancel();

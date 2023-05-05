@@ -9,17 +9,17 @@ class RacePage extends StatelessWidget {
   final AppRouterDelegate appRouterDelegate;
   const RacePage(this.appRouterDelegate, {Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => RaceMobilePage('', appRouterDelegate),
           landscape: (context) =>
               RaceMobilePage('', appRouterDelegate, isPortrait: false),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => RaceMobilePage('', appRouterDelegate),
           landscape: (context) => RaceDesktopPage('', appRouterDelegate),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => RaceMobilePage('', appRouterDelegate),
           landscape: (context) => RaceDesktopPage('', appRouterDelegate),
         ),

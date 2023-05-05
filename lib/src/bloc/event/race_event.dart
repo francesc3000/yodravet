@@ -92,3 +92,13 @@ class SpotVoteThumbDownEvent extends RaceEvent{
   @override
   String toString() => 'SpotVoteThumbDown Event';
 }
+
+class RaceDateLoadedEvent extends RaceEvent{
+  @override
+  String toString() => 'RaceDateLoaded Event';
+}
+
+class ShareCartelaEvent extends RaceEvent{
+  @override
+  String toString() => 'ShareCartela Event';
+}

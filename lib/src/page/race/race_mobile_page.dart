@@ -13,6 +13,7 @@ import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
 import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
+import 'package:yodravet/src/page/race/widget/cartela.dart';
 import 'package:yodravet/src/page/race/widget/spot_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
 
@@ -117,7 +118,8 @@ class RaceMobilePage extends RaceBasicPage {
           _argentinaStagesBuilding,
           _raceSpots,
           _isSpainMapSelected));
-      slivers.add(_buildBuyersList(context, _buyers));
+      // slivers.add(_buildBuyersList(context, _buyers));
+      slivers.add(_buildCartela(context));
 
       return Container(
         color: const Color.fromRGBO(153, 148, 86, 1),
@@ -270,7 +272,7 @@ class RaceMobilePage extends RaceBasicPage {
       bool isSpainMapSelected) {
     Widget child;
     // double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
-    double mapWidth = isPortrait ? MediaQuery.of(context).size.width -10 : 380;
+    double mapWidth = isPortrait ? MediaQuery.of(context).size.width - 10 : 380;
     double mapHeight = 380;
 
     if (riveArtboardSpain != null && riveArtboardArgentina != null) {
@@ -452,10 +454,10 @@ List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
     ),
   );
 
-  for (Buyer buyer in buyers) {
-    slivers.add(ButterflyCard(buyer, poleCounter));
-    poleCounter++;
-  }
+  // for (Buyer buyer in buyers) {
+  //   slivers.add(ButterflyCard(buyer, poleCounter));
+  //   poleCounter++;
+  // }
 
   return slivers;
 }
@@ -473,5 +475,14 @@ Positioned _buildSpot(
         name: spot.shortName,
         photo: spot.photo,
         vote: vote,
+      ),
+    );
+
+Widget _buildCartela(BuildContext context) => SliverPersistentHeader(
+      pinned: false,
+      delegate: SliverAppBarDelegate(
+        minHeight: 120,
+        maxHeight: 120,
+        child: Cartela(),
       ),
     );

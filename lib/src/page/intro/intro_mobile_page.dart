@@ -28,7 +28,7 @@ class IntroMobilePage extends IntroBasicPage {
       ContentConfig(
         title: AppLocalizations.of(context)!.introLabel2,
         description: AppLocalizations.of(context)!.introDescription2,
-        pathImage: "assets/images/cantimplora.png",
+        pathImage: "assets/images/logo.webp",
         backgroundColor: const Color(0xff203152),
       ),
     );

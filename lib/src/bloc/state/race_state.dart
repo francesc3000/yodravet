@@ -1,5 +1,6 @@
 import 'package:rive/rive.dart';
 import 'package:yodravet/src/model/buyer.dart';
+import 'package:yodravet/src/model/race.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
 
@@ -54,6 +55,15 @@ class UpdateRaceFieldsState extends RaceState {
 
   @override
   String toString() => 'UploadRaceFields State';
+}
+
+class RaceDateLoadedState extends RaceState {
+  final Race race;
+
+  RaceDateLoadedState(this.race);
+
+  @override
+  String toString() => 'RaceDateLoaded State';
 }
 
 class RaceStateError extends RaceState {

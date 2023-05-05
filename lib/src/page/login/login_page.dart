@@ -11,16 +11,16 @@ class LoginPage extends StatelessWidget {
   const LoginPage(this.appRouterDelegate, {Key? key})
       : super(key: key);
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => LoginMobilePage(
               AppLocalizations.of(context)!.loginTitle, appRouterDelegate),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => LoginMobilePage(
               AppLocalizations.of(context)!.loginTitle, appRouterDelegate),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => LoginDesktopPage(
               AppLocalizations.of(context)!.loginTitle, appRouterDelegate),
         ),

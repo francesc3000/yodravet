@@ -10,12 +10,14 @@ class UploadUserFieldsState extends UserState {
   final bool lockStravaLogin;
   final String fullname;
   final String? photo;
+  final String appVersion;
   // final String usuarios;
   UploadUserFieldsState(
       this.isStravaLogin,
       this.lockStravaLogin,
       this.fullname,
       this.photo,
+      this.appVersion,
   );
 
   @override

@@ -76,6 +76,7 @@ class FirestoreRepositoryImpl implements Repository {
         photo: data['photo'],
         isStravaLogin: data['isStravaLogin'],
         teamId: data['teamId'],
+        isTermsOn: data['isTermsOn'],
         activitiesDao: activitiesDao,
       );
     }
@@ -96,6 +97,15 @@ class FirestoreRepositoryImpl implements Repository {
       'lastname': lastname,
       'photo': photo,
       'isStravaLogin': false,
+    });
+
+    return true;
+  }
+
+  @override
+  Future<bool> acceptUserTerms(String userId) async{
+    await userCollectionEndpoint.doc(userId).update({
+      'isTermsOn': true,
     });
 
     return true;
@@ -406,8 +416,10 @@ class FirestoreRepositoryImpl implements Repository {
   Future<List<CollaboratorDao>> getCollaborators() async {
     List<CollaboratorDao> collaboratorsDao = [];
 
-    QuerySnapshot queryCollaborators =
-        await _firestore.collection("sponsors").get();
+    QuerySnapshot queryCollaborators = await _firestore
+        .collection("sponsors")
+        .where("delete", isEqualTo: false)
+        .get();
 
     if (queryCollaborators.docs.isNotEmpty) {
       collaboratorsDao =
@@ -441,7 +453,6 @@ class FirestoreRepositoryImpl implements Repository {
               Map? data = snapshot.data();
               return TransformModel.raw2TeamDao(
                   id: snapshot.id,
-                  userId: data['userId'],
                   fullname: data['fullname'],
                   photo: data['photo'],
                   delete: data['delete']);
@@ -633,12 +644,11 @@ class FirestoreRepositoryImpl implements Repository {
           .doc(raceId)
           .collection("feed")
           .orderBy('dateTime', descending: true)
-      .startAfter([afterDocument])
+          .startAfter([afterDocument])
           .limit(limit)
           .snapshots();
     }
-    return snapshots
-        .transform<List<FeedDao>>(
+    return snapshots.transform<List<FeedDao>>(
       StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
           List<FeedDao>>.fromHandlers(handleData: (query, sink) {
         List<FeedDao> feeds = [];

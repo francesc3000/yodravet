@@ -22,22 +22,22 @@ class HomePage extends StatelessWidget {
             _isMusicOn = state.isMusicOn;
             _isFirstTime = state.isFirstTime;
           }
-          return ScreenTypeLayout(
-            mobile: OrientationLayoutBuilder(
+          return ScreenTypeLayout.builder(
+            mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeMobilePage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,
                   _isMusicOn,
                   _isFirstTime),
             ),
-            tablet: OrientationLayoutBuilder(
+            tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeMobilePage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,
                   _isMusicOn,
                   _isFirstTime),
             ),
-            desktop: OrientationLayoutBuilder(
+            desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeDesktopPage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,

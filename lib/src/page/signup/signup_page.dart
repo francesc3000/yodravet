@@ -11,16 +11,16 @@ class SignupPage extends StatelessWidget {
   const SignupPage(this.appRouterDelegate, {Key? key})
       : super(key: key);
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SignupMobilePage(
               AppLocalizations.of(context)!.signIn, appRouterDelegate),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SignupMobilePage(
               AppLocalizations.of(context)!.signIn, appRouterDelegate),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SignupDesktopPage(
               AppLocalizations.of(context)!.signIn, appRouterDelegate),
         ),

@@ -141,7 +141,7 @@ class UserDesktopPage extends UserBasicPage {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   const Text(
-                      "Puedes donar tus kilometros a través de nuestra app"),
+                      "Puedes subir tus kilometros a través de nuestra app"),
                   SizedBox(
                     height: 80,
                     width: 130,

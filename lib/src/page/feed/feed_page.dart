@@ -29,15 +29,15 @@ class FeedPage extends StatelessWidget {
             return LoginPage(appRouterDelegate);
           }
 
-          return ScreenTypeLayout(
-            mobile: OrientationLayoutBuilder(
+          return ScreenTypeLayout.builder(
+            mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => FeedMobilePage('', appRouterDelegate),
             ),
-            tablet: OrientationLayoutBuilder(
+            tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => FeedMobilePage('', appRouterDelegate),
               landscape: (context) => FeedDesktopPage('', appRouterDelegate),
             ),
-            desktop: OrientationLayoutBuilder(
+            desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => FeedMobilePage('', appRouterDelegate),
               landscape: (context) => FeedDesktopPage('', appRouterDelegate),
             ),

@@ -29,15 +29,15 @@ class DonorPage extends StatelessWidget {
             return LoginPage(appRouterDelegate);
           }
 
-          return ScreenTypeLayout(
-            mobile: OrientationLayoutBuilder(
+          return ScreenTypeLayout.builder(
+            mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => DonorMobilePage('', appRouterDelegate),
             ),
-            tablet: OrientationLayoutBuilder(
+            tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => DonorMobilePage('', appRouterDelegate),
               landscape: (context) => DonorDesktopPage('', appRouterDelegate),
             ),
-            desktop: OrientationLayoutBuilder(
+            desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => DonorMobilePage('', appRouterDelegate),
               landscape: (context) => DonorDesktopPage('', appRouterDelegate),
             ),

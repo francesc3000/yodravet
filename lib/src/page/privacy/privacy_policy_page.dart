@@ -10,18 +10,18 @@ class PrivacyPolicyPage extends StatelessWidget {
   final AppRouterDelegate appRouterDelegate;
   const PrivacyPolicyPage(this.appRouterDelegate, {Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => PrivacyPolicyMobilePage(
               AppLocalizations.of(context)!.privacyPolicyTitle,
               appRouterDelegate),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => PrivacyPolicyMobilePage(
               AppLocalizations.of(context)!.privacyPolicyTitle,
               appRouterDelegate),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => PrivacyPolicyDesktopPage(
               AppLocalizations.of(context)!.privacyPolicyTitle,
               appRouterDelegate),

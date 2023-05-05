@@ -18,6 +18,7 @@ abstract class Repository implements Endpoints {
       required String name,
       required String lastname,
       String? photo});
+  Future<bool> acceptUserTerms(String userId);
   Future<bool> saveIsStravaLogin(String userId, bool isStravaLogin);
   Future<bool> donateKm(
       String userId,

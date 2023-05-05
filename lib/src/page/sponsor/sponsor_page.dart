@@ -10,20 +10,20 @@ class SponsorPage extends StatelessWidget {
   const SponsorPage(this.routerDelegate, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SponsorMobilePage(
             routerDelegate,
             key: key,
           ),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SponsorMobilePage(
             routerDelegate,
             key: key,
           ),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => SponsorDesktopPage(
             routerDelegate,
             key: key,

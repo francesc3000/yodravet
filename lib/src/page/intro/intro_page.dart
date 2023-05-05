@@ -10,20 +10,20 @@ class IntroPage extends StatelessWidget {
   const IntroPage(this.routerDelegate, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ScreenTypeLayout(
-        mobile: OrientationLayoutBuilder(
+  Widget build(BuildContext context) => ScreenTypeLayout.builder(
+        mobile: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => IntroMobilePage(
             routerDelegate,
             key: key,
           ),
         ),
-        tablet: OrientationLayoutBuilder(
+        tablet: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => IntroMobilePage(
             routerDelegate,
             key: key,
           ),
         ),
-        desktop: OrientationLayoutBuilder(
+        desktop: (BuildContext context) => OrientationLayoutBuilder(
           portrait: (context) => IntroDesktopPage(
             routerDelegate,
             key: key,

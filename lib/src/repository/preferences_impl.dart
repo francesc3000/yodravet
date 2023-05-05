@@ -35,4 +35,22 @@ class PreferencesInterfaceImpl extends Preferences {
 
   @override
   String? getString(String value) => _prefs!.getString(value);
+
+  @override
+  bool isFirstLogin() {
+    // _prefs!.setInt('year', 0);
+    // _prefs!.setBool('isFirstLogin', false);
+    int year = _prefs?.getInt('year') ?? DateTime.now().year;
+    if(DateTime.now().year!=year){
+      return true;
+    } else {
+      return _prefs?.getBool('isFirstLogin') ?? false;
+    }
+  }
+
+  @override
+  void setFirstLogin() {
+    _prefs!.setInt('year', DateTime.now().year);
+    _prefs!.setBool('isFirstLogin', false);
+  }
 }

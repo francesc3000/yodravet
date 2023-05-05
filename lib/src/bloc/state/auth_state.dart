@@ -44,7 +44,17 @@ class ChangePasswordSuccessState extends AuthState {
 
 class Go2SignupState extends AuthState {
   @override
-  String toString() => 'Go2SignupState State';
+  String toString() => 'Go2Signup State';
+}
+
+class InitCollaborateState extends AuthState {
+  @override
+  String toString() => 'InitCollaborate State';
+}
+
+class InitTermsState extends AuthState {
+  @override
+  String toString() => 'InitTerms State';
 }
 
 class AuthStateError extends AuthState {

@@ -8,5 +8,7 @@ abstract class Preferences {
   String? getString(String value);
   void keepUser(String authPlatform, String? userId, String? email,
       String password, String fullname);
+  bool isFirstLogin();
+  void setFirstLogin();
   void logout();
 }

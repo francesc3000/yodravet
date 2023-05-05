@@ -25,6 +25,7 @@ class UserMobilePage extends UserBasicPage {
     List<Widget> slivers = [];
     String fullName = '';
     String? photoUrl = '';
+    String _appVersion = '';
     bool _loading = false;
 
     return BlocBuilder<UserBloc, UserState>(
@@ -41,6 +42,7 @@ class UserMobilePage extends UserBasicPage {
         } else if (state is UploadUserFieldsState) {
           fullName = state.fullname;
           photoUrl = state.photo;
+          _appVersion = state.appVersion;
           _loading = false;
           // _churro = state.usuarios;
         } else if (state is UserStateError) {
@@ -55,7 +57,7 @@ class UserMobilePage extends UserBasicPage {
         }
 
         slivers.clear();
-        slivers = _buildSlivers(context, fullName, photoUrl!);
+        slivers = _buildSlivers(context, fullName, photoUrl!, _appVersion);
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -67,10 +69,8 @@ class UserMobilePage extends UserBasicPage {
     );
   }
 
-  List<Widget> _buildSlivers(
-      BuildContext context,
-      String fullName,
-      String photoUrl) {
+  List<Widget> _buildSlivers(BuildContext context, String fullName,
+      String photoUrl, String appVersion) {
     List<Widget> slivers = [];
     Color primaryColor = Theme.of(context).primaryColor;
 
@@ -124,7 +124,7 @@ class UserMobilePage extends UserBasicPage {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                      "Puedes donar tus kilometros a través de nuestra app"),
+                      "Puedes subir tus kilometros a través de nuestra app"),
                   Row(
                     children: [
                       SizedBox(
@@ -133,7 +133,7 @@ class UserMobilePage extends UserBasicPage {
                         child: GestureDetector(
                           child:
                               Image.asset("assets/images/stores/android.webp"),
-                          onTap: () => launchUrl( Uri.parse(
+                          onTap: () => launchUrl(Uri.parse(
                               "https://play.google.com/store/apps/details?id=es.yocorroporeldravet.yodravet")),
                         ),
                       ),
@@ -166,6 +166,20 @@ class UserMobilePage extends UserBasicPage {
         ),
       );
     }
+
+    slivers.add(
+      SliverPersistentHeader(
+        pinned: true,
+        delegate: SliverAppBarDelegate(
+          minHeight: 40,
+          maxHeight: 50,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Version: $appVersion"),
+          ),
+        ),
+      ),
+    );
     return slivers;
   }
 }

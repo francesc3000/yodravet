@@ -15,7 +15,7 @@ import 'state/auth_state.dart';
 import 'state/session_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  User _user = User();
+  User? _user;
   Preferences preferences;
   Session session;
   StreamSubscription? _sessionSubscription;
@@ -25,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (state is LogInState) {
         if (state.isSignedIn) {
           _user = session.user;
-          add(SignedInEvent(_user));
+          add(InitPostLoginEvent());
         } else {
           add(LogOutSuccessEvent());
         }
@@ -47,6 +47,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignedInEvent>(_signedInEvent);
     on<ChangePasswordEvent>(_changePasswordEvent);
     on<Go2SignupEvent>(_go2SignupEvent);
+    on<InitPostLoginEvent>(_initPostLoginEvent);
+    on<TermsRejectedEvent>(_termsRejectedEvent);
+    on<TermsAcceptedEvent>(_termsAcceptedEvent);
+    on<CollaborateMaybeLaterEvent>(_collaborateMaybeLaterEvent);
+    on<CollaborateFinishEvent>(_collaborateFinishEvent);
   }
 
   void _autoLoginEvent(AutoLogInEvent event, Emitter emit) async {
@@ -120,9 +125,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       try {
         if (!PlatformDiscover.isWeb()) {
-          _user.isStravaLogin = await session.stravaLogIn();
+          _user!.isStravaLogin = await session.stravaLogIn();
         }
-        session.add(UserChangeEvent(_user));
+        session.add(UserChangeEvent(_user!));
       } on String catch (error) {
         throw AuthStateError(error);
       }
@@ -135,7 +140,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _logOutEvent(LogOutEvent event, Emitter emit) async {
     try {
-      if (_user.isLogin) {
+      if (_user!.isLogin) {
         preferences.logout();
         session.add(session_event.LogoutEvent());
       }
@@ -152,8 +157,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _signedInEvent(SignedInEvent event, Emitter emit) async {
     try {
-      _keepUser(preferences, _user, session.password);
-      emit(LogInSuccessState(_user));
+      _keepUser(preferences, _user!, session.password);
+      emit(LogInSuccessState(_user!));
     } catch (error) {
       emit(error is AuthStateError
           ? AuthStateError(error.message)
@@ -169,7 +174,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       if (await session.changePassword(event.email)) {
         add(LogOutEvent());
-        emit(ChangePasswordSuccessState(_user));
+        emit(ChangePasswordSuccessState(_user!));
       }
     } catch (error) {
       emit(error is AuthStateError
@@ -192,6 +197,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     return false;
   }
+
+  void _initPostLoginEvent( InitPostLoginEvent event, Emitter emit) async {
+    if(!_user!.hasTerms()){
+      emit(InitTermsState());
+    } else {
+      if(preferences.isFirstLogin()) {
+        emit(InitCollaborateState());
+      } else {
+        add(SignedInEvent(_user!));
+      }
+    }
+  }
+
+  void _termsRejectedEvent(TermsRejectedEvent event, Emitter emit) async {
+    session.add(LogoutEvent());
+  }
+
+  void _termsAcceptedEvent(TermsAcceptedEvent event, Emitter emit) async {
+    emit(InitCollaborateState());
+  }
+
+  void _collaborateMaybeLaterEvent(
+      CollaborateMaybeLaterEvent event, Emitter emit) async {
+    add(SignedInEvent(_user!));
+  }
+
+  void _collaborateFinishEvent(
+      CollaborateFinishEvent event, Emitter emit) async {
+    preferences.setFirstLogin();
+    add(SignedInEvent(_user!));
+  }
+
+  User? getUser() => _user;
 
   @override
   Future<void> close() {

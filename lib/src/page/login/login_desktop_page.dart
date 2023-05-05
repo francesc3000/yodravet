@@ -58,6 +58,11 @@ class LoginDesktopPage extends LoginBasicPage {
           routerDelegate.pushPage(name: '/signupPage');
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
         });
+      } else if (state is InitCollaborateState) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          routerDelegate.pushPage(name: '/collaboratePage');
+          BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
+        });
       } else if (state is AuthStateError) {
         _someoneIsLoading = false;
         _isLoading = false;

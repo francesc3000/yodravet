@@ -94,3 +94,28 @@ class Go2SignupEvent extends AuthEvent {
   @override
   String toString() => 'Go2SignupEvent Event';
 }
+
+class InitPostLoginEvent extends AuthEvent {
+  @override
+  String toString() => 'InitCollaborate Event';
+}
+
+class TermsRejectedEvent extends AuthEvent{
+  @override
+  String toString() => 'TermsRejected Event';
+}
+
+class TermsAcceptedEvent extends AuthEvent{
+  @override
+  String toString() => 'TermsAccepted Event';
+}
+
+class CollaborateMaybeLaterEvent extends AuthEvent{
+  @override
+  String toString() => 'CollaborateMaybeLater Event';
+}
+
+class CollaborateFinishEvent extends AuthEvent{
+  @override
+  String toString() => 'CollaborateFinish Event';
+}

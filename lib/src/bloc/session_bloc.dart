@@ -36,8 +36,6 @@ class SessionBloc extends Session {
         add(SignedEvent(false, true));
       }
     }
-
-
   }
 
   Future<String?> _isUserLoggedIn() async {

@@ -14,6 +14,7 @@ abstract class UserDaoInterface {
   Future<String> createAuthUser(String email, String password);
   Future<bool> createUser(
       String id, String email, String name, String lastname, String photo);
+  Future<bool> acceptUserTerms(String userId);
   Future<bool> saveIsStravaLogin(String userId, bool isStravaLogin);
   Future<List<Activity>> getStravaActivities(DateTime before, DateTime after);
   Future<bool> donateKm(User user, String raceId, Activity activity);

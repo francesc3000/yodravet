@@ -236,11 +236,11 @@
   "@introDescription1": {
     "description": "intro 1 Description"
   },
-  "introLabel2": "Compra Cantimploras Solidarias",
+  "introLabel2": "Donar por la Investigación",
   "@introLabel2": {
     "description": "intro 2 Label"
   },
-  "introDescription2": "También puedes contribuir comprando cantimploras solidarias",
+  "introDescription2": "También puedes colaborar donando por la Investigación contra el Dravet",
   "@introDescription2": {
     "description": "intro 2 Description"
   },
@@ -248,7 +248,7 @@
   "@introLabel3": {
     "description": "intro 3 Label"
   },
-  "introDescription3": "Visita a nuestros patrocinadores en su sección. /n Puedes encender y apagar la musica arriba a la derecha",
+  "introDescription3": "Visita a nuestros patrocinadores en su sección. \n Puedes encender y apagar la musica arriba a la derecha",
   "@introDescription3": {
     "description": "intro 3 Description"
   },

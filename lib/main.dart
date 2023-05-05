@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yodravet/src/bloc/collaborate_bloc.dart';
 import 'package:yodravet/src/bloc/donor_bloc.dart';
 import 'package:yodravet/src/bloc/feed_bloc.dart';
 import 'package:yodravet/src/bloc/ranking_bloc.dart';
 import 'package:yodravet/src/bloc/sponsor_bloc.dart';
+import 'package:yodravet/src/bloc/terms_bloc.dart';
 import 'package:yodravet/src/route/app_router_delegate.dart';
 import 'package:yodravet/src/route/app_router_delegate_impl.dart';
 
@@ -31,9 +33,11 @@ void main() async {
   FactoryDao _factoryDao = FactoryDao(routeService);
   //ignore: close_sinks
   SessionBloc _sessionBloc = SessionBloc(_factoryDao);
+  RaceBloc _raceBloc = RaceBloc(_sessionBloc, _factoryDao);
+  AuthBloc _authBloc = AuthBloc(_prefs, _sessionBloc);
 
   runApp(MultiBlocProvider(providers: [
-    BlocProvider<AuthBloc>(create: (context) => AuthBloc(_prefs, _sessionBloc)),
+    BlocProvider<AuthBloc>(create: (context) => _authBloc),
     BlocProvider<HomeBloc>(
       create: (context) => HomeBloc(_sessionBloc, _factoryDao),
     ),
@@ -47,7 +51,7 @@ void main() async {
       create: (context) => RankingBloc(_sessionBloc, _factoryDao),
     ),
     BlocProvider<RaceBloc>(
-      create: (context) => RaceBloc(_sessionBloc, _factoryDao),
+      create: (context) => _raceBloc,
     ),
     BlocProvider<SignupBloc>(
       create: (context) => SignupBloc(_sessionBloc),
@@ -57,6 +61,12 @@ void main() async {
     ),
     BlocProvider<FeedBloc>(
       create: (context) => FeedBloc(_factoryDao),
+    ),
+    BlocProvider<TermsBloc>(
+      create: (context) => TermsBloc(_factoryDao, _authBloc),
+    ),
+    BlocProvider<CollaborateBloc>(
+      create: (context) => CollaborateBloc(_factoryDao, _raceBloc, _authBloc),
     ),
   ], child: App(_factoryDao.routeService)));
 }
