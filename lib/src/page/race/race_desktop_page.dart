@@ -324,8 +324,8 @@ class RaceDesktopPage extends RaceBasicPage {
                       context, argentinaStagesBuilding, raceSpots),
             ]),
           ),
-          const Expanded(
-              child: Cartela(),
+          Expanded(
+              child: Cartela(vertical: 132),
           ),
           // Expanded(
           //   flex: 1,

@@ -483,6 +483,6 @@ Widget _buildCartela(BuildContext context) => SliverPersistentHeader(
       delegate: SliverAppBarDelegate(
         minHeight: 120,
         maxHeight: 120,
-        child: Cartela(),
+        child: Cartela(vertical: 12),
       ),
     );

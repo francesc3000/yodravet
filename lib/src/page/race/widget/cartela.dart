@@ -5,11 +5,12 @@ import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 
 class Cartela extends StatelessWidget {
-  const Cartela({Key? key}) : super(key: key);
+  final double vertical;
+  Cartela({required this.vertical, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: EdgeInsets.symmetric(vertical: 132.0),
+      margin: EdgeInsets.symmetric(vertical: vertical),
       color: Colors.white,
       child: Row(
         children: [
