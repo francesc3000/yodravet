@@ -118,6 +118,7 @@ class Assets {
   static const String raceRaceMobilePage = 'lib/src/page/race/race_mobile_page.dart';
   static const String raceRacePage = 'lib/src/page/race/race_page.dart';
   static const String raceSpain = 'assets/images/race/spain.riv';
+  static const String raceSpainOld = 'assets/images/race/spain_old.riv';
   static const String rankingRankingBasicPage = 'lib/src/page/ranking/ranking_basic_page.dart';
   static const String rankingRankingDesktopPage = 'lib/src/page/ranking/ranking_desktop_page.dart';
   static const String rankingRankingMobilePage = 'lib/src/page/ranking/ranking_mobile_page.dart';
