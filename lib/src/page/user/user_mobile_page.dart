@@ -25,14 +25,14 @@ class UserMobilePage extends UserBasicPage {
     List<Widget> slivers = [];
     String fullName = '';
     String? photoUrl = '';
-    String _appVersion = '';
-    bool _loading = false;
+    String appVersion = '';
+    bool loading = false;
 
     return BlocBuilder<UserBloc, UserState>(
       builder: (BuildContext context, state) {
         if (state is UserInitState) {
           BlocProvider.of<UserBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UserLogInState) {
           // BlocProvider.of<UserBloc>(context).add(GetStravaActivitiesEvent());
         } else if (state is UserLogOutState) {
@@ -42,22 +42,22 @@ class UserMobilePage extends UserBasicPage {
         } else if (state is UploadUserFieldsState) {
           fullName = state.fullname;
           photoUrl = state.photo;
-          _appVersion = state.appVersion;
-          _loading = false;
+          appVersion = state.appVersion;
+          loading = false;
           // _churro = state.usuarios;
         } else if (state is UserStateError) {
           //TODO: Mostrar errores en Pages
           // CustomSnackBar
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
         }
 
         slivers.clear();
-        slivers = _buildSlivers(context, fullName, photoUrl!, _appVersion);
+        slivers = _buildSlivers(context, fullName, photoUrl!, appVersion);
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -97,12 +97,12 @@ class UserMobilePage extends UserBasicPage {
                     : Image.network(photoUrl)),
             title: Text(fullName),
             trailing: ElevatedButton(
-              child: Text(AppLocalizations.of(context)!.logOut),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
               },
+              child: Text(AppLocalizations.of(context)!.logOut),
             ),
           ),
         ),

@@ -16,33 +16,33 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          bool _isMusicOn = false;
-          bool _isFirstTime = false;
+          bool isMusicOn = false;
+          bool isFirstTime = false;
           if (state is UploadHomeFields) {
-            _isMusicOn = state.isMusicOn;
-            _isFirstTime = state.isFirstTime;
+            isMusicOn = state.isMusicOn;
+            isFirstTime = state.isFirstTime;
           }
           return ScreenTypeLayout.builder(
             mobile: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeMobilePage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,
-                  _isMusicOn,
-                  _isFirstTime),
+                  isMusicOn,
+                  isFirstTime),
             ),
             tablet: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeMobilePage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,
-                  _isMusicOn,
-                  _isFirstTime),
+                  isMusicOn,
+                  isFirstTime),
             ),
             desktop: (BuildContext context) => OrientationLayoutBuilder(
               portrait: (context) => HomeDesktopPage(
                   AppLocalizations.of(context)!.title,
                   appRouterDelegate,
-                  _isMusicOn,
-                  _isFirstTime),
+                  isMusicOn,
+                  isFirstTime),
             ),
           );
         },

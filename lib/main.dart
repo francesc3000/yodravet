@@ -27,46 +27,46 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final PreferencesInterfaceImpl _prefs = PreferencesInterfaceImpl();
-  await _prefs.initPreferences();
+  final PreferencesInterfaceImpl prefs = PreferencesInterfaceImpl();
+  await prefs.initPreferences();
   AppRouterDelegate routeService = AppRouterDelegateImpl();
-  FactoryDao _factoryDao = FactoryDao(routeService);
+  FactoryDao factoryDao = FactoryDao(routeService);
   //ignore: close_sinks
-  SessionBloc _sessionBloc = SessionBloc(_factoryDao);
-  RaceBloc _raceBloc = RaceBloc(_sessionBloc, _factoryDao);
-  AuthBloc _authBloc = AuthBloc(_prefs, _sessionBloc);
+  SessionBloc sessionBloc = SessionBloc(factoryDao);
+  RaceBloc raceBloc = RaceBloc(sessionBloc, factoryDao);
+  AuthBloc authBloc = AuthBloc(prefs, sessionBloc);
 
   runApp(MultiBlocProvider(providers: [
-    BlocProvider<AuthBloc>(create: (context) => _authBloc),
+    BlocProvider<AuthBloc>(create: (context) => authBloc),
     BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc(_sessionBloc, _factoryDao),
+      create: (context) => HomeBloc(sessionBloc, factoryDao),
     ),
     BlocProvider<UserBloc>(
-      create: (context) => UserBloc(_sessionBloc, _factoryDao),
+      create: (context) => UserBloc(sessionBloc, factoryDao),
     ),
     BlocProvider<DonorBloc>(
-      create: (context) => DonorBloc(_sessionBloc, _factoryDao),
+      create: (context) => DonorBloc(sessionBloc, factoryDao),
     ),
     BlocProvider<RankingBloc>(
-      create: (context) => RankingBloc(_sessionBloc, _factoryDao),
+      create: (context) => RankingBloc(sessionBloc, factoryDao),
     ),
     BlocProvider<RaceBloc>(
-      create: (context) => _raceBloc,
+      create: (context) => raceBloc,
     ),
     BlocProvider<SignupBloc>(
-      create: (context) => SignupBloc(_sessionBloc),
+      create: (context) => SignupBloc(sessionBloc),
     ),
     BlocProvider<SponsorBloc>(
-      create: (context) => SponsorBloc(_factoryDao),
+      create: (context) => SponsorBloc(factoryDao),
     ),
     BlocProvider<FeedBloc>(
-      create: (context) => FeedBloc(_factoryDao),
+      create: (context) => FeedBloc(factoryDao),
     ),
     BlocProvider<TermsBloc>(
-      create: (context) => TermsBloc(_factoryDao, _authBloc),
+      create: (context) => TermsBloc(factoryDao, authBloc),
     ),
     BlocProvider<CollaborateBloc>(
-      create: (context) => CollaborateBloc(_factoryDao, _raceBloc, _authBloc),
+      create: (context) => CollaborateBloc(factoryDao, raceBloc, authBloc),
     ),
-  ], child: App(_factoryDao.routeService)));
+  ], child: App(factoryDao.routeService)));
 }

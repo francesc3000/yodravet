@@ -30,7 +30,7 @@ class UserDesktopPage extends UserBasicPage {
     List<Widget> slivers = [];
     String fullName = '';
     String? photoUrl = '';
-    bool _loading = false;
+    bool loading = false;
     bool? isStravaLogin = false;
     bool lockStravaLogin = false;
 
@@ -38,7 +38,7 @@ class UserDesktopPage extends UserBasicPage {
       builder: (BuildContext context, state) {
         if (state is UserInitState) {
           BlocProvider.of<UserBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UserLogInState) {
           // BlocProvider.of<UserBloc>(context).add(GetStravaActivitiesEvent());
         } else if (state is UserLogOutState) {
@@ -50,10 +50,10 @@ class UserDesktopPage extends UserBasicPage {
           lockStravaLogin = state.lockStravaLogin;
           fullName = state.fullname;
           photoUrl = state.photo;
-          _loading = false;
+          loading = false;
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
@@ -114,12 +114,12 @@ class UserDesktopPage extends UserBasicPage {
             ),
             title: Text(fullName),
             trailing: ElevatedButton(
-              child: Text(AppLocalizations.of(context)!.logOut),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
                 BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
               },
+              child: Text(AppLocalizations.of(context)!.logOut),
             ),
           ),
         ),

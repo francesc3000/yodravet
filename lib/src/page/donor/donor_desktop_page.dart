@@ -28,32 +28,32 @@ class DonorDesktopPage extends DonorBasicPage {
   Widget body(BuildContext context) {
     List<Activity>? activities = [];
     List<Team>? teams;
-    String? _currentTeamId;
+    String? currentTeamId;
     List<Widget> slivers = [];
     DateTime? beforeDate;
     DateTime? afterDate;
-    bool _isStravaLogin = false;
-    bool _loading = false;
+    bool isStravaLogin = false;
+    bool loading = false;
 
     return BlocBuilder<DonorBloc, DonorState>(
       builder: (BuildContext context, state) {
         if (state is DonorInitState) {
           BlocProvider.of<DonorBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UploadDonorFieldsState) {
           activities = state.activities;
           teams = state.teams;
-          _currentTeamId = state.currentTeamId;
+          currentTeamId = state.currentTeamId;
           beforeDate = state.beforeDate;
           afterDate = state.afterDate;
-          _isStravaLogin = state.isStravaLogin;
-          _loading = false;
+          isStravaLogin = state.isStravaLogin;
+          loading = false;
         } else if (state is DonorStateError) {
           //TODO: Mostrar errores en Pages
           // CustomSnackBar
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
               alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),
@@ -61,10 +61,10 @@ class DonorDesktopPage extends DonorBasicPage {
         }
 
         slivers.clear();
-        slivers = _buildSlivers(context, _isStravaLogin,
+        slivers = _buildSlivers(context, isStravaLogin,
             activities?.isNotEmpty ?? false, beforeDate, afterDate);
         slivers.addAll(_buildSliverActivities(context, activities));
-        slivers.addAll(_buildTeams(context, _currentTeamId, teams));
+        slivers.addAll(_buildTeams(context, currentTeamId, teams));
 
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -300,7 +300,6 @@ class DonorDesktopPage extends DonorBasicPage {
         break;
       case ActivityStatus.nodonate:
         result = ElevatedButton(
-          child: Text(AppLocalizations.of(context)!.doner),
           style: ButtonStyle(
               backgroundColor:
                   MaterialStateProperty.all(Theme.of(context).primaryColor)),
@@ -308,14 +307,15 @@ class DonorDesktopPage extends DonorBasicPage {
             BlocProvider.of<DonorBloc>(context)
                 .add(DonateKmEvent(activity.stravaId));
           },
+          child: Text(AppLocalizations.of(context)!.doner),
         );
         break;
       case ActivityStatus.manual:
         result = ElevatedButton(
-            child: Text(AppLocalizations.of(context)!.manualKm),
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red)),
-            onPressed: null);
+            onPressed: null,
+            child: Text(AppLocalizations.of(context)!.manualKm));
         break;
       default:
         // result = ElevatedButton(

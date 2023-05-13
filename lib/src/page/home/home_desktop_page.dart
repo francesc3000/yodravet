@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
@@ -28,7 +27,7 @@ class HomeDesktopPage extends HomeBasicPage {
   @override
   PreferredSizeWidget appBar(BuildContext context,
       {String? title, bool isMusicOn = false, bool isFirstTime = false}) {
-    MusicIconButton _musicIconButton = MusicIconButton(context);
+    MusicIconButton musicIconButton = MusicIconButton(context);
     return AppBar(
       title: Container(
         // color: Color.fromRGBO(177, 237, 100, 93),
@@ -55,50 +54,50 @@ class HomeDesktopPage extends HomeBasicPage {
           //  BlocProvider.of<HomeBloc>(context).add(Navigate2UserPageEvent());
           //},
         //),
-        _musicIconButton.getMusicIcon(isMusicOn),
-        _musicIconButton.getPurchaseMusicIcon(),
+        musicIconButton.getMusicIcon(isMusicOn),
+        musicIconButton.getPurchaseMusicIcon(),
       ],
     );
   }
 
   @override
   Widget body(BuildContext context) {
-    Widget? _racePage;
-    _racePage ??= RacePage(routerDelegate);
-    Widget? _sponsorPage;
-    _sponsorPage ??= SponsorPage(routerDelegate);
-    Widget? _donorPage;
-    _donorPage ??= DonorPage(routerDelegate);
-    Widget? _rankingPage;
-    _rankingPage ??= RankingPage(routerDelegate);
-    Widget? _userPage;
-    _userPage ??= UserPage(routerDelegate);
-    Widget? _feedPage;
-    _feedPage ??= FeedPage(routerDelegate);
-    List<Widget?> _pages = [
-      _racePage,
-      _sponsorPage,
-      _rankingPage,
-      _feedPage,
-      _donorPage,
-      _userPage
+    Widget? racePage;
+    racePage ??= RacePage(routerDelegate);
+    Widget? sponsorPage;
+    sponsorPage ??= SponsorPage(routerDelegate);
+    Widget? donorPage;
+    donorPage ??= DonorPage(routerDelegate);
+    Widget? rankingPage;
+    rankingPage ??= RankingPage(routerDelegate);
+    Widget? userPage;
+    userPage ??= UserPage(routerDelegate);
+    Widget? feedPage;
+    feedPage ??= FeedPage(routerDelegate);
+    List<Widget?> pages = [
+      racePage,
+      sponsorPage,
+      rankingPage,
+      feedPage,
+      donorPage,
+      userPage
     ];
 
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, state) {
-      int? _currentIndex = 0;
+      int? currentIndex = 0;
 
       if (state is HomeInitState) {
         BlocProvider.of<AuthBloc>(context).add(AutoLogInEvent());
         BlocProvider.of<HomeBloc>(context).add(HomeInitDataEvent());
       } else if (state is UploadHomeFields) {
-        _currentIndex = state.index;
+        currentIndex = state.index;
       } else if (state is Navigate2UserPageState) {
         return UserPage(routerDelegate);
       }
       return Stack(
         children: [
-          Positioned(child: _pages[_currentIndex]!),
+          Positioned(child: pages[currentIndex]!),
           Positioned(
             child: SideMenu(
               position: SideMenuPosition.right,
@@ -108,7 +107,7 @@ class HomeDesktopPage extends HomeBasicPage {
                 //header: const Text('Header'),
                 items: [
                   SideMenuItemDataTile(
-                    isSelected: _currentIndex == 0,
+                    isSelected: currentIndex == 0,
                     unSelectedColor: Colors.white,
                     highlightSelectedColor:
                         const Color.fromARGB(255, 140, 71, 153),
@@ -118,7 +117,7 @@ class HomeDesktopPage extends HomeBasicPage {
                     icon: const Icon(FontAwesomeIcons.map),
                   ),
                   SideMenuItemDataTile(
-                    isSelected: _currentIndex == 1,
+                    isSelected: currentIndex == 1,
                     unSelectedColor: Colors.white,
                     highlightSelectedColor:
                         const Color.fromARGB(255, 140, 71, 153),
@@ -128,7 +127,7 @@ class HomeDesktopPage extends HomeBasicPage {
                     icon: const Icon(FontAwesomeIcons.handshakeAngle),
                   ),
                   SideMenuItemDataTile(
-                    isSelected: _currentIndex == 2,
+                    isSelected: currentIndex == 2,
                     unSelectedColor: Colors.white,
                     highlightSelectedColor:
                     const Color.fromARGB(255, 140, 71, 153),
@@ -138,7 +137,7 @@ class HomeDesktopPage extends HomeBasicPage {
                     icon: const Icon(FontAwesomeIcons.rankingStar),
                   ),
                   SideMenuItemDataTile(
-                    isSelected: _currentIndex == 3,
+                    isSelected: currentIndex == 3,
                     unSelectedColor: Colors.white,
                     highlightSelectedColor:
                     const Color.fromARGB(255, 140, 71, 153),
@@ -148,7 +147,7 @@ class HomeDesktopPage extends HomeBasicPage {
                     icon: const Icon(FontAwesomeIcons.rss),
                   ),
                   SideMenuItemDataTile(
-                    isSelected: _currentIndex == 5,
+                    isSelected: currentIndex == 5,
                     unSelectedColor: Colors.white,
                     highlightSelectedColor:
                     const Color.fromARGB(255, 140, 71, 153),

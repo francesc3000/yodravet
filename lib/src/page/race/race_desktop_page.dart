@@ -1,5 +1,4 @@
 import 'package:countup/countup.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +11,6 @@ import 'package:yodravet/src/bloc/state/race_state.dart';
 import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
-import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
 import 'package:yodravet/src/page/race/widget/cartela.dart';
 import 'package:yodravet/src/page/race/widget/spot_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
@@ -28,54 +26,54 @@ class RaceDesktopPage extends RaceBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    Artboard? _riveArtboardSpain;
-    Artboard? _riveArtboardArgentina;
-    bool _loading = false;
-    bool _isSpainMapSelected = true;
+    Artboard? riveArtboardSpain;
+    Artboard? riveArtboardArgentina;
+    bool loading = false;
+    bool isSpainMapSelected = true;
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
-      double _kmCounter = 0;
-      double _stageCounter = 0;
-      double _extraCounter = 0;
-      double _stageLimit = 0;
-      String? _stageTitle = '';
-      double? _stageDayLeft = 0;
-      List<Buyer> _buyers = [];
-      Spot? _currentSpot;
-      List<Spot>? _spainStagesBuilding = [];
-      List<Spot>? _argentinaStagesBuilding = [];
-      List<RaceSpot> _raceSpots = [];
-      List<String>? _spotVotes;
+      double kmCounter = 0;
+      double stageCounter = 0;
+      double extraCounter = 0;
+      double stageLimit = 0;
+      String? stageTitle = '';
+      double? stageDayLeft = 0;
+      List<Buyer> buyers = [];
+      Spot? currentSpot;
+      List<Spot>? spainStagesBuilding = [];
+      List<Spot>? argentinaStagesBuilding = [];
+      List<RaceSpot> raceSpots = [];
+      List<String>? spotVotes;
       List<Widget> slivers = [];
-      bool _isRaceOver = false;
-      bool _canVote = false;
-      bool _hasVote = false;
+      bool isRaceOver = false;
+      bool canVote = false;
+      bool hasVote = false;
 
       if (state is RaceInitState) {
         BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
-        _loading = true;
+        loading = true;
       } else if (state is UpdateRaceFieldsState) {
-        _kmCounter = state.kmCounter / 1000;
-        _stageCounter = state.stageCounter / 1000;
-        _extraCounter = state.extraCounter / 1000;
-        _stageLimit = state.stageLimit / 1000;
-        _stageTitle = state.stageTitle;
-        _riveArtboardSpain = state.riveArtboardSpain;
-        _riveArtboardArgentina = state.riveArtboardArgentina;
-        _buyers = state.buyers;
-        _spainStagesBuilding = state.spainStagesBuilding;
-        _argentinaStagesBuilding = state.argentinaStagesBuilding;
-        _raceSpots = state.raceSpots;
-        _spotVotes = state.spotVotes;
-        _currentSpot = state.currentSpot;
-        _loading = false;
-        _stageDayLeft = state.stageDayLeft;
-        _isRaceOver = state.isRaceOver;
-        _isSpainMapSelected = state.isSpainMapSelected;
-        _canVote = state.canVote;
-        _hasVote = state.hasVote;
-        if (_currentSpot != null) {
+        kmCounter = state.kmCounter / 1000;
+        stageCounter = state.stageCounter / 1000;
+        extraCounter = state.extraCounter / 1000;
+        stageLimit = state.stageLimit / 1000;
+        stageTitle = state.stageTitle;
+        riveArtboardSpain = state.riveArtboardSpain;
+        riveArtboardArgentina = state.riveArtboardArgentina;
+        buyers = state.buyers;
+        spainStagesBuilding = state.spainStagesBuilding;
+        argentinaStagesBuilding = state.argentinaStagesBuilding;
+        raceSpots = state.raceSpots;
+        spotVotes = state.spotVotes;
+        currentSpot = state.currentSpot;
+        loading = false;
+        stageDayLeft = state.stageDayLeft;
+        isRaceOver = state.isRaceOver;
+        isSpainMapSelected = state.isSpainMapSelected;
+        canVote = state.canVote;
+        hasVote = state.hasVote;
+        if (currentSpot != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
           SchedulerBinding.instance.addPostFrameCallback((_) {
             showModalBottomSheet(
@@ -85,20 +83,20 @@ class RaceDesktopPage extends RaceBasicPage {
                 //   BorderRadius.vertical(top: Radius.circular(25.0)),
                 // ),
                 builder: (BuildContext context) => SpotPage(
-                    spot: _currentSpot,
-                    isVoted: _spotVotes?.contains(_currentSpot?.id) ?? false,
-                    canVote: _canVote,
-                    hasVote: _hasVote,
+                    spot: currentSpot,
+                    isVoted: spotVotes?.contains(currentSpot?.id) ?? false,
+                    canVote: canVote,
+                    hasVote: hasVote,
                     expandedHeight: MediaQuery.of(context).size.height - 300,
                     leadingWidth: MediaQuery.of(context).size.width,
                     imageFit: BoxFit.cover));
           });
         }
       } else if (state is RaceStateError) {
-        _loading = false;
+        loading = false;
       }
 
-      if (_loading) {
+      if (loading) {
         return Container(
           alignment: Alignment.center,
           color: const Color.fromRGBO(153, 148, 86, 1),
@@ -109,17 +107,17 @@ class RaceDesktopPage extends RaceBasicPage {
       }
 
       slivers.clear();
-      slivers.add(_buildCounters(context, _kmCounter, _stageTitle, _stageLimit,
-          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
+      slivers.add(_buildCounters(context, kmCounter, stageTitle, stageLimit,
+          stageCounter, extraCounter, stageDayLeft, isRaceOver));
       slivers.add(_buildMap(
           context,
-          _riveArtboardSpain,
-          _riveArtboardArgentina,
-          _buyers,
-          _spainStagesBuilding,
-          _argentinaStagesBuilding,
-          _raceSpots,
-          _isSpainMapSelected));
+          riveArtboardSpain,
+          riveArtboardArgentina,
+          buyers,
+          spainStagesBuilding,
+          argentinaStagesBuilding,
+          raceSpots,
+          isSpainMapSelected));
 
       return Container(
         decoration: const BoxDecoration(
@@ -324,7 +322,7 @@ class RaceDesktopPage extends RaceBasicPage {
                       context, argentinaStagesBuilding, raceSpots),
             ]),
           ),
-          Expanded(
+          const Expanded(
               child: Cartela(vertical: 132),
           ),
           // Expanded(
@@ -483,11 +481,11 @@ class RaceDesktopPage extends RaceBasicPage {
     );
   }
 
-  Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
-    int poleCounter = index + 1;
-
-    return ButterflyCard(buyer, poleCounter);
-  }
+  // Widget _buildBuyer(BuildContext context, int index, Buyer buyer) {
+  //   int poleCounter = index + 1;
+  //
+  //   return ButterflyCard(buyer, poleCounter);
+  // }
 }
 
 Positioned _buildSpot(

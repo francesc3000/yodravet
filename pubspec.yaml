@@ -4,12 +4,13 @@ description: Una app de A.E Yo corro por el Dravet.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 3.0.3+39
+version: 3.0.3+40
 #version: 3.0.0
 
 environment:
 #  sdk: ">=2.16.0-80.1.beta <3.0.0"
-  sdk: ">=2.17.0 <3.0.0"
+#  sdk: ">=2.17.0 <3.0.0"
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -25,7 +26,7 @@ dependencies:
   # https://pub.dartlang.org/packages/flutter_bloc
   flutter_bloc: ^8.1.2
   # https://pub.dev/packages/google_fonts
-  google_fonts: ^4.0.3
+  google_fonts: ^4.0.4
   # https://pub.dev/packages/responsive_builder
   responsive_builder: ^0.6.4
   # https://pub.dev/packages/strava_flutter
@@ -33,20 +34,20 @@ dependencies:
   strava_flutter:
     git: https://github.com/dreampowder/strava_flutter.git
   # https://pub.dev/packages/cloud_firestore
-  cloud_firestore: ^4.3.1
+  cloud_firestore: ^4.7.0
   # cloud_firestore: ^1.0.7
   # https://pub.dev/packages/firebase_auth
-  firebase_auth: ^4.2.5
+  firebase_auth: ^4.6.0
   # https://pub.dev/packages/google_sign_in
-  google_sign_in: ^6.0.2
+  google_sign_in: ^6.1.0
   # https://pub.dev/packages/google_sign_in_web
   # google_sign_in_web: ^0.9.2
   # https://pub.dartlang.org/packages/firebase_analytics
   # firebase_analytics: ^7.0.1
   # https://pub.dev/packages/firebase_core
-  firebase_core: ^2.4.1
+  firebase_core: ^2.12.0
   # https://pub.dev/packages/rive
-  rive: ^0.10.3
+  rive: ^0.10.4
   # https://pub.dev/packages/countup
   #  countup: ^0.1.3
   countup:
@@ -54,18 +55,18 @@ dependencies:
   # https://pub.dev/packages/number_inc_dec
   number_inc_dec: ^0.8.0
   # https://pub.dev/packages/flash
-  flash: ^2.0.5+1
+  flash: ^3.0.3+5
   # https://pub.dev/packages/email_validator
   email_validator: ^2.1.17
   # https://pub.dev/packages/sign_in_with_apple
   # https://firebase.flutter.dev/docs/auth/social/
   sign_in_with_apple: ^4.3.0
   # https://pub.dev/packages/crypto
-  crypto: ^3.0.2
+  crypto: ^3.0.3
   # https://pub.dev/packages/animations
   animations: ^2.0.7
   # https://pub.dev/packages/url_launcher
-  url_launcher: ^6.1.10
+  url_launcher: ^6.1.11
   # https://pub.dev/packages/flutter_native_splash
   flutter_native_splash: ^2.2.19
   # https://pub.dev/packages/assets_audio_player
@@ -87,17 +88,17 @@ dependencies:
 # https://pub.dev/packages/intro_slider
   intro_slider: ^4.2.0
 # https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.0.18
+  shared_preferences: ^2.1.1
 # https://pub.dev/packages/animated_bottom_navigation_bar
   animated_bottom_navigation_bar: ^1.2.0
 # https://pub.dev/packages/badges
-  badges: ^3.0.2
+  badges: ^3.1.1
 # https://pub.dev/packages/any_link_preview
   any_link_preview: ^3.0.0
 # https://pub.dev/packages/bubble
   bubble: ^1.2.1
 # https://pub.dev/packages/flutter_side_menu
-  flutter_side_menu: ^0.3.0
+  flutter_side_menu: ^0.3.2
 # https://pub.dev/packages/flutter_cors
   flutter_cors: ^1.3.2
 # https://pub.dev/packages/flutter_app_version_checker
@@ -109,7 +110,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
 
   # https://pub.dev/packages/flutter_launcher_icons
   flutter_launcher_icons: ^0.13.1

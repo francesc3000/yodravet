@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+// import 'package:meta/meta.dart';
 import 'package:yodravet/src/bloc/event/session_event.dart';
 import 'package:yodravet/src/bloc/state/session_state.dart';
 import 'package:yodravet/src/model/user.dart';
@@ -17,10 +17,10 @@ abstract class Session extends Bloc<SessionEvent, SessionState> {
   Future<bool> changePassword(String email);
   Future signup(String? email, String? password, String? name, String? lastname,
       String? photo);
-  @protected
+  // @protected
   void logout();
 
-  @protected
+  // @protected
   final String userCollectionName = "users";
   User user = User();
   String password = '';

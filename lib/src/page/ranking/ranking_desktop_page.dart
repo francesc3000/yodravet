@@ -25,24 +25,24 @@ class RankingDesktopPage extends RankingBasicPage {
   @override
   Widget body(BuildContext context) {
     List<Widget> slivers = [];
-    int _filterRankingTab = 2;
+    int filterRankingTab = 2;
     List<Ranking> rankings = [];
     List<Ranking> rankingsTeam = [];
-    bool _loading = false;
+    bool loading = false;
 
     return BlocBuilder<RankingBloc, RankingState>(
       builder: (BuildContext context, state) {
         if (state is RankingInitState) {
           BlocProvider.of<RankingBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UploadRankingFieldsState) {
-          _filterRankingTab = state.filterRankingTab;
+          filterRankingTab = state.filterRankingTab;
           rankings = state.rankings ?? [];
           rankingsTeam = state.rankingsTeam ?? [];
-          _loading = false;
+          loading = false;
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               color: const Color.fromRGBO(153, 148, 86, 1),
@@ -50,9 +50,9 @@ class RankingDesktopPage extends RankingBasicPage {
         }
 
         slivers.clear();
-        slivers.add(_buildRankingsList(context, _filterRankingTab,
+        slivers.add(_buildRankingsList(context, filterRankingTab,
             AppLocalizations.of(context)!.rankingDonerKm, rankings));
-        slivers.add(_buildRankingsList(context, _filterRankingTab,
+        slivers.add(_buildRankingsList(context, filterRankingTab,
             AppLocalizations.of(context)!.rankingDonerTeamKm, rankingsTeam));
 
         return Container(

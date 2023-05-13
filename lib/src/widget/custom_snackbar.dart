@@ -14,17 +14,23 @@ class CustomSnackBar {
         duration: const Duration(seconds: 3),
         builder: (context, controller) => Flash(
           controller: controller,
-          behavior: FlashBehavior.floating,
+          // behavior: FlashBehavior.floating,
           position: FlashPosition.bottom,
-          boxShadows: kElevationToShadow[4],
-          backgroundColor: Colors.blue,
-          backgroundGradient: const LinearGradient(
-            colors: [Colors.blue, Colors.blueAccent],
-          ),
-          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          // boxShadows: kElevationToShadow[4],
+          // backgroundColor: Colors.blue,
+          // backgroundGradient: const LinearGradient(
+          //   colors: [Colors.blue, Colors.blueAccent],
+          // ),
+          dismissDirections: const [FlashDismissDirection.startToEnd],
+          forwardAnimationCurve: Curves.easeInCirc,
+          reverseAnimationCurve: Curves.bounceIn,
           child: FlashBar(
             icon: Icon(iconData),
             content: Text(message!),
+            controller: controller,
+            backgroundColor: Colors.blue,
+            forwardAnimationCurve: Curves.easeInCirc,
+            reverseAnimationCurve: Curves.bounceIn,
           ),
         ),
       );

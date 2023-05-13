@@ -23,10 +23,10 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
     _sponsors = [];
     _promoters = [];
     _clubs = [];
-    List<Collaborator> _collaborators =
+    List<Collaborator> collaborators =
         await factoryDao.collaboratorDao.getCollaborators();
 
-    for (var collaborator in _collaborators) {
+    for (var collaborator in collaborators) {
       if (collaborator.type == CollaboratorType.sponsor) {
         _sponsors!.add(collaborator);
       } else if (collaborator.type == CollaboratorType.promoter) {

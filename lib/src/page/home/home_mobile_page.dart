@@ -28,7 +28,7 @@ class HomeMobilePage extends HomeBasicPage {
   @override
   PreferredSizeWidget? appBar(BuildContext context,
       {String? title, bool isFirstTime = false, bool isMusicOn = false}) {
-    MusicIconButton _musicIconButton = MusicIconButton(context);
+    MusicIconButton musicIconButton = MusicIconButton(context);
     return isFirstTime
         ? null
         : AppBar(
@@ -48,7 +48,7 @@ class HomeMobilePage extends HomeBasicPage {
             ),
             title: Text(title!),
             actions: [
-              _musicIconButton.getMusicIcon(isMusicOn),
+              musicIconButton.getMusicIcon(isMusicOn),
               IconButton(
                   onPressed: () =>
                       BlocProvider.of<HomeBloc>(context).add(ChangeTabEvent(5)),
@@ -59,61 +59,61 @@ class HomeMobilePage extends HomeBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    Widget? _racePage;
-    _racePage ??= RacePage(routerDelegate);
-    Widget? _sponsorPage;
-    _sponsorPage ??= SponsorPage(routerDelegate);
-    Widget? _donorPage;
-    _donorPage ??= DonorPage(routerDelegate);
-    Widget? _rankingPage;
-    _rankingPage ??= RankingPage(routerDelegate);
-    Widget? _userPage;
-    _userPage ??= UserPage(routerDelegate);
-    Widget? _feedPage;
-    _feedPage ??= FeedPage(routerDelegate);
-    List<Widget?> _pages = [
-      _racePage,
-      _sponsorPage,
-      _rankingPage,
-      _feedPage,
-      _donorPage,
-      _userPage
+    Widget? racePage;
+    racePage ??= RacePage(routerDelegate);
+    Widget? sponsorPage;
+    sponsorPage ??= SponsorPage(routerDelegate);
+    Widget? donorPage;
+    donorPage ??= DonorPage(routerDelegate);
+    Widget? rankingPage;
+    rankingPage ??= RankingPage(routerDelegate);
+    Widget? userPage;
+    userPage ??= UserPage(routerDelegate);
+    Widget? feedPage;
+    feedPage ??= FeedPage(routerDelegate);
+    List<Widget?> pages = [
+      racePage,
+      sponsorPage,
+      rankingPage,
+      feedPage,
+      donorPage,
+      userPage
     ];
 
     return BlocBuilder<HomeBloc, HomeState>(
         builder: (BuildContext context, state) {
-      int? _currentIndex = 0;
-      bool _firstTime = false;
-      bool _loading = false;
+      int? currentIndex = 0;
+      bool firstTime = false;
+      bool loading = false;
 
       if (state is HomeInitState) {
-        _loading = true;
+        loading = true;
         BlocProvider.of<AuthBloc>(context).add(AutoLogInEvent());
         BlocProvider.of<HomeBloc>(context).add(HomeInitDataEvent());
       } else if (state is UploadHomeFields) {
-        _loading = false;
-        _currentIndex = state.index;
-        _firstTime = state.isFirstTime;
+        loading = false;
+        currentIndex = state.index;
+        firstTime = state.isFirstTime;
       }
 
-      if (_loading) {
+      if (loading) {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (_firstTime) {
+      if (firstTime) {
         return IntroMobilePage(routerDelegate);
       }
 
-      return _pages[_currentIndex]!;
+      return pages[currentIndex]!;
     });
   }
 
   @override
   Widget? floatingActionButton(BuildContext context) => FloatingActionButton(
-      child: const Icon(FontAwesomeIcons.personRunning),
       backgroundColor: const Color.fromARGB(255, 140, 71, 153),
       onPressed: () =>
-          BlocProvider.of<HomeBloc>(context).add(ChangeTabEvent(4)));
+          BlocProvider.of<HomeBloc>(context).add(ChangeTabEvent(4)),
+      child: const Icon(FontAwesomeIcons.personRunning));
 
   @override
   FloatingActionButtonLocation? floatingActionButtonLocation(
@@ -149,9 +149,9 @@ class HomeMobilePage extends HomeBasicPage {
         ? null
         : BlocBuilder<HomeBloc, HomeState>(
             builder: (BuildContext context, state) {
-            int _currentIndex = 0;
+            int currentIndex = 0;
             if (state is UploadHomeFields) {
-              _currentIndex = state.index;
+              currentIndex = state.index;
             }
 
             // return BottomNavigationBar(
@@ -171,7 +171,7 @@ class HomeMobilePage extends HomeBasicPage {
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: AnimatedBottomNavigationBar(
                 icons: iconList,
-                activeIndex: _currentIndex,
+                activeIndex: currentIndex,
                 gapLocation: GapLocation.center,
                 backgroundColor: const Color.fromARGB(255, 140, 71, 153),
                 activeColor: Colors.white,
@@ -180,7 +180,7 @@ class HomeMobilePage extends HomeBasicPage {
                 leftCornerRadius: 32,
                 rightCornerRadius: 32,
                 onTap: (index) {
-                  _currentIndex = index;
+                  currentIndex = index;
                   BlocProvider.of<HomeBloc>(context).add(ChangeTabEvent(index));
                 },
                 //other params

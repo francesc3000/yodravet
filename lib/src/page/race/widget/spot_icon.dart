@@ -24,14 +24,14 @@ class SpotIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _currentId = '';
-    String _currentMouseId = '';
+    String currentId = '';
+    String currentMouseId = '';
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
       if (state is UpdateRaceFieldsState) {
-        _currentId = state.currentSpot?.id ?? '';
-        _currentMouseId = state.currentMouseSpot?.id ?? '';
+        currentId = state.currentSpot?.id ?? '';
+        currentMouseId = state.currentMouseSpot?.id ?? '';
       }
 
       return MouseRegion(
@@ -43,12 +43,13 @@ class SpotIcon extends StatelessWidget {
           onPressed: () {
             BlocProvider.of<RaceBloc>(context).add(ClickOnMapEvent(id));
           },
+          shape: const CircleBorder(),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               Transform.scale(
-                scale: _currentId.compareTo(id) == 0 ||
-                        _currentMouseId.compareTo(id) == 0
+                scale: currentId.compareTo(id) == 0 ||
+                        currentMouseId.compareTo(id) == 0
                     ? 1
                     : 0.5,
                 child: ClipRRect(
@@ -69,8 +70,8 @@ class SpotIcon extends StatelessWidget {
                 top: 40,
                 left: -15,
                 child: Transform.translate(
-                  offset: _currentId.compareTo(id) == 0 ||
-                          _currentMouseId.compareTo(id) == 0
+                  offset: currentId.compareTo(id) == 0 ||
+                          currentMouseId.compareTo(id) == 0
                       ? const Offset(0.0, 20.0)
                       : const Offset(0.0, 5.0),
                   child: SizedBox(
@@ -92,7 +93,6 @@ class SpotIcon extends StatelessWidget {
               ),
             ],
           ),
-          shape: const CircleBorder(),
         ),
       );
     });

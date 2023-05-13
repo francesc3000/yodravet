@@ -32,9 +32,9 @@ class CollaborateBloc extends Bloc<CollaborateEvent, CollaborateState> {
     on<ICollaborateEvent>(_iCollaborateEvent);
   }
 
-  void _collaborateInitState(CollaborateInitState event, Emitter emit) {
-    emit(_uploadCollaborateFields());
-  }
+  // void _collaborateInitState(CollaborateInitState event, Emitter emit) {
+  //   emit(_uploadCollaborateFields());
+  // }
 
   void _startCollaborateEvent(StartCollaborateEvent event, Emitter emit) {
     emit(_uploadCollaborateFields());

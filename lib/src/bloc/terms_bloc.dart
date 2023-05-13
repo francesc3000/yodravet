@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
 import 'package:yodravet/src/bloc/event/terms_event.dart';
 import 'package:yodravet/src/bloc/state/terms_state.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
-import 'package:yodravet/src/model/user.dart' as myUser;
+import 'package:yodravet/src/model/user.dart' as my_user;
 
 class TermsBloc extends Bloc<TermsEvent, TermsState> {
   final FactoryDao factoryDao;
@@ -32,7 +31,7 @@ class TermsBloc extends Bloc<TermsEvent, TermsState> {
     authBloc.add(TermsAcceptedEvent());
   }
 
-  myUser.User? _getUser() => authBloc.getUser();
+  my_user.User? _getUser() => authBloc.getUser();
 
   TermsState _uploadTermsFields() => UploadTermsFields();
 }

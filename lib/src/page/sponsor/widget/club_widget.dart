@@ -15,6 +15,9 @@ class ClubWidget extends StatelessWidget {
         child: Container(
           height: 110,
           width: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Card(
             elevation: 4.0,
             shape: const RoundedRectangleBorder(
@@ -49,9 +52,6 @@ class ClubWidget extends StatelessWidget {
               //   cache: true,
               // ),
             ),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
           ),
         ),
         onTap: () => BlocProvider.of<SponsorBloc>(context)

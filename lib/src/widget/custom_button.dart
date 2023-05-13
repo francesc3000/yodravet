@@ -16,10 +16,10 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.0),
           elevation: 6.0,
           child: MaterialButton(
-            child: child,
             minWidth: 200.0,
             height: 45.0,
             onPressed: onPressed,
+            child: child,
           ),
         ),
       );

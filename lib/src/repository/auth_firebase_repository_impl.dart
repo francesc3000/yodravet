@@ -58,7 +58,7 @@ class AuthFirebaseRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserDao> googleLogIn() async {
-    GoogleSignIn _googleSignIn = GoogleSignIn(
+    GoogleSignIn googleSignIn = GoogleSignIn(
       scopes: [
         'email',
         'https://www.googleapis.com/auth/userinfo.profile',
@@ -69,7 +69,7 @@ class AuthFirebaseRepositoryImpl implements AuthRepository {
     // final GoogleSignInAccount googleUser =
     //     await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
 
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =

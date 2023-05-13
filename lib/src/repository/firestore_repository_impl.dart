@@ -248,13 +248,13 @@ class FirestoreRepositoryImpl implements Repository {
           }
 
           // se guarda la actividad en el pool de la carrera
-          var _randomId =
+          var randomId =
               raceCollectionEndpoint.doc(raceId).collection('pool').doc().id;
           transaction.set(
               raceCollectionEndpoint
                   .doc(raceId)
                   .collection('pool')
-                  .doc(_randomId),
+                  .doc(randomId),
               {
                 'userId': userId,
                 'userFullname': userFullname,
@@ -272,7 +272,7 @@ class FirestoreRepositoryImpl implements Repository {
               userCollectionEndpoint
                   .doc(userId)
                   .collection('activities')
-                  .doc(_randomId),
+                  .doc(randomId),
               {
                 'stravaId': userStravaId,
                 'raceId': raceId,

@@ -19,8 +19,8 @@ class RankingMobilePage extends RankingBasicPage {
   @override
   Widget body(BuildContext context) {
     List<Widget> slivers = [];
-    bool _loading = false;
-    int _filterRankingTab = 2;
+    bool loading = false;
+    int filterRankingTab = 2;
     List<Ranking> rankings = [];
     List<Ranking> rankingsTeam = [];
 
@@ -28,27 +28,27 @@ class RankingMobilePage extends RankingBasicPage {
       builder: (BuildContext context, state) {
         if (state is RankingInitState) {
           BlocProvider.of<RankingBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UploadRankingFieldsState) {
-          _filterRankingTab = state.filterRankingTab;
+          filterRankingTab = state.filterRankingTab;
           rankings = state.rankings ?? [];
           rankingsTeam = state.rankingsTeam ?? [];
-          _loading = false;
+          loading = false;
         } else if (state is RankingStateError) {
           //TODO: Mostrar errores en Pages
           // CustomSnackBar
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
               color: const Color.fromRGBO(153, 148, 86, 1),
               child: const Center(child: CircularProgressIndicator()));
         }
 
         slivers.clear();
-        slivers.add(_buildRankingsList(context, _filterRankingTab,
+        slivers.add(_buildRankingsList(context, filterRankingTab,
             AppLocalizations.of(context)!.rankingDonerKm, rankings));
-        slivers.add(_buildRankingsList(context, _filterRankingTab,
+        slivers.add(_buildRankingsList(context, filterRankingTab,
             AppLocalizations.of(context)!.rankingDonerTeamKm, rankingsTeam));
 
         return Container(

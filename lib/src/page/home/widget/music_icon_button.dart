@@ -18,6 +18,10 @@ class MusicIconButton {
         : const Icon(FontAwesomeIcons.pause, color: Colors.white),
     itemBuilder: (context) => [
           PopupMenuItem(
+            value: 1,
+            onTap: () => BlocProvider.of<HomeBloc>(context).add(
+              ChangeMuteOptionEvent(),
+            ),
             child: isMusicOn
                 ? Row(
                     children: [
@@ -39,12 +43,11 @@ class MusicIconButton {
                       const Icon(FontAwesomeIcons.music),
                     ],
                   ),
-            value: 1,
-            onTap: () => BlocProvider.of<HomeBloc>(context).add(
-              ChangeMuteOptionEvent(),
-            ),
           ),
           PopupMenuItem(
+            value: 2,
+            onTap: () =>
+                BlocProvider.of<RaceBloc>(context).add(PurchaseSongEvent()),
             child: Row(
               children: [
                 Text(
@@ -55,9 +58,6 @@ class MusicIconButton {
                 const Icon(FontAwesomeIcons.cartShopping),
               ],
             ),
-            value: 2,
-            onTap: () =>
-                BlocProvider.of<RaceBloc>(context).add(PurchaseSongEvent()),
           ),
         ]);
 

@@ -180,7 +180,7 @@ class TermsAndConditions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(10.0),
     color: Colors.white,
     child: ListView(
       children: [

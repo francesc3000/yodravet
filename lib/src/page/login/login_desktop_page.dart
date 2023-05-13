@@ -22,10 +22,10 @@ class LoginDesktopPage extends LoginBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    bool _someoneIsLoading = false;
-    bool _isLoading = false;
-    bool _isLoadingGoogle = false;
-    bool _isLoadingApple = false;
+    bool someoneIsLoading = false;
+    bool isLoading = false;
+    bool isLoadingGoogle = false;
+    bool isLoadingApple = false;
     TextEditingController emailTextController = TextEditingController();
     TextEditingController passTextController = TextEditingController();
 
@@ -35,17 +35,17 @@ class LoginDesktopPage extends LoginBasicPage {
     return BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, state) {
       if (state is LogInSuccessState) {
-        _isLoading = false;
-        _isLoadingGoogle = false;
-        _isLoadingApple = false;
+        isLoading = false;
+        isLoadingGoogle = false;
+        isLoadingApple = false;
         // SchedulerBinding.instance!.addPostFrameCallback((_) {
         //   routerDelegate.pushPageAndRemoveUntil(name: '/userPage');
         // });
       } else if (state is AuthLoadingState) {
-        _someoneIsLoading = true;
-        _isLoading = state.isLoading;
-        _isLoadingGoogle = state.isLoadingGoogle;
-        _isLoadingApple = state.isLoadingApple;
+        someoneIsLoading = true;
+        isLoading = state.isLoading;
+        isLoadingGoogle = state.isLoadingGoogle;
+        isLoadingApple = state.isLoadingApple;
       } else if (state is ChangePasswordSuccessState) {
         CustomSnackBar().show(
             context: context,
@@ -64,10 +64,10 @@ class LoginDesktopPage extends LoginBasicPage {
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
         });
       } else if (state is AuthStateError) {
-        _someoneIsLoading = false;
-        _isLoading = false;
-        _isLoadingGoogle = false;
-        _isLoadingApple = false;
+        someoneIsLoading = false;
+        isLoading = false;
+        isLoadingGoogle = false;
+        isLoadingApple = false;
         CustomSnackBar().show(
             context: context,
             message: state.message,
@@ -83,10 +83,18 @@ class LoginDesktopPage extends LoginBasicPage {
               shrinkWrap: true,
               children: <Widget>[
                 CustomButton(
-                  child: _isLoadingGoogle
+                  color: Colors.red,
+                  onPressed: someoneIsLoading
+                      ? null
+                      : () {
+                          // routerDelegate.popRoute();
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(GoogleLogInEvent());
+                        },
+                  child: isLoadingGoogle
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      : _isLoading || _isLoadingApple
+                      : isLoading || isLoadingApple
                           ? null
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -102,14 +110,6 @@ class LoginDesktopPage extends LoginBasicPage {
                                 )
                               ],
                             ),
-                  color: Colors.red,
-                  onPressed: _someoneIsLoading
-                      ? null
-                      : () {
-                          // routerDelegate.popRoute();
-                          BlocProvider.of<AuthBloc>(context)
-                              .add(GoogleLogInEvent());
-                        },
                 ),
                 Visibility(
                   visible: _visibleIfPlatform(context),
@@ -117,10 +117,18 @@ class LoginDesktopPage extends LoginBasicPage {
                     margin: const EdgeInsets.only(
                         left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
                     child: CustomButton(
-                      child: _isLoadingApple
+                      color: Colors.black,
+                      onPressed: someoneIsLoading
+                          ? null
+                          : () {
+                              // routerDelegate.popRoute();
+                              BlocProvider.of<AuthBloc>(context)
+                                  .add(AppleLogInEvent());
+                            },
+                      child: isLoadingApple
                           ? const CircularProgressIndicator(
                               backgroundColor: Colors.white)
-                          : _isLoading || _isLoadingGoogle
+                          : isLoading || isLoadingGoogle
                               ? null
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -136,14 +144,6 @@ class LoginDesktopPage extends LoginBasicPage {
                                     )
                                   ],
                                 ),
-                      color: Colors.black,
-                      onPressed: _someoneIsLoading
-                          ? null
-                          : () {
-                              // routerDelegate.popRoute();
-                              BlocProvider.of<AuthBloc>(context)
-                                  .add(AppleLogInEvent());
-                            },
                     ),
                   ),
                 ),
@@ -176,14 +176,7 @@ class LoginDesktopPage extends LoginBasicPage {
                   ),
                 ),
                 CustomButton(
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                          backgroundColor: Colors.white)
-                      : _isLoadingGoogle || _isLoadingApple
-                          ? null
-                          : Text(AppLocalizations.of(context)!.logIn,
-                              style: const TextStyle(color: Colors.white)),
-                  onPressed: _someoneIsLoading
+                  onPressed: someoneIsLoading
                       ? null
                       : () {
                           // routerDelegate.popRoute();
@@ -191,6 +184,13 @@ class LoginDesktopPage extends LoginBasicPage {
                               email: emailTextController.text,
                               pass: passTextController.text));
                         },
+                  child: isLoading
+                      ? const CircularProgressIndicator(
+                          backgroundColor: Colors.white)
+                      : isLoadingGoogle || isLoadingApple
+                          ? null
+                          : Text(AppLocalizations.of(context)!.logIn,
+                              style: const TextStyle(color: Colors.white)),
                 ),
                 Row(
                   children: [

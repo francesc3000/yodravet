@@ -6,7 +6,7 @@ import 'package:yodravet/src/bloc/race_bloc.dart';
 
 class Cartela extends StatelessWidget {
   final double vertical;
-  Cartela({required this.vertical, Key? key}) : super(key: key);
+  const Cartela({required this.vertical, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(

@@ -15,6 +15,9 @@ class PromoterWidget extends StatelessWidget {
         child: Container(
           height: 110,
           width: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Card(
             elevation: 4.0,
             shape: const RoundedRectangleBorder(
@@ -42,9 +45,6 @@ class PromoterWidget extends StatelessWidget {
                 fit: BoxFit.scaleDown,
               ),
             ),
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
           ),
         ),
         onTap: () => BlocProvider.of<SponsorBloc>(context)

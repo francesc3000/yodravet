@@ -15,15 +15,15 @@ class CollaborateDesktopPage extends CollaborateBasicPage {
   Widget body(BuildContext context) =>
       BlocBuilder<CollaborateBloc, CollaborateState>(
         builder: (context, state) {
-          bool _loading = false;
+          bool loading = false;
 
           if (state is CollaborateInitState) {
             // _loading = true;
           } else if (state is UploadCollaborateFields) {
-            _loading = false;
+            loading = false;
           }
 
-          if (_loading) {
+          if (loading) {
             return Container(
               alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),

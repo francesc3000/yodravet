@@ -15,6 +15,17 @@ class SponsorWidget extends StatelessWidget {
         child: Container(
           height: 200,
           width: 200,
+          decoration: BoxDecoration(
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromARGB(255, 140, 71, 153),
+                blurRadius: 5.0,
+                offset: Offset(0, 10),
+                spreadRadius: 0.5,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Card(
             elevation: 4.0,
             shape: const RoundedRectangleBorder(
@@ -33,17 +44,6 @@ class SponsorWidget extends StatelessWidget {
                 fit: BoxFit.scaleDown,
               ),
             ),
-          ),
-          decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(255, 140, 71, 153),
-                blurRadius: 5.0,
-                offset: Offset(0, 10),
-                spreadRadius: 0.5,
-              ),
-            ],
-            borderRadius: BorderRadius.circular(12),
           ),
         ),
         onTap: () => BlocProvider.of<SponsorBloc>(context)

@@ -70,11 +70,11 @@ class RaceMapFactory {
       nextStageDate,
     );
 
-    MySimpleAnimation _controllerShark;
+    MySimpleAnimation controllerShark;
     var sharkController = 'Shark';
-    _controllerShark = MySimpleAnimation(sharkController);
-    _controllerShark.isActive = true;
-    riveArtboardSpain!.addController(_controllerShark);
+    controllerShark = MySimpleAnimation(sharkController);
+    controllerShark.isActive = true;
+    riveArtboardSpain!.addController(controllerShark);
   }
 }
 
@@ -84,10 +84,10 @@ void _buildControllers(
     int stage,
     DateTime startStageDate,
     DateTime nextStageDate) {
-  RiveAnimationController? _firstControllerStep;
-  MySimpleAnimation? _preControllerStep;
-  MySimpleAnimation _controllerStep;
-  bool _first = false;
+  RiveAnimationController? firstControllerStep;
+  MySimpleAnimation? preControllerStep;
+  MySimpleAnimation controllerStep;
+  bool first = false;
   // int _stage = -1;
 
   // if (_stage != stage) {
@@ -113,29 +113,29 @@ void _buildControllers(
     }
     for (int j = startStep; j <= step; j++) {
       var controllerName = 'Stage$i Step$j';
-      _controllerStep = MySimpleAnimation(controllerName);
+      controllerStep = MySimpleAnimation(controllerName);
 
-      if (!_first) {
-        _first = true;
-        _firstControllerStep = _controllerStep;
+      if (!first) {
+        first = true;
+        firstControllerStep = controllerStep;
       }
 
-      if (_preControllerStep != null) {
-        _preControllerStep.nextAnimation = _controllerStep;
-        riveArtboardSpain!.addController(_preControllerStep);
-        _preControllerStep.isActive = false;
+      if (preControllerStep != null) {
+        preControllerStep.nextAnimation = controllerStep;
+        riveArtboardSpain!.addController(preControllerStep);
+        preControllerStep.isActive = false;
       }
-      _preControllerStep = _controllerStep;
+      preControllerStep = controllerStep;
     }
   }
 
-  if (_preControllerStep != null) {
-    riveArtboardSpain!.addController(_preControllerStep);
-    _preControllerStep.isActive = false;
+  if (preControllerStep != null) {
+    riveArtboardSpain!.addController(preControllerStep);
+    preControllerStep.isActive = false;
   }
 
-  if (_firstControllerStep != null) {
-    _firstControllerStep.isActive = true;
+  if (firstControllerStep != null) {
+    firstControllerStep.isActive = true;
   }
 }
 

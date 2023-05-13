@@ -22,25 +22,25 @@ class LoginMobilePage extends LoginBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    bool _isLoading = false;
-    bool _isLoadingGoogle = false;
-    bool _isLoadingApple = false;
+    bool isLoading = false;
+    bool isLoadingGoogle = false;
+    bool isLoadingApple = false;
     TextEditingController emailTextController = TextEditingController();
     TextEditingController passTextController = TextEditingController();
 
     return BlocBuilder<AuthBloc, AuthState>(
         builder: (BuildContext context, state) {
       if (state is LogInSuccessState) {
-        _isLoading = false;
-        _isLoadingGoogle = false;
-        _isLoadingApple = false;
+        isLoading = false;
+        isLoadingGoogle = false;
+        isLoadingApple = false;
         // SchedulerBinding.instance!.addPostFrameCallback((_) {
         //   routerDelegate.pushPageAndRemoveUntil(name: '/userPage');
         // });
       } else if (state is AuthLoadingState) {
-        _isLoading = state.isLoading;
-        _isLoadingGoogle = state.isLoadingGoogle;
-        _isLoadingApple = state.isLoadingApple;
+        isLoading = state.isLoading;
+        isLoadingGoogle = state.isLoadingGoogle;
+        isLoadingApple = state.isLoadingApple;
       } else if (state is ChangePasswordSuccessState) {
         CustomSnackBar().show(
             context: context,
@@ -64,9 +64,9 @@ class LoginMobilePage extends LoginBasicPage {
           BlocProvider.of<AuthBloc>(context).add(AuthEventEmpty());
         });
       } else if (state is AuthStateError) {
-        _isLoading = false;
-        _isLoadingGoogle = false;
-        _isLoadingApple = false;
+        isLoading = false;
+        isLoadingGoogle = false;
+        isLoadingApple = false;
         CustomSnackBar().show(
             context: context,
             message: state.message,
@@ -81,11 +81,16 @@ class LoginMobilePage extends LoginBasicPage {
               margin: const EdgeInsets.only(
                   left: 20.0, right: 20.0, top: 16.0, bottom: 2.0),
               child: CustomButton(
-                child: _isLoadingGoogle
+                color: Colors.red,
+                onPressed: () {
+                  // routerDelegate.popRoute();
+                  BlocProvider.of<AuthBloc>(context).add(GoogleLogInEvent());
+                },
+                child: isLoadingGoogle
                     // ? null
                     ? const CircularProgressIndicator(
                         backgroundColor: Colors.white)
-                    : _isLoading || _isLoadingApple
+                    : isLoading || isLoadingApple
                         ? null
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -101,11 +106,6 @@ class LoginMobilePage extends LoginBasicPage {
                               )
                             ],
                           ),
-                color: Colors.red,
-                onPressed: () {
-                  // routerDelegate.popRoute();
-                  BlocProvider.of<AuthBloc>(context).add(GoogleLogInEvent());
-                },
               ),
             ),
             Visibility(
@@ -114,10 +114,15 @@ class LoginMobilePage extends LoginBasicPage {
                 margin: const EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
                 child: CustomButton(
-                  child: _isLoadingApple
+                  color: Colors.black,
+                  onPressed: () {
+                    // routerDelegate.popRoute();
+                    BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
+                  },
+                  child: isLoadingApple
                       ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                      : _isLoading || _isLoadingGoogle
+                      : isLoading || isLoadingGoogle
                           ? null
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -133,11 +138,6 @@ class LoginMobilePage extends LoginBasicPage {
                                 )
                               ],
                             ),
-                  color: Colors.black,
-                  onPressed: () {
-                    // routerDelegate.popRoute();
-                    BlocProvider.of<AuthBloc>(context).add(AppleLogInEvent());
-                  },
                 ),
               ),
             ),
@@ -170,10 +170,10 @@ class LoginMobilePage extends LoginBasicPage {
               ),
             ),
             CustomButton(
-              child: _isLoading
+              child: isLoading
                   ? const CircularProgressIndicator(
                       backgroundColor: Colors.white)
-                  : _isLoadingGoogle || _isLoadingApple
+                  : isLoadingGoogle || isLoadingApple
                       ? null
                       : Text(AppLocalizations.of(context)!.logIn,
                           style: const TextStyle(color: Colors.white)),

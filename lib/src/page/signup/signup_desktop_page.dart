@@ -26,40 +26,40 @@ class SignupDesktopPage extends SignupBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    bool _isLoading = false;
-    TextEditingController _emailTextController = TextEditingController();
-    TextEditingController _passTextController = TextEditingController();
-    TextEditingController _passCopyTextController = TextEditingController();
-    TextEditingController _nameTextController = TextEditingController();
-    TextEditingController _lastnameTextController = TextEditingController();
-    String? _emailError = '';
-    String? _nameError = '';
-    String? _lastnameError = '';
-    String? _passwordError = '';
-    String? _passwordCopyError = '';
+    bool isLoading = false;
+    TextEditingController emailTextController = TextEditingController();
+    TextEditingController passTextController = TextEditingController();
+    TextEditingController passCopyTextController = TextEditingController();
+    TextEditingController nameTextController = TextEditingController();
+    TextEditingController lastnameTextController = TextEditingController();
+    String? emailError = '';
+    String? nameError = '';
+    String? lastnameError = '';
+    String? passwordError = '';
+    String? passwordCopyError = '';
 
     return BlocBuilder<SignupBloc, SignupState>(
         builder: (BuildContext context, state) {
       if (state is UpdateSignupFieldsState) {
-        _emailTextController.text = state.signup.email!;
-        _nameTextController.text = state.signup.name!;
-        _lastnameTextController.text = state.signup.lastname!;
-        _passTextController.text = state.signup.password!;
-        _passCopyTextController.text = state.signup.passwordCopy!;
-        _emailError = state.signup.emailError;
-        _nameError = state.signup.nameError;
-        _lastnameError = state.signup.lastnameError;
-        _passwordError = state.signup.passwordError;
-        _passwordCopyError = state.signup.passwordCopyError;
-        _isLoading = state.isLoading;
+        emailTextController.text = state.signup.email!;
+        nameTextController.text = state.signup.name!;
+        lastnameTextController.text = state.signup.lastname!;
+        passTextController.text = state.signup.password!;
+        passCopyTextController.text = state.signup.passwordCopy!;
+        emailError = state.signup.emailError;
+        nameError = state.signup.nameError;
+        lastnameError = state.signup.lastnameError;
+        passwordError = state.signup.passwordError;
+        passwordCopyError = state.signup.passwordCopyError;
+        isLoading = state.isLoading;
       } else if (state is SignUpSuccessState) {
-        _isLoading = false;
+        isLoading = false;
         BlocProvider.of<SignupBloc>(context).add(SignupEventEmpty());
         SchedulerBinding.instance.addPostFrameCallback((_) {
           routerDelegate.pushPageAndRemoveUntil(name: '/');
         });
       } else if (state is SignupStateError) {
-        _isLoading = false;
+        isLoading = false;
         CustomSnackBar().show(
             context: context,
             message: state.message,
@@ -76,38 +76,38 @@ class SignupDesktopPage extends SignupBasicPage {
                 margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
-                  controller: _emailTextController,
+                  controller: emailTextController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                      labelText: 'Correo electrónico', errorText: _emailError),
+                      labelText: 'Correo electrónico', errorText: emailError),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
-                  controller: _nameTextController,
+                  controller: nameTextController,
                   decoration: InputDecoration(
-                      labelText: 'Nombre', errorText: _nameError),
+                      labelText: 'Nombre', errorText: nameError),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
-                  controller: _lastnameTextController,
+                  controller: lastnameTextController,
                   decoration: InputDecoration(
-                      labelText: 'Apellidos', errorText: _lastnameError),
+                      labelText: 'Apellidos', errorText: lastnameError),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
-                  controller: _passTextController,
+                  controller: passTextController,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
-                      labelText: 'Contraseña', errorText: _passwordError),
+                      labelText: 'Contraseña', errorText: passwordError),
                   obscureText: true,
                 ),
               ),
@@ -115,16 +115,16 @@ class SignupDesktopPage extends SignupBasicPage {
                 margin: const EdgeInsets.only(
                     left: 28.0, right: 28.0, top: 2.0, bottom: 8.0),
                 child: TextFormField(
-                  controller: _passCopyTextController,
+                  controller: passCopyTextController,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                       labelText: 'Repetir contraseña',
-                      errorText: _passwordCopyError),
+                      errorText: passwordCopyError),
                   obscureText: true,
                 ),
               ),
               CustomButton(
-                child: _isLoading
+                child: isLoading
                     ? const CircularProgressIndicator(
                         backgroundColor: Colors.white)
                     : Text(
@@ -133,11 +133,11 @@ class SignupDesktopPage extends SignupBasicPage {
                       ),
                 onPressed: () {
                   BlocProvider.of<SignupBloc>(context).add(SignUpEvent(
-                    _emailTextController.text,
-                    _nameTextController.text,
-                    _lastnameTextController.text,
-                    _passTextController.text,
-                    _passCopyTextController.text,
+                    emailTextController.text,
+                    nameTextController.text,
+                    lastnameTextController.text,
+                    passTextController.text,
+                    passCopyTextController.text,
                   ));
                 },
               ),

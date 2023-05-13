@@ -1,5 +1,4 @@
 import 'package:countup/countup.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,10 +8,8 @@ import 'package:rive/rive.dart';
 import 'package:yodravet/src/bloc/event/race_event.dart';
 import 'package:yodravet/src/bloc/race_bloc.dart';
 import 'package:yodravet/src/bloc/state/race_state.dart';
-import 'package:yodravet/src/model/buyer.dart';
 import 'package:yodravet/src/model/race_spot.dart';
 import 'package:yodravet/src/model/spot.dart';
-import 'package:yodravet/src/page/race/widget/butterfly_card.dart';
 import 'package:yodravet/src/page/race/widget/cartela.dart';
 import 'package:yodravet/src/page/race/widget/spot_icon.dart';
 import 'package:yodravet/src/widget/sliver_appbar_delegate.dart';
@@ -28,54 +25,54 @@ class RaceMobilePage extends RaceBasicPage {
 
   @override
   Widget body(BuildContext context) {
-    Artboard? _riveArtboardSpain;
-    Artboard? _riveArtboardArgentina;
-    bool _loading = false;
-    bool _isSpainMapSelected = true;
+    Artboard? riveArtboardSpain;
+    Artboard? riveArtboardArgentina;
+    bool loading = false;
+    bool isSpainMapSelected = true;
 
     return BlocBuilder<RaceBloc, RaceState>(
         builder: (BuildContext context, state) {
-      double _kmCounter = 0;
-      double _stageCounter = 0;
-      double _extraCounter = 0;
-      double _stageLimit = 0;
-      String? _stageTitle = '';
-      double? _stageDayLeft = 0;
-      List<Buyer> _buyers = [];
-      Spot? _currentSpot;
-      List<Spot>? _spainStagesBuilding = [];
-      List<Spot>? _argentinaStagesBuilding = [];
-      List<RaceSpot> _raceSpots = [];
-      List<String>? _spotVotes = [];
+      double kmCounter = 0;
+      double stageCounter = 0;
+      double extraCounter = 0;
+      double stageLimit = 0;
+      String? stageTitle = '';
+      double? stageDayLeft = 0;
+      // List<Buyer> _buyers = [];
+      Spot? currentSpot;
+      List<Spot>? spainStagesBuilding = [];
+      List<Spot>? argentinaStagesBuilding = [];
+      List<RaceSpot> raceSpots = [];
+      List<String>? spotVotes = [];
       List<Widget> slivers = [];
-      bool _isRaceOver = false;
-      bool _canVote = false;
-      bool _hasVote = false;
+      bool isRaceOver = false;
+      bool canVote = false;
+      bool hasVote = false;
 
       if (state is RaceInitState) {
         BlocProvider.of<RaceBloc>(context).add(InitRaceFieldsEvent());
-        _loading = true;
+        loading = true;
       } else if (state is UpdateRaceFieldsState) {
-        _kmCounter = state.kmCounter / 1000;
-        _stageCounter = state.stageCounter / 1000;
-        _extraCounter = state.extraCounter / 1000;
-        _stageLimit = state.stageLimit / 1000;
-        _stageTitle = state.stageTitle;
-        _stageDayLeft = state.stageDayLeft;
-        _riveArtboardSpain = state.riveArtboardSpain;
-        _riveArtboardArgentina = state.riveArtboardArgentina;
-        _buyers = state.buyers;
-        _spainStagesBuilding = state.spainStagesBuilding;
-        _argentinaStagesBuilding = state.argentinaStagesBuilding;
-        _raceSpots = state.raceSpots;
-        _spotVotes = state.spotVotes;
-        _currentSpot = state.currentSpot;
-        _isSpainMapSelected = state.isSpainMapSelected;
-        _isRaceOver = state.isRaceOver;
-        _canVote = state.canVote;
-        _hasVote = state.hasVote;
-        _loading = false;
-        if (_currentSpot != null) {
+        kmCounter = state.kmCounter / 1000;
+        stageCounter = state.stageCounter / 1000;
+        extraCounter = state.extraCounter / 1000;
+        stageLimit = state.stageLimit / 1000;
+        stageTitle = state.stageTitle;
+        stageDayLeft = state.stageDayLeft;
+        riveArtboardSpain = state.riveArtboardSpain;
+        riveArtboardArgentina = state.riveArtboardArgentina;
+        // _buyers = state.buyers;
+        spainStagesBuilding = state.spainStagesBuilding;
+        argentinaStagesBuilding = state.argentinaStagesBuilding;
+        raceSpots = state.raceSpots;
+        spotVotes = state.spotVotes;
+        currentSpot = state.currentSpot;
+        isSpainMapSelected = state.isSpainMapSelected;
+        isRaceOver = state.isRaceOver;
+        canVote = state.canVote;
+        hasVote = state.hasVote;
+        loading = false;
+        if (currentSpot != null) {
           BlocProvider.of<RaceBloc>(context).add(BackClickOnMapEvent());
           SchedulerBinding.instance.addPostFrameCallback((_) {
             showModalBottomSheet(
@@ -85,20 +82,20 @@ class RaceMobilePage extends RaceBasicPage {
                       BorderRadius.vertical(top: Radius.circular(25.0)),
                 ),
                 builder: (BuildContext context) => SpotPage(
-                    spot: _currentSpot,
-                    isVoted: _spotVotes?.contains(_currentSpot?.id) ?? false,
-                    canVote: _canVote,
-                    hasVote: _hasVote,
+                    spot: currentSpot,
+                    isVoted: spotVotes?.contains(currentSpot?.id) ?? false,
+                    canVote: canVote,
+                    hasVote: hasVote,
                     expandedHeight: MediaQuery.of(context).size.height / 3,
                     leadingWidth: MediaQuery.of(context).size.width,
                     imageFit: BoxFit.cover));
           });
         }
       } else if (state is RaceStateError) {
-        _loading = false;
+        loading = false;
       }
 
-      if (_loading) {
+      if (loading) {
         return Container(
           color: const Color.fromRGBO(153, 148, 86, 1),
           alignment: Alignment.center,
@@ -107,17 +104,17 @@ class RaceMobilePage extends RaceBasicPage {
       }
 
       slivers.clear();
-      slivers.add(_buildTotalCounter(context, _kmCounter));
-      slivers.add(_buildSubCounters(context, _stageTitle, _stageLimit,
-          _stageCounter, _extraCounter, _stageDayLeft, _isRaceOver));
+      slivers.add(_buildTotalCounter(context, kmCounter));
+      slivers.add(_buildSubCounters(context, stageTitle, stageLimit,
+          stageCounter, extraCounter, stageDayLeft, isRaceOver));
       slivers.add(_buildMap(
           context,
-          _riveArtboardSpain,
-          _riveArtboardArgentina,
-          _spainStagesBuilding,
-          _argentinaStagesBuilding,
-          _raceSpots,
-          _isSpainMapSelected));
+          riveArtboardSpain,
+          riveArtboardArgentina,
+          spainStagesBuilding,
+          argentinaStagesBuilding,
+          raceSpots,
+          isSpainMapSelected));
       // slivers.add(_buildBuyersList(context, _buyers));
       slivers.add(_buildCartela(context));
 
@@ -418,49 +415,49 @@ Stack _argentinaSpots(BuildContext context, double mapHeight, double mapWidth,
   );
 }
 
-Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) => SliverList(
-      delegate: SliverChildListDelegate(_buildBuyers(context, buyers)),
-    );
-
-List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
-  List<Widget> slivers = [];
-  int poleCounter = 1;
-
-  slivers.add(
-    Center(
-      child: RichText(
-        text: TextSpan(
-            text: AppLocalizations.of(context)!.buyLink,
-            style: const TextStyle(fontFamily: 'AkayaTelivigala'),
-            children: [
-              TextSpan(
-                text: 'Apoyo Dravet ',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    BlocProvider.of<RaceBloc>(context)
-                        .add(PurchaseButterfliesEvent());
-                  },
-              ),
-              const WidgetSpan(
-                child: Icon(FontAwesomeIcons.upRightFromSquare, size: 11.0),
-              ),
-            ]),
-      ),
-    ),
-  );
-
-  // for (Buyer buyer in buyers) {
-  //   slivers.add(ButterflyCard(buyer, poleCounter));
-  //   poleCounter++;
-  // }
-
-  return slivers;
-}
+// Widget _buildBuyersList(BuildContext context, List<Buyer> buyers) => SliverList(
+//       delegate: SliverChildListDelegate(_buildBuyers(context, buyers)),
+//     );
+//
+// List<Widget> _buildBuyers(BuildContext context, List<Buyer> buyers) {
+//   List<Widget> slivers = [];
+//   int poleCounter = 1;
+//
+//   slivers.add(
+//     Center(
+//       child: RichText(
+//         text: TextSpan(
+//             text: AppLocalizations.of(context)!.buyLink,
+//             style: const TextStyle(fontFamily: 'AkayaTelivigala'),
+//             children: [
+//               TextSpan(
+//                 text: 'Apoyo Dravet ',
+//                 style: const TextStyle(
+//                   fontSize: 16.0,
+//                   color: Colors.blue,
+//                   decoration: TextDecoration.underline,
+//                 ),
+//                 recognizer: TapGestureRecognizer()
+//                   ..onTap = () {
+//                     BlocProvider.of<RaceBloc>(context)
+//                         .add(PurchaseButterfliesEvent());
+//                   },
+//               ),
+//               const WidgetSpan(
+//                 child: Icon(FontAwesomeIcons.upRightFromSquare, size: 11.0),
+//               ),
+//             ]),
+//       ),
+//     ),
+//   );
+//
+//   // for (Buyer buyer in buyers) {
+//   //   slivers.add(ButterflyCard(buyer, poleCounter));
+//   //   poleCounter++;
+//   // }
+//
+//   return slivers;
+// }
 
 Positioned _buildSpot(
         {required double top,
@@ -483,6 +480,6 @@ Widget _buildCartela(BuildContext context) => SliverPersistentHeader(
       delegate: SliverAppBarDelegate(
         minHeight: 120,
         maxHeight: 120,
-        child: Cartela(vertical: 12),
+        child: const Cartela(vertical: 12),
       ),
     );

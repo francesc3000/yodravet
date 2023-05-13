@@ -18,23 +18,23 @@ class SponsorMobilePage extends SponsorBasicPage {
   @override
   Widget body(BuildContext context) => BlocBuilder<SponsorBloc, SponsorState>(
         builder: (context, state) {
-          List<Widget> _slivers = [];
-          List<Collaborator> _sponsors = [];
-          List<Collaborator> _promoters = [];
-          List<Collaborator> _clubs = [];
-          bool _loading = false;
+          List<Widget> slivers = [];
+          List<Collaborator> sponsors = [];
+          List<Collaborator> promoters = [];
+          List<Collaborator> clubs = [];
+          bool loading = false;
 
           if (state is SponsorInitState) {
-            _loading = true;
+            loading = true;
             BlocProvider.of<SponsorBloc>(context).add(SponsorInitDataEvent());
           } else if (state is UploadSponsorFields) {
-            _loading = false;
-            _sponsors = state.sponsors;
-            _promoters = state.promoters;
-            _clubs = state.clubs;
+            loading = false;
+            sponsors = state.sponsors;
+            promoters = state.promoters;
+            clubs = state.clubs;
           }
 
-          if (_loading) {
+          if (loading) {
             return Container(
               alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),
@@ -42,20 +42,20 @@ class SponsorMobilePage extends SponsorBasicPage {
             );
           }
 
-          _slivers.clear();
-          _slivers.add(
+          slivers.clear();
+          slivers.add(
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
-          _slivers.add(_buildSponsorGrid(context, _sponsors));
-          _slivers.add(
+          slivers.add(_buildSponsorGrid(context, sponsors));
+          slivers.add(
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
-          _slivers.add(_buildPromoterGrid(context, _promoters));
-          _slivers.add(
+          slivers.add(_buildPromoterGrid(context, promoters));
+          slivers.add(
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
-          _slivers.add(_buildClubGrid(context, _clubs));
-          _slivers.add(
+          slivers.add(_buildClubGrid(context, clubs));
+          slivers.add(
             const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
           );
 
@@ -66,7 +66,7 @@ class SponsorMobilePage extends SponsorBasicPage {
             color: const Color.fromRGBO(153, 148, 86, 1),
             alignment: Alignment.center,
             child: CustomScrollView(
-              slivers: _slivers,
+              slivers: slivers,
             ),
           );
         },

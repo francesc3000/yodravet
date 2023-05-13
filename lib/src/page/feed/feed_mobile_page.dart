@@ -19,8 +19,8 @@ class FeedMobilePage extends FeedBasicPage {
   @override
   Widget body(BuildContext context) {
     List<Widget> slivers = [];
-    bool _loading = false;
-    List<Feed> _feeds = [];
+    bool loading = false;
+    List<Feed> feeds = [];
     // ScrollController _scrollController = ScrollController();
 
     // _scrollController.addListener(() {
@@ -35,16 +35,16 @@ class FeedMobilePage extends FeedBasicPage {
       builder: (BuildContext context, state) {
         if (state is FeedInitState) {
           BlocProvider.of<FeedBloc>(context).add(LoadInitialDataEvent());
-          _loading = true;
+          loading = true;
         } else if (state is UploadFeedFieldsState) {
-          _loading = false;
-          _feeds = state.feeds;
+          loading = false;
+          feeds = state.feeds;
         } else if (state is FeedStateError) {
           //TODO: Mostrar errores en Pages
           // CustomSnackBar
         }
 
-        if (_loading) {
+        if (loading) {
           return Container(
               alignment: Alignment.center,
               color: const Color.fromRGBO(153, 148, 86, 1),
@@ -52,7 +52,7 @@ class FeedMobilePage extends FeedBasicPage {
         }
 
         slivers.clear();
-        slivers.add(_buildFeed(_feeds));
+        slivers.add(_buildFeed(feeds));
         slivers.add(_buildHeaderFeed());
 
         return Container(

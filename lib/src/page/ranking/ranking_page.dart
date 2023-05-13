@@ -18,14 +18,14 @@ class RankingPage extends StatelessWidget {
   Widget build(BuildContext context) =>
       BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          bool _isLogin = false;
+          bool isLogin = false;
           if (state is LogInSuccessState) {
-            _isLogin = true;
+            isLogin = true;
           } else if (state is LogOutSuccessState) {
-            _isLogin = false;
+            isLogin = false;
           }
 
-          if (!_isLogin) {
+          if (!isLogin) {
             return LoginPage(appRouterDelegate);
           }
 

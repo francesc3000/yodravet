@@ -14,15 +14,15 @@ class TermsDesktopPage extends TermsBasicPage {
   @override
   Widget body(BuildContext context) => BlocBuilder<TermsBloc, TermsState>(
     builder: (context, state) {
-      bool _loading = false;
+      bool loading = false;
 
       if (state is TermsInitState) {
         // _loading = true;
       } else if (state is UploadTermsFields) {
-        _loading = false;
+        loading = false;
       }
 
-      if (_loading) {
+      if (loading) {
         return Container(
           alignment: Alignment.center,
           color: const Color.fromRGBO(153, 148, 86, 1),
