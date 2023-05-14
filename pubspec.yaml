@@ -29,7 +29,8 @@ dependencies:
   # https://pub.dev/packages/strava_flutter
   #  strava_flutter: ^1.2.2+62
   strava_flutter:
-    git: https://github.com/dreampowder/strava_flutter.git
+#    git: https://github.com/dreampowder/strava_flutter.git
+    git: https://github.com/pedrocortizo/strava_flutter
   # https://pub.dev/packages/cloud_firestore
   cloud_firestore: ^4.3.1
   # cloud_firestore: ^1.0.7
