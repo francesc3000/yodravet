@@ -326,8 +326,8 @@ class RaceMobilePage extends RaceBasicPage {
                 onPressed: () => BlocProvider.of<RaceBloc>(context)
                     .add(ChangeMapSelectedEvent()),
               ),
-              Column(
-                children: const [
+              const Column(
+                children: [
                   Text("Argentina"),
                   Text("Chile"),
                 ],

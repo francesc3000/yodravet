@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 import 'package:yodravet/src/dao/factory_dao.dart';
 import 'package:yodravet/src/model/user.dart';
 import 'package:yodravet/src/shared/platform_discover.dart';
@@ -18,7 +17,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   late User _user;
   bool _lockStravaLogin = false;
   StreamSubscription? _sessionSubscription;
-  final _checker = AppVersionChecker();
+  // final _checker = AppVersionChecker();
   late String _appVersion;
 
   UserBloc(this.session, this.factoryDao) : super(UserInitState()) {
@@ -55,8 +54,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         }
       }
 
-      AppCheckerResult result = await _checker.checkUpdate();
-      _appVersion = result.currentVersion;
+      // AppCheckerResult result = await _checker.checkUpdate();
+      // _appVersion = result.currentVersion;
 
       // void checkVersion() async {
       //   _checker.checkUpdate().then((value) {

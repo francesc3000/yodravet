@@ -167,19 +167,19 @@ class UserMobilePage extends UserBasicPage {
       );
     }
 
-    slivers.add(
-      SliverPersistentHeader(
-        pinned: true,
-        delegate: SliverAppBarDelegate(
-          minHeight: 40,
-          maxHeight: 50,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Version: $appVersion"),
-          ),
-        ),
-      ),
-    );
+    // slivers.add(
+    //   SliverPersistentHeader(
+    //     pinned: true,
+    //     delegate: SliverAppBarDelegate(
+    //       minHeight: 40,
+    //       maxHeight: 50,
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(8.0),
+    //         child: Text("Version: $appVersion"),
+    //       ),
+    //     ),
+    //   ),
+    // );
     return slivers;
   }
 }

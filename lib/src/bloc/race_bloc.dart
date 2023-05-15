@@ -246,9 +246,9 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
       [
         Researcher(
           'Asociació Esportiva Yo Corro por el Dravet',
-          'Ciudad de la sede de la Asociación Esportiva yo corro por el Dravet y punto de salida de la cursa virtual Dravet Tour y de llegada el día 23 junio dia internacional del sindrome de Dravet.',
-          // 'assets/images/race/logoYoCorro.webp',
-          'assets/images/race/stages/researchers/victorpuntes.webp',
+          'Ciudad de la sede de la Asociación Esportiva yo corro por el Dravet y punto de salida de la cursa virtual Dravet Tour y de llegada el día 23 junio día internacional del sindrome de Dravet.',
+          'assets/images/race/logoYoCorro.webp',
+          // 'assets/images/race/stages/researchers/victorpuntes.webp',
           '',
         )
       ],

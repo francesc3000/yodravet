@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:strava_flutter/domain/model/model_authentication_response.dart';
-import 'package:strava_flutter/domain/model/model_authentication_scopes.dart';
-import 'package:strava_flutter/domain/model/model_summary_activity.dart';
-import 'package:strava_flutter/strava_client.dart';
+import 'package:strava_client/strava_client.dart';
 import 'package:yodravet/src/model/activity_dao.dart';
 import 'package:yodravet/src/shared/secret.dart';
 import 'package:yodravet/src/shared/transform_model.dart';
@@ -17,7 +14,7 @@ class StravaImpl extends StravaInterface {
   Future<bool> stravaLogIn() async {
     List<AuthenticationScope> scopes = [AuthenticationScope.activity_read_all];
     await _strava.authentication
-        .authenticate(scopes: scopes, redirectUrl: "stravaflutter://redirect");
+        .authenticate(scopes: scopes, redirectUrl: "stravaflutter://redirect", callbackUrlScheme: '');
 
     return true;
   }

@@ -92,9 +92,9 @@ class LoginMobilePage extends LoginBasicPage {
                         backgroundColor: Colors.white)
                     : isLoading || isLoadingApple
                         ? null
-                        : Row(
+                        : const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Icon(FontAwesomeIcons.google,
                                   color: Colors.white),
                               SizedBox(
@@ -124,9 +124,9 @@ class LoginMobilePage extends LoginBasicPage {
                           backgroundColor: Colors.white)
                       : isLoading || isLoadingGoogle
                           ? null
-                          : Row(
+                          : const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Icon(FontAwesomeIcons.apple,
                                     color: Colors.white),
                                 SizedBox(
