@@ -41,6 +41,7 @@ class UserDesktopPage extends UserBasicPage {
           loading = true;
         } else if (state is UserLogInState) {
           // BlocProvider.of<UserBloc>(context).add(GetStravaActivitiesEvent());
+          BlocProvider.of<UserBloc>(context).add(LoadInitialDataEvent());
         } else if (state is UserLogOutState) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             routerDelegate.pushPageAndRemoveUntil(name: '/');

@@ -558,7 +558,7 @@ class RaceBloc extends Bloc<RaceEvent, RaceState> {
 
   void _shareCartelaEvent(ShareCartelaEvent event, Emitter emit) async {
     // Share.shareXFiles([XFile("/assets/images/logo.webp")], text: "Hola");
-    Share.share("#YoParticipo  #YoDono\n\nhttps://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2Fcartela.jpeg?alt=media&token=5b9caa8b-ea61-48dd-9789-ab3b6fceb6f4");
+    Share.share("#YoParticipo  #YoDono\n\nhttps://firebasestorage.googleapis.com/v0/b/yo-corro-por-el-dravet.appspot.com/o/app%2Fcartela2023.jpeg?alt=media&token=357b35ff-d5ba-4d7f-be14-d3cf025dd1bb");
   }
 
   RaceState _updateRaceFields() => UpdateRaceFieldsState(

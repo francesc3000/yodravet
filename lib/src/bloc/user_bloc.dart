@@ -18,7 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   bool _lockStravaLogin = false;
   StreamSubscription? _sessionSubscription;
   // final _checker = AppVersionChecker();
-  late String _appVersion;
+  String? _appVersion;
 
   UserBloc(this.session, this.factoryDao) : super(UserInitState()) {
     _sessionSubscription = session.stream.listen((state) {
@@ -83,7 +83,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _user.isStravaLogin = false;
         factoryDao.userDao.saveIsStravaLogin(_user.id, _user.isStravaLogin);
       }
-      await factoryDao.userDao.logOut();
+      // await factoryDao.userDao.logOut();
       _user.logout();
       emit(UserLogOutState());
     } catch (error) {
@@ -145,7 +145,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         _lockStravaLogin,
         _user.fullName,
         _user.photo,
-        _appVersion,
+        _appVersion ?? "1.0",
       );
 
   @override

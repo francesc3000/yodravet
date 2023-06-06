@@ -40,33 +40,36 @@ class SponsorBloc extends Bloc<SponsorEvent, SponsorState> {
   }
 
   void _navigate2SponsorWebsiteEvent(
-      Navigate2SponsorWebsiteEvent event, Emitter emit) {
+      Navigate2SponsorWebsiteEvent event, Emitter emit) async {
     try {
       Collaborator sponsor =
           _sponsors!.firstWhere((sponsor) => sponsor.id == event.sponsorId);
       if (sponsor.website.isNotEmpty) {
-        launchUrl(Uri.parse(sponsor.website));
+        await launchUrl(Uri.parse(sponsor.website),
+            mode: LaunchMode.externalApplication);
       }
     } on StateError catch (_) {}
   }
 
   void _navigate2PromoterWebsiteEvent(
-      Navigate2PromoterWebsiteEvent event, Emitter emit) {
+      Navigate2PromoterWebsiteEvent event, Emitter emit) async {
     try {
       Collaborator promoter =
           _promoters!.firstWhere((promoter) => promoter.id == event.promoterId);
       if (promoter.website.isNotEmpty) {
-        launchUrl(Uri.parse(promoter.website));
+        await launchUrl(Uri.parse(promoter.website),
+            mode: LaunchMode.externalApplication);
       }
     } on StateError catch (_) {}
   }
 
   void _navigate2ClubWebsiteEvent(
-      Navigate2ClubWebsiteEvent event, Emitter emit) {
+      Navigate2ClubWebsiteEvent event, Emitter emit) async {
     try {
       Collaborator club = _clubs!.firstWhere((club) => club.id == event.clubId);
       if (club.website.isNotEmpty) {
-        launchUrl(Uri.parse(club.website));
+        await launchUrl(Uri.parse(club.website),
+            mode: LaunchMode.externalApplication);
       }
     } on StateError catch (_) {}
   }

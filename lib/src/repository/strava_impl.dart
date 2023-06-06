@@ -13,9 +13,16 @@ class StravaImpl extends StravaInterface {
   @override
   Future<bool> stravaLogIn() async {
     List<AuthenticationScope> scopes = [AuthenticationScope.activity_read_all];
-    await _strava.authentication
-        .authenticate(scopes: scopes, redirectUrl: "stravaflutter://redirect", callbackUrlScheme: '');
-
+    await _strava.authentication.authenticate(
+        scopes: scopes,
+        redirectUrl: "stravaflutter://redirect",
+        // redirectUrl: "flutterstrava://redirect",
+        callbackUrlScheme: "stravaflutter"
+        // callbackUrlScheme: "flutterstrava"
+        ).onError((TokenResponse error, stackTrace) async{
+          await logOut();
+          return error;
+    });
     return true;
   }
 
@@ -52,8 +59,7 @@ class StravaImpl extends StravaInterface {
               distance: activity.distance,
               startDate: DateTime.parse(activity.startDate!),
               type: activity.type,
-              isManual: activity.manual!
-      ))
+              isManual: activity.manual!))
           .toList();
     } catch (e) {
       return [];
