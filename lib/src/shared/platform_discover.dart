@@ -6,4 +6,7 @@ class PlatformDiscover {
 
   static bool isMacOs(BuildContext context) =>
       Theme.of(context).platform == TargetPlatform.macOS;
+
+  static bool isIOs(BuildContext context) =>
+      Theme.of(context).platform == TargetPlatform.iOS;
 }

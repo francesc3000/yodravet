@@ -3,7 +3,7 @@ description: Una app de A.E Yo corro por el Dravet.
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'
 
-version: 3.0.4+42
+version: 3.0.6+46
 #version: 3.0.0
 
 environment:
@@ -30,7 +30,7 @@ dependencies:
   #  strava_flutter: ^1.2.2+62
 #  strava_flutter:
 #    git: https://github.com/dreampowder/strava_flutter.git
-#    git: https://github.com/pedrocortizo/strava_flutter
+#    git: https://github.com/francesc3000/strava_flutter
   # https://pub.dev/packages/strava_client
   strava_client: ^2.1.0
 #  strava_client: ^2.0.0

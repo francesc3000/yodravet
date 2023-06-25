@@ -1,7 +1,10 @@
+import 'package:flash/flash_helper.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yodravet/src/bloc/auth_bloc.dart';
 import 'package:yodravet/src/bloc/event/auth_event.dart';
@@ -102,7 +105,54 @@ class UserMobilePage extends UserBasicPage {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
-                BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
+                context.showFlash(
+                  barrierColor: Colors.black54,
+                  barrierDismissible: true,
+                  builder: (context, controller) => FadeTransition(
+                    opacity: controller.controller,
+                    child: AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        side: BorderSide(),
+                      ),
+                      contentPadding: const EdgeInsets.only(
+                          left: 24.0, top: 16.0, right: 24.0, bottom: 16.0),
+                      title: Text(
+                          AppLocalizations.of(context)!.dataCollectionTitle),
+                      content: Text(
+                          AppLocalizations.of(context)!.dataCollectionBody),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            controller.dismiss();
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(LogOutEvent());
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(primaryColor)),
+                          child: Text(
+                            AppLocalizations.of(context)!.dataCollectionSave,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            controller.dismiss();
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(LogOutEvent());
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.dataCollectionDiscard,
+                            style: const TextStyle(
+                                fontSize: 13, color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
               child: Text(AppLocalizations.of(context)!.logOut),
             ),
@@ -167,6 +217,157 @@ class UserMobilePage extends UserBasicPage {
           ),
         ),
       );
+
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: false,
+          delegate: SliverAppBarDelegate(
+            minHeight: 100,
+            maxHeight: MediaQuery.of(context).size.height - 530,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                children: [
+                  RichText(
+                    text: TextSpan(text: "", children: [
+                      const TextSpan(
+                        style: TextStyle(
+                            decoration: TextDecoration.underline, fontSize: 18),
+                        text: "INSTRUCCIONES\n",
+                      ),
+                      const TextSpan(
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 14),
+                          text: "1. CONECTAR CON STRAVA\n"),
+                      const TextSpan(
+                          text:
+                              "Debes pulsar el botón situado aquí arriba con el título. A continuación navegarás a la página de enlace de tu cuenta Strava con nuestra aplicación. Si aún no estás dado de alta desde esta página podrás crear tu cuenta y enlazarla."),
+                      const TextSpan(
+                        style: TextStyle(
+                            decoration: TextDecoration.underline, fontSize: 14),
+                        text:
+                            "\n\n2. TUTORIAL STRAVA PARA REGISTRAR ACTIVIDADES\n",
+                      ),
+                      const TextSpan(
+                          text:
+                              "A través del siguiente enlace podemos navegar a las instrucciones de Strava para registrar actividades en su aplicación."),
+                      TextSpan(
+                        style: const TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launchUrl(Uri.parse(
+                                'https://support.strava.com/hc/es-es/articles/216917397-Registrar-una-actividad#:~:text=Para%20ir%20a%20la%20pantalla,encima%20del%20bot%C3%B3n%20de%20inicio'));
+                          },
+                        text: " Tutorial",
+                      ),
+                      const TextSpan(
+                        style: TextStyle(
+                            decoration: TextDecoration.underline, fontSize: 14),
+                        text: "\n\n3. SUBE ACTIVIDADES POR EL DRAVET\n",
+                      ),
+                      const TextSpan(
+                          text:
+                              "Debes hacer clic en el botón central de la barra inferior (icono del corredor "),
+                      const WidgetSpan(
+                        child: Icon(
+                          FontAwesomeIcons.personRunning,
+                          size: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const TextSpan(
+                          text:
+                              " ). Aquí, si has enlazado tu cuenta de Strava aparecerán tus actividades registradas en Strava en los días de la carrera.")
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      if (PlatformDiscover.isIOs(context)) {
+        slivers.add(
+          SliverPersistentHeader(
+            pinned: false,
+            delegate: SliverAppBarDelegate(
+              minHeight: 100,
+              maxHeight: 40,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(primaryColor)),
+                      onPressed: () {
+                        context.showFlash(
+                          barrierColor: Colors.black54,
+                          barrierDismissible: true,
+                          builder: (context, controller) => FadeTransition(
+                            opacity: controller.controller,
+                            child: AlertDialog(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(16)),
+                                side: BorderSide(),
+                              ),
+                              contentPadding: const EdgeInsets.only(
+                                  left: 24.0,
+                                  top: 16.0,
+                                  right: 24.0,
+                                  bottom: 16.0),
+                              title: Text(AppLocalizations.of(context)!
+                                  .deleteAccountTitle),
+                              content: Text(AppLocalizations.of(context)!
+                                  .deleteAccountBody),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    controller.dismiss();
+                                    BlocProvider.of<UserBloc>(context)
+                                        .add(DeleteAccountEvent());
+                                  },
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(
+                                          primaryColor)),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .deleteAccountOk,
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: controller.dismiss,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .deleteAccountDiscard,
+                                    style: const TextStyle(
+                                        fontSize: 13, color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.deleteAccount,
+                      ),
+                    ),
+                    Container(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
     }
 
     // slivers.add(

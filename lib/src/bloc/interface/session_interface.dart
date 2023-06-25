@@ -34,14 +34,14 @@ abstract class Session extends Bloc<SessionEvent, SessionState> {
   }
 
   void _onSignedEvent(SignedEvent event, Emitter emit) async {
-    if (!event.isSignedIn && user.isLogin) _logout();
+    if (!event.isSignedIn && user.isLogin) logout();
 
     emit(LogInState(event.isSignedIn, event.isAutoLogin));
   }
 
   void _onLogoutEvent(LogoutEvent event, Emitter emit) async {
     if (event.logout) {
-      _logout();
+      logout();
       emit(LogOutState(event.logout));
     }
   }
@@ -49,10 +49,5 @@ abstract class Session extends Bloc<SessionEvent, SessionState> {
   void _onUserChangeEvent(UserChangeEvent event, Emitter emit) async {
     user = event.user;
     emit(UserChangeState(user));
-  }
-
-  void _logout() {
-    logout();
-    user.logout();
   }
 }

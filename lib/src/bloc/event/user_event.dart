@@ -26,6 +26,11 @@ class ConnectWithStravaEvent extends UserEvent {
   String toString() => 'ConnectWithStrava Event';
 }
 
+class DeleteAccountEvent extends UserEvent {
+  @override
+  String toString() => 'DeleteAccount Event';
+}
+
 class UploadUserFieldsEvent extends UserEvent {
   @override
   String toString() => 'UploadUserFields Event';

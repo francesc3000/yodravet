@@ -131,7 +131,7 @@ class DonorDesktopPage extends DonorBasicPage {
           // childAspectRatio: 2.0,
         ),
         delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+          (BuildContext context, int index) {
             Team team = teams[index];
             return Container(
               margin: const EdgeInsets.all(10),
@@ -153,10 +153,10 @@ class DonorDesktopPage extends DonorBasicPage {
                           backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).primaryColor)),
                       onPressed:
-                      currentTeamId == null || currentTeamId != team.id
-                          ? () => BlocProvider.of<DonorBloc>(context)
-                          .add(JoinTeamEvent(team.id))
-                          : null,
+                          currentTeamId == null || currentTeamId != team.id
+                              ? () => BlocProvider.of<DonorBloc>(context)
+                                  .add(JoinTeamEvent(team.id))
+                              : null,
                       child: Text(AppLocalizations.of(context)!.joinTeam),
                     ),
                   ),
@@ -164,13 +164,16 @@ class DonorDesktopPage extends DonorBasicPage {
                     visible: currentTeamId == team.id,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white)),
                       onPressed: currentTeamId == team.id
                           ? () => BlocProvider.of<DonorBloc>(context)
-                          .add(DisJoinTeamEvent(team.id))
+                              .add(DisJoinTeamEvent(team.id))
                           : null,
-                      child: Text(AppLocalizations.of(context)!.disJoinTeam),
+                      child: Text(
+                        AppLocalizations.of(context)!.disJoinTeam,
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
                     ),
                   ),
                 ],
@@ -236,9 +239,9 @@ class DonorDesktopPage extends DonorBasicPage {
               padding: const EdgeInsets.all(8.0),
               child: Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(AppLocalizations.of(context)!.noStravaActivities),
-                  )),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(AppLocalizations.of(context)!.noStravaActivities),
+              )),
             ),
           ]),
         ),

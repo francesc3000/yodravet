@@ -255,5 +255,41 @@
   "buyLink": "Buy your solidarity canteens at ",
   "@buyLink": {
     "description": "buyLink Description"
+  },
+  "dataCollectionTitle": "Save your login information?",
+  "@DataCollectionTitle": {
+    "description": "Data Collection Title"
+  },
+  "dataCollectionBody": "We'll save your login information so you don't have to enter it on your device the next time you sign in",
+  "@DataCollectionBody": {
+    "description": "Data Collection Body"
+  },
+  "dataCollectionSave": "Save",
+  "@DataCollectionSave": {
+    "description": "Data Collection Save"
+  },
+  "dataCollectionDiscard": "Maybe later",
+  "@DataCollectionDiscard": {
+    "description": "Data Collection Discard"
+  },
+  "deleteAccount": "Delete Account",
+  "@deleteAccount": {
+    "description": "Delete Account"
+  },
+  "deleteAccountTitle": "Delete Account",
+  "@deleteAccountTitle": {
+    "description": "Delete account title"
+  },
+  "deleteAccountBody": "This process will permanently delete all your user information from the app. Are you sure?",
+  "@deleteAccount": {
+    "description": "Delete account body"
+  },
+  "deleteAccountOk": "Yes",
+  "@deleteAccountOk": {
+    "description": "Yes"
+  },
+  "deleteAccountDiscard": "No",
+  "@deleteAccountDiscard": {
+    "description": "No"
   }
 }

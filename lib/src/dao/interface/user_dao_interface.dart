@@ -24,4 +24,5 @@ abstract class UserDaoInterface {
   Stream<List<String>> streamSpotVotes(String userId, String raceId);
   Future<bool> spotThumbUp(String userId, String raceId, String spotId);
   Future<bool> spotThumbDown(String userId, String raceId, String spotId);
+  Future<bool> deleteAccount(String userId);
 }

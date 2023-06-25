@@ -255,5 +255,41 @@
   "buyLink": "Compra tus cantimploras solidarias en ",
   "@buyLink": {
     "description": "buyLink Description"
+  },
+  "dataCollectionTitle": "¿Guardar su información de inicio de sesión?",
+  "@DataCollectionTitle": {
+    "description": "Data Collection Title"
+  },
+  "dataCollectionBody": "Guardaremos la información de inicio de sesión para que no tengas que introducirlos en tu dispositivo la próxima vez que inicies sesión",
+  "@DataCollectionBody": {
+    "description": "Data Collection Body"
+  },
+  "dataCollectionSave": "Guardar",
+  "@DataCollectionSave": {
+    "description": "Data Collection Save"
+  },
+  "dataCollectionDiscard": "Ahora no",
+  "@DataCollectionDiscard": {
+    "description": "Data Collection Discard"
+  },
+  "deleteAccount": "Borrar Cuenta",
+  "@deleteAccount": {
+    "description": "Delete Account"
+  },
+  "deleteAccountTitle": "Borrar Cuenta",
+  "@deleteAccountTitle": {
+    "description": "Delete account title"
+  },
+  "deleteAccountBody": "Este proceso eliminará permanentemente toda tu información de usuario de la app. ¿Estas seguro?",
+  "@deleteAccount": {
+    "description": "Delete account body"
+  },
+  "deleteAccountOk": "Sí",
+  "@deleteAccountOk": {
+    "description": "Yes"
+  },
+  "deleteAccountDiscard": "No",
+  "@deleteAccountDiscard": {
+    "description": "No"
   }
 }

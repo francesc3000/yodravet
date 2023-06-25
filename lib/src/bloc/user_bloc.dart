@@ -39,6 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserLogOutEvent>(_userLogOutEvent);
     on<UserLogInEvent>(_userLogInEvent);
     on<ConnectWithStravaEvent>(_connectWithStravaEvent);
+    on<DeleteAccountEvent>(_deleteAccountEvent);
     on<UploadUserFieldsEvent>(_uploadUserFieldsEvent);
   }
 
@@ -78,13 +79,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _userLogOutEvent(UserLogOutEvent event, Emitter emit) async {
     try {
-      if (_user.isStravaLogin!) {
-        factoryDao.userDao.stravaLogout();
-        _user.isStravaLogin = false;
-        factoryDao.userDao.saveIsStravaLogin(_user.id, _user.isStravaLogin);
-      }
-      // await factoryDao.userDao.logOut();
-      _user.logout();
       emit(UserLogOutState());
     } catch (error) {
       emit(error is UserStateError
@@ -133,6 +127,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(error is UserStateError
           ? UserStateError(error.message)
           : UserStateError('Algo fue mal en el Strava Login!'));
+    }
+  }
+
+  void _deleteAccountEvent(DeleteAccountEvent event, Emitter emit) async {
+    try {
+      await factoryDao.userDao.deleteAccount(_user.id!);
+      session.add(LogoutEvent());
+    } catch (error) {
+      emit(error is UserStateError
+          ? UserStateError(error.message)
+          : UserStateError('Algo fue mal en al borrar la cuenta!'));
     }
   }
 

@@ -138,4 +138,8 @@ class UserDaoImpl extends UserDaoInterface {
   @override
   Future<bool> acceptUserTerms(String userId) async =>
       await firestore.acceptUserTerms(userId);
+
+  @override
+  Future<bool> deleteAccount(String userId) async =>
+      await firestore.deleteUserAccount(userId);
 }

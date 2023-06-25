@@ -63,15 +63,17 @@
 		</dict>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
-    	<array>
-    		<string>strava</string>
-    	</array>
+	<array>
+		<string>strava</string>
+	</array>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+	<string>&quot;This app require permission to access details&quot;</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

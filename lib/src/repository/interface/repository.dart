@@ -46,4 +46,5 @@ abstract class Repository implements Endpoints {
   Future<bool> spotThumbDown(String userId, String raceId, String spotId);
   Stream<List<FeedDao>> streamFeed(
       String raceId, FeedDao? afterDocument, int limit);
+  Future<bool> deleteUserAccount(String userId);
 }

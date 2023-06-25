@@ -256,5 +256,41 @@
   "buyLink": "Compra les teves cantimplores solidàries a ",
   "@buyLink": {
     "description": "buyLink Description"
+  },
+  "dataCollectionTitle": "Desar la vostra informació d'inici de sessió?",
+  "@DataCollectionTitle": {
+    "description": "Data Collection Title"
+  },
+  "dataCollectionBody": "Desarem la informació d'inici de sessió perquè no hàgiu d'introduir-los al vostre dispositiu la propera vegada que inicieu sessió",
+  "@DataCollectionBody": {
+    "description": "Data Collection Body"
+  },
+  "dataCollectionSave": "Desar",
+  "@DataCollectionSave": {
+    "description": "Data Collection Save"
+  },
+  "dataCollectionDiscard": "Ara no",
+  "@DataCollectionDiscard": {
+    "description": "Data Collection Discard"
+  },
+  "deleteAccount": "Esborrar Compte.",
+  "@deleteAccount": {
+    "description": "Delete Account"
+  },
+  "deleteAccountTitle": "Esborrar Compte.",
+  "@deleteAccountTitle": {
+    "description": "Delete account title"
+  },
+  "deleteAccountBody": "Aquest procés eliminarà permanentment tota la informació d'usuari de l'app. Estàs segur?",
+  "@deleteAccount": {
+    "description": "Delete account body"
+  },
+  "deleteAccountOk": "Sí",
+  "@deleteAccountOk": {
+    "description": "Yes"
+  },
+  "deleteAccountDiscard": "No",
+  "@deleteAccountDiscard": {
+    "description": "No"
   }
 }

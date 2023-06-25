@@ -43,42 +43,46 @@ class FirestoreRepositoryImpl implements Repository {
       List<ActivityDao> activitiesDao = [];
       Map data = snapshot.data() as Map;
 
-      //Se buscan las actividades del usuario
-      QuerySnapshot queryActivites = await userCollectionEndpoint
-          .doc(userId)
-          .collection('activities')
-          .where("raceId", isEqualTo: raceId)
-          .get();
+      bool isDeleted = data['isDeleted'] ?? false;
 
-      if (queryActivites.docs.isNotEmpty) {
-        activitiesDao.addAll(queryActivites.docs
-            .map<ActivityDao>((QueryDocumentSnapshot snapshot) {
-          Map data = snapshot.data() as Map;
-          return TransformModel.raw2ActivityDao(
-            id: snapshot.id,
-            stravaId: data['stravaId'],
-            raceId: data['raceId'],
-            distance: double.parse(data['distance'].toString()),
-            startDate: data['date'].toDate(),
-            isDonate: data['isDonate'],
-            isPurchase: data['isPurchase'],
-            totalPurchase: double.parse(data['totalPurchase'].toString()),
-            type: data['type'],
-          );
-        }).toList());
+      if (isDeleted == false) {
+        //Se buscan las actividades del usuario
+        QuerySnapshot queryActivites = await userCollectionEndpoint
+            .doc(userId)
+            .collection('activities')
+            .where("raceId", isEqualTo: raceId)
+            .get();
+
+        if (queryActivites.docs.isNotEmpty) {
+          activitiesDao.addAll(queryActivites.docs
+              .map<ActivityDao>((QueryDocumentSnapshot snapshot) {
+            Map data = snapshot.data() as Map;
+            return TransformModel.raw2ActivityDao(
+              id: snapshot.id,
+              stravaId: data['stravaId'],
+              raceId: data['raceId'],
+              distance: double.parse(data['distance'].toString()),
+              startDate: data['date'].toDate(),
+              isDonate: data['isDonate'],
+              isPurchase: data['isPurchase'],
+              totalPurchase: double.parse(data['totalPurchase'].toString()),
+              type: data['type'],
+            );
+          }).toList());
+        }
+
+        userDao = TransformModel.raw2UserDao(
+          id: userId,
+          email: data['email'],
+          name: data['name'],
+          lastname: data['lastname'],
+          photo: data['photo'],
+          isStravaLogin: data['isStravaLogin'],
+          teamId: data['teamId'],
+          isTermsOn: data['isTermsOn'],
+          activitiesDao: activitiesDao,
+        );
       }
-
-      userDao = TransformModel.raw2UserDao(
-        id: userId,
-        email: data['email'],
-        name: data['name'],
-        lastname: data['lastname'],
-        photo: data['photo'],
-        isStravaLogin: data['isStravaLogin'],
-        teamId: data['teamId'],
-        isTermsOn: data['isTermsOn'],
-        activitiesDao: activitiesDao,
-      );
     }
 
     return userDao;
@@ -665,5 +669,13 @@ class FirestoreRepositoryImpl implements Repository {
         sink.add(feeds);
       }),
     );
+  }
+
+  @override
+  Future<bool> deleteUserAccount(String userId) async{
+    await userCollectionEndpoint
+        .doc(userId)
+        .update({'isDeleted': true});
+    return true;
   }
 }

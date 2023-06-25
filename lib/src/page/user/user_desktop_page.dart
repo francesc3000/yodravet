@@ -1,3 +1,4 @@
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,7 +119,54 @@ class UserDesktopPage extends UserBasicPage {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(primaryColor)),
               onPressed: () {
-                BlocProvider.of<AuthBloc>(context).add(LogOutEvent());
+                context.showFlash(
+                  barrierColor: Colors.black54,
+                  barrierDismissible: true,
+                  builder: (context, controller) => FadeTransition(
+                    opacity: controller.controller,
+                    child: AlertDialog(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        side: BorderSide(),
+                      ),
+                      contentPadding: const EdgeInsets.only(
+                          left: 24.0, top: 16.0, right: 24.0, bottom: 16.0),
+                      title: Text(
+                          AppLocalizations.of(context)!.dataCollectionTitle),
+                      content: Text(
+                          AppLocalizations.of(context)!.dataCollectionBody),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            controller.dismiss();
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(LogOutEvent());
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(primaryColor)),
+                          child: Text(
+                            AppLocalizations.of(context)!.dataCollectionSave,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            controller.dismiss();
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(LogOutEvent());
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.dataCollectionDiscard,
+                            style: const TextStyle(
+                                fontSize: 13, color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
               child: Text(AppLocalizations.of(context)!.logOut),
             ),

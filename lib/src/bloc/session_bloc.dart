@@ -150,7 +150,11 @@ class SessionBloc extends Session {
   @override
   void logout() {
     user.logout();
-    //this.add(SignedEvent(false));
+    if (user.isStravaLogin??false) {
+      _factoryDao.userDao.stravaLogout();
+      _factoryDao.userDao.saveIsStravaLogin(user.id, user.isStravaLogin);
+    }
+
     _factoryDao.userDao.logOut();
   }
 

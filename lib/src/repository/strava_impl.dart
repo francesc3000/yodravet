@@ -51,7 +51,7 @@ class StravaImpl extends StravaInterface {
     try {
       //TODO: Gestionar paginas de actividades en listLoggedInAthleteActivities
       List<SummaryActivity> stravaActivities = await _strava.activities
-          .listLoggedInAthleteActivities(before, after, 1, 1);
+          .listLoggedInAthleteActivities(before, after, 1, 20);
 
       return stravaActivities
           .map<ActivityDao>((activity) => TransformModel.raw2ActivityDao(

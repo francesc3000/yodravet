@@ -158,13 +158,16 @@ class DonorMobilePage extends DonorBasicPage {
                     visible: currentTeamId == team.id,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white)),
                       onPressed: currentTeamId == team.id
                           ? () => BlocProvider.of<DonorBloc>(context)
                               .add(DisJoinTeamEvent(team.id))
                           : null,
-                      child: Text(AppLocalizations.of(context)!.disJoinTeam),
+                      child: Text(
+                        AppLocalizations.of(context)!.disJoinTeam,
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
                     ),
                   ),
                 ],
